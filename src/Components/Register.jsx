@@ -37,10 +37,10 @@ function Register() {
   };
   return (
     <div>
-      <div className="row" style={styles.row}>
+      <div className="row row-custom-settings">
         <div className="col-md-3"></div>
         <div className="col-md-6">
-          <div style={styles.centerColumn}>
+          <div className="center-col-container">
             <Link
               style={{
                 fontSize: "3.5em",
@@ -113,7 +113,6 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     height: "100%",
-
   },
   row: {
     boxSizing: "border-box",

@@ -9,10 +9,10 @@ const Welcome = () => {
   // Router
   const history = useHistory();
   return (
-    <div className="row " style={styles.row}>
+    <div className="row row-custom-settings">
       <div className="col-md-3"></div>
       <div className="col-md-6">
-        <div style={styles.centerColumn}>
+        <div className="center-col-container">
           <h2 style={{ fontSize: "3em", padding: "20px 0px" }}>Welcome</h2>
           <p>Do something</p>
 

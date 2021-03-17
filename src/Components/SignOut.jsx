@@ -24,52 +24,50 @@ const SignOut = () => {
 
   return (
     <div className="checklist-wall-window">
-      <div className="row" style={styles.row}>
+      <div className="row row-custom-settings">
         <div className="col-md-3"></div>
-        <div
-          className="col-md-6 d-flex flex-column justify-content-center"
-          style={{ minHeight: "100vh" }}
-        >
-          <Link
-            style={{
-              fontSize: "3.5em",
-              textAlign: "center",
-              color: "rgba(250,250,250,0.55)",
-            }}
-            to="/"
-          >
-            Checklist<span style={{ color: "red" }}>-</span>me
-          </Link>
-          <h1 className="page-title" style={{ fontSize: "2.2em" }}>
-            Sign Out
-          </h1>
-          <h4
-            style={{
-              padding: "20px 10px",
-              textAlign: "center",
-              color: "white",
-            }}
-          >
-            ¿ Are you leaving ?
-          </h4>
-          <Button
-            variant="danger"
-            onClick={(e) => {
-              e.preventDefault();
-              handleSignOut();
-            }}
-          >
-            Yes, I'm out!
-          </Button>
-          <Button
-            variant="success"
-            onClick={() => {
-              history.goBack();
-            }}
-            style={{ marginTop: "20px" }}
-          >
-            No, take me back.
-          </Button>
+        <div className="col-md-6">
+          <div className="center-col-container">
+            <Link
+              style={{
+                fontSize: "3.5em",
+                textAlign: "center",
+                color: "rgba(250,250,250,0.55)",
+              }}
+              to="/"
+            >
+              Home
+            </Link>
+            <h1 className="page-title" style={{ fontSize: "2.2em" }}>
+              Sign Out
+            </h1>
+            <h4
+              style={{
+                padding: "20px 10px",
+                textAlign: "center",
+              }}
+            >
+              ¿ Are you leaving ?
+            </h4>
+            <Button
+              variant="danger"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSignOut();
+              }}
+            >
+              Yes, I'm out!
+            </Button>
+            <Button
+              variant="success"
+              onClick={() => {
+                history.goBack();
+              }}
+              style={{ marginTop: "20px" }}
+            >
+              No, take me back.
+            </Button>
+          </div>
         </div>
         <div className="col-md-3"></div>
       </div>

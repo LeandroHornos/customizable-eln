@@ -9,3 +9,26 @@
   width: 100%;
   box-sizing: border-box;
 }
+
+h1 {
+  padding: 40px 10px;
+  text-align: center;
+}
+
+h4 {
+  padding: 20px 5px;
+}
+
+.center-col-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.row-custom-settings {
+  box-sizing: border-box;
+  padding: 0px 10px;
+  margin: 0px;
+  min-height: 80vh;
+}

@@ -13,6 +13,7 @@ import Register from "./Components/Register";
 import Login from "./Components/Login";
 import SignOut from "./Components/SignOut";
 import Welcome from "./Components/Welcome";
+import TemplateEditor from "./Components/TemplateEditor";
 
 import "./App.css";
 
@@ -34,6 +35,9 @@ function App() {
           </Route>
           <Route exact path="/exit">
             <SignOut />
+          </Route>
+          <Route exact path="/template-editor">
+            <TemplateEditor />
           </Route>
         </Switch>
       </div>
