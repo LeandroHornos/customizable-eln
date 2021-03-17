@@ -36,70 +36,68 @@ function Register() {
     }
   };
   return (
-    <div className="checklist-wall-window">
+    <div>
       <div className="row" style={styles.row}>
         <div className="col-md-3"></div>
-        <div
-          className="col-md-6 d-flex flex-column justify-content-center"
-          style={{ minHeight: "100vh" }}
-        >
-          <Link
-            style={{
-              fontSize: "3.5em",
-              textAlign: "center",
-              color: "rgba(250,250,250,0.55)",
-            }}
-            to="/"
-          >
-            Checklist<span style={{ color: "red" }}>-</span>me
-          </Link>
-          <h1 className="page-title" style={{ fontSize: "2.2em" }}>
-            Register
-          </h1>
-          <Form>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label style={{ color: "white" }}>Email</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label style={{ color: "white" }}>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-            </Form.Group>
-            <Button
-              block
-              variant="success"
-              type="submit"
-              onClick={(e) => {
-                e.preventDefault();
-                handleSignUp();
+        <div className="col-md-6">
+          <div style={styles.centerColumn}>
+            <Link
+              style={{
+                fontSize: "3.5em",
+                textAlign: "center",
+                color: "rgba(250,250,250,0.55)",
               }}
+              to="/"
             >
+              Home
+            </Link>
+            <h1 className="page-title" style={{ fontSize: "2.2em" }}>
               Register
-            </Button>
-            <Button
-              block
-              variant="dark"
-              onClick={(e) => {
-                history.push("/login");
-              }}
-              style={{ color: "white" }}
-            >
-              I have an account
-            </Button>
-          </Form>
+            </h1>
+            <Form>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                />
+              </Form.Group>
+              <Button
+                block
+                variant="success"
+                type="submit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSignUp();
+                }}
+              >
+                Register
+              </Button>
+              <Button
+                block
+                variant="dark"
+                onClick={(e) => {
+                  history.push("/login");
+                }}
+              >
+                I have an account
+              </Button>
+            </Form>
+          </div>
         </div>
         <div className="col-md-3"></div>
       </div>
@@ -113,8 +111,9 @@ const styles = {
   centerColumn: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
     justifyContent: "center",
+    height: "100%",
+
   },
   row: {
     boxSizing: "border-box",

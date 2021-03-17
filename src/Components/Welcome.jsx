@@ -9,52 +9,42 @@ const Welcome = () => {
   // Router
   const history = useHistory();
   return (
-    <div className="checklist-wall-window">
-      <div className="row " style={styles.row}>
-        <div className="col-md-3"></div>
-        <div className="col-md-6" style={styles.centerColumn}>
-          <div className="d-flex flex-column justify-content-around align-items-center">
-            <h2
-              style={{ color: "white", fontSize: "3em", padding: "20px 0px" }}
-            >
-              Welcome to Checklist<span style={{ color: "red" }}>-</span>me
-            </h2>
-            <p style={{ color: "white" }}>
-              Control the world, one checklist at a time
-            </p>
+    <div className="row " style={styles.row}>
+      <div className="col-md-3"></div>
+      <div className="col-md-6">
+        <div style={styles.centerColumn}>
+          <h2 style={{ fontSize: "3em", padding: "20px 0px" }}>Welcome</h2>
+          <p>Do something</p>
 
-            <Button
-              onClick={() => {
-                history.push("/login");
-              }}
-              block
-              variant="outline-success"
-              style={{
-                color: "white",
-                padding: "10px 0px",
-                margin: "10px 0px",
-              }}
-            >
-              Login
-            </Button>
-            <Button
-              onClick={() => {
-                history.push("/register");
-              }}
-              block
-              variant="outline-success"
-              style={{
-                color: "white",
-                padding: "10px 0px",
-                margin: "10px 0px",
-              }}
-            >
-              Create new account
-            </Button>
-          </div>
+          <Button
+            onClick={() => {
+              history.push("/login");
+            }}
+            block
+            variant="outline-success"
+            style={{
+              padding: "10px 0px",
+              margin: "10px 0px",
+            }}
+          >
+            Login
+          </Button>
+          <Button
+            onClick={() => {
+              history.push("/register");
+            }}
+            block
+            variant="outline-success"
+            style={{
+              padding: "10px 0px",
+              margin: "10px 0px",
+            }}
+          >
+            Create new account
+          </Button>
         </div>
-        <div className="col-md-3"></div>
       </div>
+      <div className="col-md-3"></div>
     </div>
   );
 };
@@ -67,6 +57,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    minHeight: "100%",
   },
   row: {
     boxSizing: "border-box",
