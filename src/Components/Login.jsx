@@ -24,7 +24,7 @@ function Login() {
   };
 
   return (
-    <div className="checklist-wall-window">
+    <div>
       <div className="row" style={styles.row}>
         <div className="col-md-3"></div>
         <div
