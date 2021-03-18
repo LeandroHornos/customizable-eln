@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 const Dashboard = () => {
   const history = useHistory();
   return (
-    <div className="row row-custom-settings">
+    <div className="row row-custom-settings min-h-80">
       <div className="col-md-3"></div>
       <div className="col-md-6">
         <div className="center-col-container">

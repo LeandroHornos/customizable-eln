@@ -19,6 +19,14 @@ h4 {
   padding: 20px 5px;
 }
 
+label {
+  padding: 5px 5px;
+}
+
+input[type=text] {
+  padding: 2px 2px;
+}
+
 .center-col-container {
   display: flex;
   flex-direction: column;
@@ -30,5 +38,17 @@ h4 {
   box-sizing: border-box;
   padding: 0px 10px;
   margin: 0px;
+  /* min-height: 80vh; */
+}
+
+.min-h-80 {
   min-height: 80vh;
+}
+
+.min-h-100 {
+  min-height: 100vh;
+}
+
+.block-btn {
+  margin: 5px 0px;
 }
