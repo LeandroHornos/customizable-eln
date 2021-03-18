@@ -52,3 +52,10 @@ input[type=text] {
 .block-btn {
   margin: 5px 0px;
 }
+
+.template-preview-cont {
+  border: solid;
+  border-color: black;
+  border-width: 1px;
+  padding: 10px;
+}

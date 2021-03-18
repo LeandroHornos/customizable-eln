@@ -35,7 +35,12 @@ const TemplateEditor = () => {
             <Button className="block-btn">Clear</Button>
           </div>
         </div>
-        <div className="col-md-6"></div>
+        <div className="col-md-6">
+        <h4>Template Preview</h4>
+          <div className="template-preview-cont">
+            <h4>Hola don pepito</h4>
+          </div>
+        </div>
       </div>
     </div>
   );
