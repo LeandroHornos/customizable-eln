@@ -56,33 +56,36 @@ const TemplateEditor = () => {
         </div>
       </div>
       <div className="row row-custom-settings">
-        <div className="col-md-6">
-          <div className="center-col-container">
-            <h4>Template Title</h4>
-            <input
-              value={title}
-              type="text"
-              placeholder="Choose a name for the section"
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-            ></input>
-            <h4>Add a new section to the template</h4>
-            <div>
-              <label>Section title</label>
+        <div className="col-md-7">
+          <div className="center-col-container ">
+            <div className="template-box">
+              <h2>Template Title</h2>
               <input
-                value={currentSection.name}
+                value={title}
                 type="text"
                 placeholder="Choose a name for the section"
                 onChange={(e) => {
-                  setCurrentSection({
-                    ...currentSection,
-                    name: e.target.value,
-                  });
+                  setTitle(e.target.value);
                 }}
               ></input>
             </div>
-            <div>
+
+            <div className="template-box">
+              <h2>Add a new section to the template</h2>
+              <div>
+                <label>Section title</label>
+                <input
+                  value={currentSection.name}
+                  type="text"
+                  placeholder="Choose a name for the section"
+                  onChange={(e) => {
+                    setCurrentSection({
+                      ...currentSection,
+                      name: e.target.value,
+                    });
+                  }}
+                ></input>
+              </div>
               <label>Section Component</label>
               <select
                 value={currentSection.component}
@@ -100,34 +103,44 @@ const TemplateEditor = () => {
                 <option value="journal-section">Journal</option>
                 <option value="form-section">Form</option>
               </select>
+              <TableSectionConfig />
+              <div>
+                {" "}
+                <Button
+                  block
+                  variant="success"
+                  className="block-btn"
+                  onClick={() => {
+                    console.log("Nueva seccion", currentSection);
+                    if (sectionIsComplete) {
+                      setSections([...sections, currentSection]);
+                    }
+                    clearSectionForm();
+                  }}
+                >
+                  Add Section
+                </Button>
+                <Button block variant="outline-dark" className="block-btn">
+                  Clear
+                </Button>
+              </div>
             </div>
-            <Button
-              className="block-btn"
-              onClick={() => {
-                console.log("Nueva seccion", currentSection);
-                if (sectionIsComplete) {
-                  setSections([...sections, currentSection]);
-                }
-                clearSectionForm();
-              }}
-            >
-              Add Section
-            </Button>
-            <Button className="block-btn">Clear</Button>
           </div>
         </div>
-        <div className="col-md-6">
-          <h4>Template Preview</h4>
-          <div className="template-preview-cont">
-            <h5 className="text-center">{title}</h5>
-            {sections.map((section) => {
-              return (
-                <div>
-                  <h5>{section.name}</h5>
-                  <p>{section.component}</p>
-                </div>
-              );
-            })}
+        <div className="col-md-5">
+          <div className="template-box">
+            <h2 className="text-center">Template Preview</h2>
+            <div className="section-config-box">
+              <h5 className="text-center">{title}</h5>
+              {sections.map((section) => {
+                return (
+                  <div>
+                    <h5>{section.name}</h5>
+                    <p>{section.component}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
           <Button
             block
@@ -146,36 +159,49 @@ const TemplateEditor = () => {
 // SUBCOMPONENTS
 
 const TableSectionConfig = (props) => {
+  const emptyCol = { name: "", type: "", order: null, unit: "" };
   const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
-  const [colNum, setColNum] = useState(0); // Cuantas columnas va a tener la tabla
-  const [columns, setColumns] = useState([]); // Las columnas con su info
+  // const [colNum, setColNum] = useState(0); // Cuantas columnas va a tener la tabla
+  const [columns, setColumns] = useState([emptyCol]); // Las columnas con su info
 
   // Efects
-  useEffect(() => {
-    /* Escuchar cambios en el número de columnas que va a tener la tabla y crear una lista de objetos
-    para contener la info de cada columna.
-    */
-    let cols = [];
-    if (columns.lenght === 0) {
-      //{ crear n columnas nuevas, n = colNum}
-    } else if (columns.length < colNum) {
-      // { crear n columnas nuevas, n = (colNum - columnas.lenght)}
-    } else if (columns.lenght > colNum) {
-      // {borrar las últimas n columnas, n = n = (columnas.lenght- colNum)}
+  const handleColumns = (colNum, currentCols) => {
+    console.log("Current cols", currentCols);
+    console.log("Current cols length", currentCols.length);
+    console.log("colNum", colNum);
+
+    let cols = currentCols;
+    let delta = colNum - currentCols.length;
+
+    if (delta > 0) {
+      console.log("hay columnas de menos");
+      for (var y = 0; y < delta; y++) {
+        console.log({ ...emptyCol, order: y });
+        cols.push({ ...emptyCol, order: y });
+      }
+    } else {
+      console.log("hay columnas de mas");
+      let k = -1 * delta;
+      cols = columns;
+      for (var z = 0; z < k; z++) {
+        cols.pop();
+      }
     }
+
     setColumns(cols);
-  }, [colNum]);
+  };
 
   return (
-    <div>
+    <div className="section-config-box">
+      <h3>Table Config</h3>
       <p>How many columns does de table must have?</p>
       <select
         onChange={(e) => {
-          setColumns(e.target.value);
+          handleColumns(e.target.value, columns);
         }}
       >
         {ops.map((cols) => {
-          <option value={cols}>{cols}</option>;
+          return <option value={cols}>{cols}</option>;
         })}
       </select>
     </div>
