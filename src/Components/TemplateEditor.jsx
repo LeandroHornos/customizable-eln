@@ -143,4 +143,43 @@ const TemplateEditor = () => {
   );
 };
 
+// SUBCOMPONENTS
+
+const TableSectionConfig = (props) => {
+  const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
+  const [colNum, setColNum] = useState(0); // Cuantas columnas va a tener la tabla
+  const [columns, setColumns] = useState([]); // Las columnas con su info
+
+  // Efects
+  useEffect(() => {
+    /* Escuchar cambios en el número de columnas que va a tener la tabla y crear una lista de objetos
+    para contener la info de cada columna.
+    */
+    let cols = [];
+    if (columns.lenght === 0) {
+      //{ crear n columnas nuevas, n = colNum}
+    } else if (columns.length < colNum) {
+      // { crear n columnas nuevas, n = (colNum - columnas.lenght)}
+    } else if (columns.lenght > colNum) {
+      // {borrar las últimas n columnas, n = n = (columnas.lenght- colNum)}
+    }
+    setColumns(cols);
+  }, [colNum]);
+
+  return (
+    <div>
+      <p>How many columns does de table must have?</p>
+      <select
+        onChange={(e) => {
+          setColumns(e.target.value);
+        }}
+      >
+        {ops.map((cols) => {
+          <option value={cols}>{cols}</option>;
+        })}
+      </select>
+    </div>
+  );
+};
+
 export default TemplateEditor;
