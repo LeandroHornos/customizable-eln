@@ -16,6 +16,7 @@ const TemplateEditor = () => {
   const db = firebaseApp.firestore();
   const history = useHistory();
 
+  const [templateName, setTemplateName] = useState(""); // Nombre de la plantilla
   const [title, setTitle] = useState(""); // Nombre de la plantilla
   const [sections, setSections] = useState([]);
   const [currentSection, setCurrentSection] = useState(sectionSchema);
@@ -52,14 +53,23 @@ const TemplateEditor = () => {
     <div>
       <div className="row row-custom-settings">
         <div className="col-12">
-          <h1>Template Editor</h1>
+          <h1>Editor de plantillas</h1>
         </div>
       </div>
       <div className="row row-custom-settings">
         <div className="col-md-7">
           <div className="center-col-container ">
             <div className="template-box">
-              <h2>Template Title</h2>
+              <h2>Nombre la plantilla</h2>
+              <input
+                value={templateName}
+                type="text"
+                placeholder="Choose a name for the section"
+                onChange={(e) => {
+                  setTemplateName(e.target.value);
+                }}
+              ></input>
+              <h2>Título</h2>
               <input
                 value={title}
                 type="text"
@@ -71,9 +81,9 @@ const TemplateEditor = () => {
             </div>
 
             <div className="template-box">
-              <h2>Add a new section to the template</h2>
+              <h2>Agrega una nueva sección a la plantilla</h2>
               <div>
-                <label>Section title</label>
+                <label>Título de la sección</label>
                 <input
                   value={currentSection.name}
                   type="text"
@@ -86,7 +96,7 @@ const TemplateEditor = () => {
                   }}
                 ></input>
               </div>
-              <label>Section Component</label>
+              <label>Clase de sección</label>
               <select
                 value={currentSection.component}
                 onChange={(e) => {
@@ -118,10 +128,10 @@ const TemplateEditor = () => {
                     clearSectionForm();
                   }}
                 >
-                  Add Section
+                  Agregar sección
                 </Button>
                 <Button block variant="outline-dark" className="block-btn">
-                  Clear
+                  Limpiar
                 </Button>
               </div>
             </div>
@@ -129,7 +139,7 @@ const TemplateEditor = () => {
         </div>
         <div className="col-md-5">
           <div className="template-box">
-            <h2 className="text-center">Template Preview</h2>
+            <h2 className="text-center">Vista previa de la plantilla</h2>
             <div className="section-config-box">
               <h5 className="text-center">{title}</h5>
               {sections.map((section) => {
