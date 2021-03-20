@@ -1,20 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import Button from "react-bootstrap/Button";
 
 // Firebase
-
 import firebaseApp from "../firebaseApp";
+
+// Context
+import { LanguageContext } from "../Lang";
 
 // Router
 import { useHistory } from "react-router-dom";
 
+// Data structure
 import sectionSchema from "../Models/sectionSchema";
 import templateSchema from "../Models/templateSchema";
+
+// Components
+import NavigationBar from "./NavigationBar";
 
 const TemplateEditor = () => {
   const db = firebaseApp.firestore();
   const history = useHistory();
+
+  const { dictionary } = useContext(LanguageContext);
+  const txt = dictionary.components.templateEditor;
+  const gtxt = dictionary.general;
 
   const [templateName, setTemplateName] = useState(""); // Nombre de la plantilla
   const [title, setTitle] = useState(""); // Nombre de la plantilla
@@ -51,29 +61,30 @@ const TemplateEditor = () => {
 
   return (
     <div>
+      <NavigationBar />
       <div className="row row-custom-settings">
         <div className="col-12">
-          <h1>Editor de plantillas</h1>
+          <h1>{txt.title}</h1>
         </div>
       </div>
       <div className="row row-custom-settings">
         <div className="col-md-7">
           <div className="center-col-container ">
             <div className="template-box">
-              <h2>Nombre la plantilla</h2>
+              <h2>{txt.templateName}</h2>
               <input
                 value={templateName}
                 type="text"
-                placeholder="Choose a name for the section"
+                placeholder={txt.tempNamePlaceholder}
                 onChange={(e) => {
                   setTemplateName(e.target.value);
                 }}
               ></input>
-              <h2>Título</h2>
+              <h2>{txt.templateTitle}</h2>
               <input
                 value={title}
                 type="text"
-                placeholder="Choose a name for the section"
+                placeholder={txt.tempTitlePlaceholder}
                 onChange={(e) => {
                   setTitle(e.target.value);
                 }}
@@ -81,13 +92,13 @@ const TemplateEditor = () => {
             </div>
 
             <div className="template-box">
-              <h2>Agrega una nueva sección a la plantilla</h2>
+              <h2>{txt.addNewSection}</h2>
               <div>
-                <label>Título de la sección</label>
+                <label>{txt.sectionTitle}</label>
                 <input
                   value={currentSection.name}
                   type="text"
-                  placeholder="Choose a name for the section"
+                  placeholder={txt.secTitlePlaceholder}
                   onChange={(e) => {
                     setCurrentSection({
                       ...currentSection,
@@ -96,7 +107,7 @@ const TemplateEditor = () => {
                   }}
                 ></input>
               </div>
-              <label>Clase de sección</label>
+              <label>{txt.sectionClass}</label>
               <select
                 value={currentSection.component}
                 onChange={(e) => {
@@ -106,16 +117,15 @@ const TemplateEditor = () => {
                   });
                 }}
               >
-                <option value="">Select a section class</option>
-                <option value="header-section">Header</option>
-                <option value="text-section">Text block</option>
-                <option value="table-section">Table</option>
-                <option value="journal-section">Journal</option>
-                <option value="form-section">Form</option>
+                <option value="">{txt.secClassPlaceholder}</option>
+                <option value="header-section">{txt.compNames.header}</option>
+                <option value="text-section">{txt.compNames.textBlock}</option>
+                <option value="table-section">{txt.compNames.table}</option>
+                <option value="journal-section">{txt.compNames.journal}</option>
+                <option value="form-section">{txt.compNames.form}</option>
               </select>
               <TableSectionConfig />
               <div>
-                {" "}
                 <Button
                   block
                   variant="success"
@@ -128,10 +138,10 @@ const TemplateEditor = () => {
                     clearSectionForm();
                   }}
                 >
-                  Agregar sección
+                  {txt.addNewSection}
                 </Button>
                 <Button block variant="outline-dark" className="block-btn">
-                  Limpiar
+                  {gtxt.clear}
                 </Button>
               </div>
             </div>

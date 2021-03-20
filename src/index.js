@@ -5,11 +5,14 @@ import "./index.css";
 // import reportWebVitals from './reportWebVitals';
 
 import { AuthProvider } from "./Auth";
+import { LanguageProvider } from "./Lang";
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
-      <App />
+      <LanguageProvider>
+        <App />
+      </LanguageProvider>
     </AuthProvider>
   </React.StrictMode>,
   document.getElementById("root")

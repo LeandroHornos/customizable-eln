@@ -7,6 +7,7 @@ import "./App.css";
 /* Firebase */
 import { AuthContext } from "./Auth";
 
+
 // Components
 import Dashboard from "./Components/Dashboard";
 import Register from "./Components/Register";
@@ -14,7 +15,6 @@ import Login from "./Components/Login";
 import SignOut from "./Components/SignOut";
 import Welcome from "./Components/Welcome";
 import TemplateEditor from "./Components/TemplateEditor";
-import { LanguageProvider } from "./Lang";
 
 import "./App.css";
 
@@ -22,7 +22,7 @@ function App() {
   // const currentLang = "es";
   const { currentUser } = useContext(AuthContext);
   return (
-    <LanguageProvider>
+
       <Router>
         <div style={{ boxSizing: "border-box" }}>
           <Switch>
@@ -44,7 +44,7 @@ function App() {
           </Switch>
         </div>
       </Router>
-    </LanguageProvider>
+
   );
 }
 

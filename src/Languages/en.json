@@ -1,5 +1,47 @@
 {
-  "hello": "Hello",
-  "save": "Save",
-  "update": "Update"
+  "general": {
+    "clear": "Clear",
+    "hello": "Hello",
+    "save": "Save",
+    "update": "Update",
+    "home": "Home",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Log In",
+    "signUp": "Sign Up"
+  },
+  "components": {
+    "dashboard": { "title": "Home", "templateEditor": "Template Editor" },
+    "login": {
+      "noAccount": "I don't have an account yet",
+      "emailPlaceholder": "ie: name@email.com",
+      "passPlaceholder": "Your password"
+    },
+    "register": {
+      "haveAccount": "I already have an account",
+      "emailPlaceholder": "ie: name@email.com",
+      "passPlaceholder": "Your password"
+    },
+    "signout": {},
+    "templateEditor": {
+      "title": "Template Editor",
+      "templateName": "Template Name",
+      "tempNamePlaceholder": "ie: General template",
+      "templateTitle": "Title",
+      "tempTitlePlaceholder": "ie: Report",
+      "addNewSection": "Add a new section",
+      "sectionTitle": "Section Title",
+      "secTitlePlaceholder": "Choose a name for the section",
+      "sectionClass": "Section class",
+      "secClassPlaceholder": "Choose a componet",
+      "compNames": {
+        "header": "Header",
+        "textBlock": "Text block",
+        "table": "Table",
+        "journal": "Journal",
+        "form": "form"
+      }
+    },
+    "welcome": {}
+  }
 }

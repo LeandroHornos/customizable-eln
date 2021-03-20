@@ -1,5 +1,50 @@
 {
-  "hello": "Hola",
-  "save": "Guardar",
-  "update": "Actualizar"
+  "general": {
+    "clear": "limpiar",
+    "hello": "Hola",
+    "save": "Guardar",
+    "update": "Actualizar",
+    "home": "Inicio",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "signIn": "Ingresar",
+    "signUp": "Registrarse"
+  },
+  "components": {
+    "dashboard": {
+      "title": "Inicio",
+      "templateEditor": "Editor de plantillas"
+    },
+    "login": {
+      "noAccount": "Todavía no tengo una cuenta",
+      "emailPlaceholder": "Ej: nombre@correo.com",
+      "passPlaceholder": "Tu contraseña"
+    },
+    "register": {
+      "haveAccount": "Ya tengo una cuenta",
+      "emailPlaceholder": "Ej: nombre@correo.com",
+      "passPlaceholder": "Tu contraseña"
+    },
+    "templateEditor": {
+      "title": "Editor de Plantillas",
+      "templateName": "Nombre de la plantilla",
+      "tempNamePlaceholder": "Ej: plantilla general",
+      "templateTitle": "Titulo",
+      "tempTitlePlaceholder": "Ej: Reporte",
+      "addNewSection": "Añadir una nueva sección",
+      "sectionTitle": "Título de la sección",
+      "secTitlePlaceholder": "Elige un nombre para la sección",
+      "sectionClass": "Clase de la sección",
+      "secClassPlaceholder": "Elige un componente",
+      "compNames": {
+        "header": "Encabezado",
+        "textBlock": "Bloque de texto",
+        "table": "Tabla",
+        "journal": "Registro",
+        "form": "formulario"
+      }
+    },
+    "signout": {},
+    "welcome": {}
+  }
 }

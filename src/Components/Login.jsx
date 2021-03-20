@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
+// Context 
+import { LanguageContext } from "../Lang";
 
 // Firebase
 import firebaseApp from "../firebaseApp";
 
+// React Bootstrap Components
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
+// Components
+import NavigationBar from "./NavigationBar";
+
 function Login() {
+  const { dictionary } = useContext(LanguageContext);
+  const txt = dictionary.components.login;
+  const gtxt = dictionary.general;
   const history = useHistory();
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
@@ -25,29 +35,18 @@ function Login() {
 
   return (
     <div>
+      <NavigationBar />
       <div className="row row-custom-settings min-h-80">
         <div className="col-md-3"></div>
         <div className="col-md-6">
           <div className="center-col-container">
-            <Link
-              style={{
-                fontSize: "3.5em",
-                textAlign: "center",
-                color: "rgba(250,250,250,0.55)",
-              }}
-              to="/"
-            >
-              Home
-            </Link>
-            <h1 className="page-title" style={{ fontSize: "2.2em" }}>
-              Sign In
-            </h1>
+            <h1 style={{ fontSize: "2.2em", color: "red" }}>{gtxt.signIn}</h1>
             <Form>
               <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email</Form.Label>
+                <Form.Label>{gtxt.email}</Form.Label>
                 <Form.Control
                   type="email"
-                  placeholder="Enter email"
+                  placeholder={txt.emailPlaceholder}
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
@@ -55,10 +54,10 @@ function Login() {
               </Form.Group>
 
               <Form.Group controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
+                <Form.Label>{gtxt.password}</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="Password"
+                  placeholder={txt.passPlaceholder}
                   onChange={(e) => {
                     setPassword(e.target.value);
                   }}
@@ -66,23 +65,23 @@ function Login() {
               </Form.Group>
               <Button
                 block
-                variant="success"
+                className="dark-btn"
                 type="submit"
                 onClick={(e) => {
                   e.preventDefault();
                   handleSignIn();
                 }}
               >
-                Enter
+                {gtxt.signIn}
               </Button>
               <Button
                 block
-                variant="dark"
+                variant="outline-info"
                 onClick={(e) => {
                   history.push("/register");
                 }}
               >
-                I don't have an account
+                {txt.noAccount}
               </Button>
             </Form>
           </div>

@@ -90,3 +90,16 @@ input[type="text"] {
   border-radius: 5px;
   box-shadow: inset 0px 2px 8px 1px rgba(0, 0, 0, 0.1);
 }
+
+/* Button Styles */
+.dark-btn {
+  background-color: rgb(41, 43, 44);
+}
+
+.dark-btn:hover {
+  background-color: rgb(29, 96, 122);
+}
+
+.dark-btn:active {
+  background-color: rgb(30, 38, 61);
+}

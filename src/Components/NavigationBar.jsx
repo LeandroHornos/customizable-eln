@@ -8,7 +8,9 @@ import LangSelector from "./LangSelector";
 const NavigationBar = () => {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Navbar.Brand href="/">Lean's Customizable ELN</Navbar.Brand>
+      <Navbar.Brand href="/">
+        LEAN<span style={{ color: "red" }}>ELN</span>
+      </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
