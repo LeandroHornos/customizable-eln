@@ -124,7 +124,12 @@ const TemplateEditor = () => {
                 <option value="journal-section">{txt.compNames.journal}</option>
                 <option value="form-section">{txt.compNames.form}</option>
               </select>
-              <TableSectionConfig />
+              {currentSection.component === "table-section" && (
+                <TableSectionConfig />
+              )}
+              {currentSection.component === "form-section" && (
+                <FormSectionConfig />
+              )}
               <div>
                 <Button
                   block
@@ -152,7 +157,9 @@ const TemplateEditor = () => {
             className="template-box"
             style={{ backgroundColor: "rgb(50,50,50)" }}
           >
-            <h2 className="text-center temp-preview-header">{txt.templatePreviewHeader}</h2>
+            <h2 className="text-center temp-preview-header">
+              {txt.templatePreviewHeader}
+            </h2>
             {(sections.length > 0 || title != "") && (
               <div
                 className="section-config-box"
@@ -186,10 +193,57 @@ const TemplateEditor = () => {
 
 // SUBCOMPONENTS
 
-const TableSectionConfig = (props) => {
-  const emptyCol = { name: "", type: "", order: null, unit: "" };
+const FormSectionConfig = (props) => {
+  const emptyField = { id: "", name: "", order: null, type: "", unit: "" };
   const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
-  // const [colNum, setColNum] = useState(0); // Cuantas columnas va a tener la tabla
+  const [fields, setFields] = useState([]);
+
+  const handleFields = (fieldNum, currentFields) => {
+    console.log("Current fields", currentFields);
+    console.log("Current fields length", currentFields.length);
+    console.log("fieldNum", fieldNum);
+
+    let flds = currentFields;
+    let delta = fieldNum - currentFields.length;
+
+    if (delta > 0) {
+      console.log("hay campos de menos");
+      for (var y = 0; y < delta; y++) {
+        console.log({ ...emptyField, order: y });
+        flds.push({ ...emptyField, order: y });
+      }
+    } else {
+      console.log("hay campos de mas");
+      let k = -1 * delta;
+      flds = fields;
+      for (var z = 0; z < k; z++) {
+        flds.pop();
+        console.log("pop!")
+      }
+    }
+
+    setFields(flds);
+  };
+  return (
+    <div className="section-config-box">
+      <h3>Form Section Config</h3>
+      <p>How many fields must the form have?</p>
+      <select
+        onChange={(e) => {
+          handleFields(e.target.value, fields);
+        }}
+      >
+        {ops.map((flds) => {
+          return <option value={flds}>{flds}</option>;
+        })}
+      </select>
+    </div>
+  );
+};
+
+const TableSectionConfig = (props) => {
+  const emptyCol = { id: "", name: "", order: null, type: "", unit: "" };
+  const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
   const [columns, setColumns] = useState([emptyCol]); // Las columnas con su info
 
   // Efects
@@ -222,7 +276,7 @@ const TableSectionConfig = (props) => {
   return (
     <div className="section-config-box">
       <h3>Table Config</h3>
-      <p>How many columns does de table must have?</p>
+      <p>How many columns must the table have?</p>
       <select
         onChange={(e) => {
           handleColumns(e.target.value, columns);
