@@ -77,6 +77,10 @@ input[type="text"] {
   padding: 10px;
 }
 
+.temp-preview-header {
+  color: white;
+}
+
 .template-box {
   margin: 10px 0px;
   padding: 10px;

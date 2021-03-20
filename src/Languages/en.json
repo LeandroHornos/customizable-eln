@@ -24,23 +24,25 @@
     },
     "signout": {},
     "templateEditor": {
-      "title": "Template Editor",
-      "templateName": "Template Name",
-      "tempNamePlaceholder": "ie: General template",
-      "templateTitle": "Title",
-      "tempTitlePlaceholder": "ie: Report",
       "addNewSection": "Add a new section",
+      "compNames": {
+        "form": "form",
+        "header": "Header",
+        "journal": "Journal",
+        "table": "Table",
+        "textBlock": "Text block"
+      },
+      "secClassPlaceholder": "Choose a componet",
+      "sectionClass": "Section class",
       "sectionTitle": "Section Title",
       "secTitlePlaceholder": "Choose a name for the section",
-      "sectionClass": "Section class",
-      "secClassPlaceholder": "Choose a componet",
-      "compNames": {
-        "header": "Header",
-        "textBlock": "Text block",
-        "table": "Table",
-        "journal": "Journal",
-        "form": "form"
-      }
+      "templateName": "Template Name",
+      "templatePreviewHeader": "Template preview",
+      "templateSaveButton": "Save template",
+      "templateTitle": "Title",
+      "tempNamePlaceholder": "ie: General template",
+      "tempTitlePlaceholder": "ie: Report",
+      "title": "Template Editor"
     },
     "welcome": {}
   }

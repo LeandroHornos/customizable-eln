@@ -148,19 +148,27 @@ const TemplateEditor = () => {
           </div>
         </div>
         <div className="col-md-5">
-          <div className="template-box">
-            <h2 className="text-center">Vista previa de la plantilla</h2>
-            <div className="section-config-box">
-              <h5 className="text-center">{title}</h5>
-              {sections.map((section) => {
-                return (
-                  <div>
-                    <h5>{section.name}</h5>
-                    <p>{section.component}</p>
-                  </div>
-                );
-              })}
-            </div>
+          <div
+            className="template-box"
+            style={{ backgroundColor: "rgb(50,50,50)" }}
+          >
+            <h2 className="text-center temp-preview-header">{txt.templatePreviewHeader}</h2>
+            {(sections.length > 0 || title != "") && (
+              <div
+                className="section-config-box"
+                style={{ backgroundColor: "white" }}
+              >
+                <h5 className="text-center">{title}</h5>
+                {sections.map((section) => {
+                  return (
+                    <div>
+                      <h5>{section.name}</h5>
+                      <p>{section.component}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
           <Button
             block
@@ -168,7 +176,7 @@ const TemplateEditor = () => {
             className="block-btn"
             onClick={saveNewTemplate}
           >
-            Save Template
+            {txt.templateSaveButton}
           </Button>
         </div>
       </div>
