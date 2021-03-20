@@ -14,6 +14,7 @@ import Login from "./Components/Login";
 import SignOut from "./Components/SignOut";
 import Welcome from "./Components/Welcome";
 import TemplateEditor from "./Components/TemplateEditor";
+import { LanguageProvider } from "./Lang";
 
 import "./App.css";
 
@@ -21,27 +22,29 @@ function App() {
   // const currentLang = "es";
   const { currentUser } = useContext(AuthContext);
   return (
-    <Router>
-      <div style={{ boxSizing: "border-box" }}>
-        <Switch>
-          <Route exact path="/">
-            {currentUser ? <Dashboard /> : <Welcome />}
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/register">
-            <Register />
-          </Route>
-          <Route exact path="/exit">
-            <SignOut />
-          </Route>
-          <Route exact path="/template-editor">
-            <TemplateEditor />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <div style={{ boxSizing: "border-box" }}>
+          <Switch>
+            <Route exact path="/">
+              {currentUser ? <Dashboard /> : <Welcome />}
+            </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <Route exact path="/register">
+              <Register />
+            </Route>
+            <Route exact path="/exit">
+              <SignOut />
+            </Route>
+            <Route exact path="/template-editor">
+              <TemplateEditor />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
+    </LanguageProvider>
   );
 }
 

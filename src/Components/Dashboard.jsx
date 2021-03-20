@@ -5,25 +5,30 @@ import { useHistory } from "react-router-dom";
 //
 import Button from "react-bootstrap/Button";
 
+import NavigationBar from "./NavigationBar";
+
 const Dashboard = () => {
   const history = useHistory();
   return (
-    <div className="row row-custom-settings min-h-80">
-      <div className="col-md-3"></div>
-      <div className="col-md-6">
-        <div className="center-col-container">
-          <h1 style={styles.h1}>Lets start</h1>
-          <Button
-            onClick={() => {
-              history.push("/template-editor");
-            }}
-          >
-            Template Editor
-          </Button>
+    <React.Fragment>
+      <NavigationBar />
+      <div className="row row-custom-settings min-h-80">
+        <div className="col-md-3"></div>
+        <div className="col-md-6">
+          <div className="center-col-container">
+            <h1 style={styles.h1}>Lets start</h1>
+            <Button
+              onClick={() => {
+                history.push("/template-editor");
+              }}
+            >
+              Template Editor
+            </Button>
+          </div>
         </div>
+        <div className="col-md-3"></div>
       </div>
-      <div className="col-md-3"></div>
-    </div>
+    </React.Fragment>
   );
 };
 

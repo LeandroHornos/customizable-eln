@@ -4,12 +4,11 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
+import LangSelector from "./LangSelector";
 const NavigationBar = () => {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Navbar.Brand href="/">
-        Checklist<span style={{ color: "red" }}>-</span>me
-      </Navbar.Brand>
+      <Navbar.Brand href="/">Lean's Customizable ELN</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
@@ -28,6 +27,7 @@ const NavigationBar = () => {
           </NavDropdown>
         </Nav>
         <Nav>
+          <LangSelector />
           <Nav.Link href="/exit">Sign Out</Nav.Link>
         </Nav>
       </Navbar.Collapse>
