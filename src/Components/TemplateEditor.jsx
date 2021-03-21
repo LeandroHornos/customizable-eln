@@ -194,16 +194,16 @@ const TemplateEditor = () => {
 // SUBCOMPONENTS
 
 const FormSectionConfig = (props) => {
-  const emptyField = { id: "", name: "", order: null, type: "", unit: "" };
+  const emptyField = { id: "", name: "", order: 0, type: "", unit: "" };
   const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
-  const [fields, setFields] = useState([]);
+  const [fields, setFields] = useState([emptyField]);
 
   const handleFields = (fieldNum, currentFields) => {
     console.log("Current fields", currentFields);
     console.log("Current fields length", currentFields.length);
     console.log("fieldNum", fieldNum);
 
-    let flds = currentFields;
+    let flds = [...currentFields];
     let delta = fieldNum - currentFields.length;
 
     if (delta > 0) {
@@ -215,10 +215,10 @@ const FormSectionConfig = (props) => {
     } else {
       console.log("hay campos de mas");
       let k = -1 * delta;
-      flds = fields;
+      // flds = [...fields];
       for (var z = 0; z < k; z++) {
         flds.pop();
-        console.log("pop!")
+        console.log("pop!");
       }
     }
 
@@ -237,8 +237,34 @@ const FormSectionConfig = (props) => {
           return <option value={flds}>{flds}</option>;
         })}
       </select>
+      <FormSectionFieldList fields={fields} />
     </div>
   );
+};
+
+const FormSectionFieldList = (props) => {
+  return props.fields.map((field) => {
+    return (
+      <div key={`field-${field.order}`}>
+        <div>
+          <label>Nombre:</label>
+          <input type="text"></input>
+        </div>
+        <div>
+          <label>Clase:</label>
+          <select>
+            <option value=""></option>
+            <option value="text">Texto</option>
+            <option value="number">Numero</option>
+          </select>
+        </div>
+        <div>
+          <label>Unidad:</label>
+          <input type="text"></input>
+        </div>
+      </div>
+    );
+  });
 };
 
 const TableSectionConfig = (props) => {
