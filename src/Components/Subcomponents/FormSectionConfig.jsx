@@ -4,7 +4,6 @@ indicar cuantos campos va a contener la seccion de formulario
 y brinda una lista de inputs donde permite asignarle un nombre
 una clase (numero o texto) y una unidad a cada campo. */
 
-
 /* FormSectionFieldList: genera la lista de inputs para cada campo,
 a partir del número de campos a generar, que recibe por props. Además,
 maneja los cambios de cada uno de los campos y los recopila en un
@@ -72,7 +71,11 @@ const FormSectionConfig = (props) => {
         }}
       >
         {ops.map((flds) => {
-          return <option value={flds}>{flds}</option>;
+          return (
+            <option key={Utils.makeId(4)} value={flds}>
+              {flds}
+            </option>
+          );
         })}
       </select>
       <FormSectionFieldList fields={fields} setFields={setFields} />
@@ -136,55 +139,59 @@ const FormSectionFieldList = (props) => {
     console.log("campo editado:", newFields);
   };
 
-  return loadedFields.map((field, index) => {
-    // console.log("FIeld es:", field);
-    return (
-      <div key={field.id} style={{ margin: "10px 0px" }}>
-        <Form>
-          <Row>
-            <Col sm={1}>{field.order + 1}</Col>
-            <Col sm={4}>
-              <Form.Control
-                style={{ marginBottom: "10px" }}
-                placeholder="Nombre"
-                value={field.name}
-                onChange={(e) => {
-                  handleNameChange(field.id, e.target.value);
-                }}
-              />
-            </Col>
-            <Col sm={4}>
-              <Form.Control
-                style={{ marginBottom: "10px" }}
-                as="select"
-                value={field.type}
-                onChange={(e) => {
-                  handleTypeChange(field.id, e.target.value);
-                  if (e.target.value == "text") {
-                    handleUnitChange(field.id, "");
-                  }
-                }}
-              >
-                <option value="text">Texto</option>
-                <option value="number">Numero</option>
-              </Form.Control>
-            </Col>
-            <Col sm={3}>
-              <Form.Control
-                readOnly={field.type === "text"}
-                style={{ marginBottom: "10px" }}
-                placeholder="Unidad"
-                value={field.unit}
-                onChange={(e) => {
-                  handleUnitChange(field.id, e.target.value);
-                }}
-              />
-            </Col>
-          </Row>
-        </Form>
-      </div>
-    );
-  });
+  return (
+    <React.Fragment>
+      {loadedFields.map((field) => {
+        // console.log("FIeld es:", field);
+        return (
+          <div key={field.id} style={{ margin: "10px 0px" }}>
+            <Form>
+              <Row>
+                <Col sm={1}>{field.order + 1}</Col>
+                <Col sm={4}>
+                  <Form.Control
+                    style={{ marginBottom: "10px" }}
+                    placeholder="Nombre"
+                    value={field.name}
+                    onChange={(e) => {
+                      handleNameChange(field.id, e.target.value);
+                    }}
+                  />
+                </Col>
+                <Col sm={4}>
+                  <Form.Control
+                    style={{ marginBottom: "10px" }}
+                    as="select"
+                    value={field.type}
+                    onChange={(e) => {
+                      handleTypeChange(field.id, e.target.value);
+                      if (e.target.value == "text") {
+                        handleUnitChange(field.id, "");
+                      }
+                    }}
+                  >
+                    <option value="text">Texto</option>
+                    <option value="number">Numero</option>
+                  </Form.Control>
+                </Col>
+                <Col sm={3}>
+                  <Form.Control
+                    readOnly={field.type === "text"}
+                    style={{ marginBottom: "10px" }}
+                    placeholder="Unidad"
+                    value={field.unit}
+                    onChange={(e) => {
+                      handleUnitChange(field.id, e.target.value);
+                    }}
+                  />
+                </Col>
+              </Row>
+            </Form>
+          </div>
+        );
+      })}
+    </React.Fragment>
+  );
 };
 
 export default FormSectionConfig;
