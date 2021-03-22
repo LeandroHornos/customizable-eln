@@ -38,13 +38,8 @@ const TemplateEditor = () => {
   const [currentSection, setCurrentSection] = useState({
     ...sectionSchema,
     id: Utils.makeId(16),
-  });
-  // useEffect(() => {
-  //   console.log(
-  //     "TemplateEditor dice que se ha agregado una nueva seccion, las que ahora son:",
-  //     sections
-  //   );
-  // }, [sections]);
+  }); // para comenzar crea un único objeto seccion vacío en secciones, y le asigna un id
+
 
   const clearSectionForm = () => {
     setCurrentSection({
