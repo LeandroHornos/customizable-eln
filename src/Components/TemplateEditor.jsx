@@ -35,22 +35,23 @@ const TemplateEditor = () => {
   const [templateName, setTemplateName] = useState(""); // Nombre de la plantilla
   const [title, setTitle] = useState(""); // Nombre de la plantilla
   const [sections, setSections] = useState([]);
-  const [currentSection, setCurrentSection] = useState(sectionSchema);
-  const [sectionIsComplete, setSectionIsComplete] = useState(false);
+  const [currentSection, setCurrentSection] = useState({
+    ...sectionSchema,
+    id: Utils.makeId(16),
+  });
+  // useEffect(() => {
+  //   console.log(
+  //     "TemplateEditor dice que se ha agregado una nueva seccion, las que ahora son:",
+  //     sections
+  //   );
+  // }, [sections]);
+
   const clearSectionForm = () => {
-    setCurrentSection(sectionSchema);
+    setCurrentSection({
+      ...sectionSchema,
+      id: Utils.makeId(16),
+    });
   };
-
-  useEffect(() => {
-    const { name, component } = currentSection;
-    if (name !== "" && component !== "") {
-      setSectionIsComplete(true);
-    }
-  }, [currentSection]);
-
-  useEffect(() => {
-    console.log("se ha agregado una nueva seccion", sections);
-  }, [sections]);
 
   const saveNewTemplate = async () => {
     let template = { ...templateSchema, title, sections, creatorId: "" };
@@ -63,6 +64,41 @@ const TemplateEditor = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const addCurrentSectionToTemplate = (sectionData) => {
+    const newSection = { ...currentSection, data: sectionData };
+    // Compruebo si ya existe una seccion con el id de la actual:
+    const sectionExists = sections.some(
+      (section) => section.id === currentSection.id
+    );
+
+    // Si la seccion ya existe reemplazo el objeto
+    if (sectionExists) {
+      console.log("la seccion ya existe, actualizando");
+      let updatedSections = sections.map((section) => {
+        if (section.id === currentSection.id) {
+          section = newSection;
+        }
+        return section;
+      });
+      setSections(updatedSections);
+      console.log("se han actualizado las secciones:", updatedSections);
+      console.log("hay este numero de secciones:", updatedSections.length);
+    } else {
+      // Si no existe el objeto agrego uno nuevo:
+      console.log(
+        "estas son las secciones antes de agregar una nueva:",
+        sections
+      );
+      let updatedSections = sections;
+      updatedSections.push(newSection);
+      setSections(updatedSections);
+      console.log("Se han actualizado las secciones", updatedSections);
+      console.log("hay este numero de secciones:", updatedSections.length);
+    }
+
+    clearSectionForm();
   };
 
   return (
@@ -134,23 +170,9 @@ const TemplateEditor = () => {
                 <TableSectionConfig />
               )}
               {currentSection.component === "form-section" && (
-                <FormSectionConfig />
+                <FormSectionConfig saveChanges={addCurrentSectionToTemplate} />
               )}
               <div>
-                <Button
-                  block
-                  variant="success"
-                  className="block-btn"
-                  onClick={() => {
-                    // console.log("Nueva seccion", currentSection);
-                    if (sectionIsComplete) {
-                      setSections([...sections, currentSection]);
-                    }
-                    clearSectionForm();
-                  }}
-                >
-                  {txt.addNewSection}
-                </Button>
                 <Button block variant="outline-dark" className="block-btn">
                   {gtxt.clear}
                 </Button>
@@ -214,7 +236,9 @@ const FormSectionConfig = (props) => {
     unit: "",
   };
   const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
-  const [fields, setFields] = useState([emptyField]);
+  const [fields, setFields] = useState([
+    { ...emptyField, id: Utils.makeId(16) },
+  ]);
 
   const handleFields = (fieldNum, currentFields) => {
     // console.log("Current fields", currentFields);
@@ -227,7 +251,11 @@ const FormSectionConfig = (props) => {
     if (delta > 0) {
       // console.log("hay campos de menos");
       for (var y = 0; y < delta; y++) {
-        flds.push({ ...emptyField, order: y+1, id: Utils.makeId(16) });
+        flds.push({
+          ...emptyField,
+          order: y + currentFields.length,
+          id: Utils.makeId(16),
+        });
       }
     } else {
       // console.log("hay campos de mas");
@@ -254,7 +282,17 @@ const FormSectionConfig = (props) => {
           return <option value={flds}>{flds}</option>;
         })}
       </select>
-      <FormSectionFieldList fields={fields} />
+      <FormSectionFieldList fields={fields} setFields={setFields} />
+      <Button
+        block
+        variant="success"
+        className="block-btn"
+        onClick={() => {
+          props.saveChanges({ fields });
+        }}
+      >
+        Agregar Nueva seccion
+      </Button>
     </div>
   );
 };
@@ -265,58 +303,61 @@ maneja los cambios de cada uno de los campos y los recopila en un
 array que le pasa al componente padre FormSectionConfig */
 
 const FormSectionFieldList = (props) => {
-  const [editedFields, setEditedFields] = useState(props.fields);
+  const [loadedFields, setLoadedFields] = useState(props.fields);
 
   useEffect(() => {
-    setEditedFields(props.fields);
+    setLoadedFields(props.fields);
   }, [props]);
 
   const handleNameChange = (fieldId, name) => {
-    // console.log("editando nombre. Edited fields:", editedFields);
-    const newFields = editedFields.map((field) => {
+    // console.log("editando nombre. Edited fields:", loadedFields);
+    const newFields = loadedFields.map((field) => {
       if (fieldId === field.id) {
         field.name = name;
       }
       return field;
     });
-    setEditedFields(newFields);
+    props.setFields(newFields);
+    // setLoadedFields(newFields);
     console.log("HandleNameChange dice campo editado:", newFields);
   };
 
-  const handleClassChange = (fieldId, fieldClass) => {
-    // console.log("editando nombre. Edited fields:", editedFields);
-    const newFields = editedFields.map((field) => {
+  const handleTypeChange = (fieldId, fieldClass) => {
+    // console.log("editando nombre. Edited fields:", loadedFields);
+    const newFields = loadedFields.map((field) => {
       if (fieldId === field.id) {
         field.type = fieldClass;
       }
       return field;
     });
-    setEditedFields(newFields);
+    props.setFields(newFields);
+    // setLoadedFields(newFields);
     console.log("HanldeClassChange dice campo editado:", newFields);
   };
 
   const handleUnitChange = (fieldId, unit) => {
-    // console.log("editando nombre. Edited fields:", editedFields);
-    const newFields = editedFields.map((field) => {
+    // console.log("editando nombre. Edited fields:", loadedFields);
+    const newFields = loadedFields.map((field) => {
       if (fieldId === field.id) {
         field.unit = unit;
       }
       return field;
     });
-    setEditedFields(newFields);
+    props.setFields(newFields);
+    // setLoadedFields(newFields);
     console.log("campo editado:", newFields);
   };
 
-  return props.fields.map((field, index) => {
+  return loadedFields.map((field, index) => {
     // console.log("FIeld es:", field);
     return (
       <div key={field.id} style={{ margin: "10px 0px" }}>
         <Form>
           <Row>
-            <Col sm={1}>{field.order+1}</Col>
+            <Col sm={1}>{field.order + 1}</Col>
             <Col sm={4}>
               <Form.Control
-              style={{marginBottom: "10px"}}
+                style={{ marginBottom: "10px" }}
                 placeholder="Nombre"
                 value={field.name}
                 onChange={(e) => {
@@ -326,11 +367,14 @@ const FormSectionFieldList = (props) => {
             </Col>
             <Col sm={4}>
               <Form.Control
-              style={{marginBottom: "10px"}}
+                style={{ marginBottom: "10px" }}
                 as="select"
-                value={field.class}
+                value={field.type}
                 onChange={(e) => {
-                  handleClassChange(field.id, e.target.value);
+                  handleTypeChange(field.id, e.target.value);
+                  if (e.target.value == "text") {
+                    handleUnitChange(field.id, "");
+                  }
                 }}
               >
                 <option value="text">Texto</option>
@@ -339,8 +383,9 @@ const FormSectionFieldList = (props) => {
             </Col>
             <Col sm={3}>
               <Form.Control
-              style={{marginBottom: "10px"}}
-                placeholder="Unidad (opcional)"
+                readOnly={field.type === "text"}
+                style={{ marginBottom: "10px" }}
+                placeholder="Unidad"
                 value={field.unit}
                 onChange={(e) => {
                   handleUnitChange(field.id, e.target.value);
