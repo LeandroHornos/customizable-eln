@@ -19,6 +19,7 @@ import templateSchema from "../Models/templateSchema";
 // Components & Subcomponents
 import NavigationBar from "./NavigationBar";
 import FormSectionConfig from "./Subcomponents/FormSectionConfig";
+import TableSectionConfig from "./Subcomponents/TableSectionConfig";
 
 import Utils from "../utilities";
 
@@ -159,7 +160,7 @@ const TemplateEditor = () => {
                 <option value="form-section">{txt.compNames.form}</option>
               </select>
               {currentSection.component === "table-section" && (
-                <TableSectionConfig />
+                <TableSectionConfig saveColumns={addCurrentSectionToTemplate} />
               )}
               {currentSection.component === "form-section" && (
                 <FormSectionConfig saveFields={addCurrentSectionToTemplate} />
@@ -207,56 +208,6 @@ const TemplateEditor = () => {
           </Button>
         </div>
       </div>
-    </div>
-  );
-};
-
-// SUBCOMPONENTS
-const TableSectionConfig = (props) => {
-  const emptyCol = { id: "", name: "", order: null, type: "", unit: "" };
-  const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
-  const [columns, setColumns] = useState([emptyCol]); // Las columnas con su info
-
-  // Efects
-  const handleColumns = (colNum, currentCols) => {
-    // console.log("Current cols", currentCols);
-    // console.log("Current cols length", currentCols.length);
-    // console.log("colNum", colNum);
-
-    let cols = currentCols;
-    let delta = colNum - currentCols.length;
-
-    if (delta > 0) {
-      // console.log("hay columnas de menos");
-      for (var y = 0; y < delta; y++) {
-        // console.log({ ...emptyCol, order: y });
-        cols.push({ ...emptyCol, order: y });
-      }
-    } else {
-      // console.log("hay columnas de mas");
-      let k = -1 * delta;
-      cols = columns;
-      for (var z = 0; z < k; z++) {
-        cols.pop();
-      }
-    }
-
-    setColumns(cols);
-  };
-
-  return (
-    <div className="section-config-box">
-      <h3>Table Config</h3>
-      <p>How many columns must the table have?</p>
-      <select
-        onChange={(e) => {
-          handleColumns(e.target.value, columns);
-        }}
-      >
-        {ops.map((cols) => {
-          return <option value={cols}>{cols}</option>;
-        })}
-      </select>
     </div>
   );
 };
