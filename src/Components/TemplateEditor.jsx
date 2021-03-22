@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 
+// React Bootstrap
 import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
 
 // Firebase
 import firebaseApp from "../firebaseApp";
@@ -17,6 +21,8 @@ import templateSchema from "../Models/templateSchema";
 
 // Components
 import NavigationBar from "./NavigationBar";
+
+import Utils from "../utilities";
 
 const TemplateEditor = () => {
   const db = firebaseApp.firestore();
@@ -136,7 +142,7 @@ const TemplateEditor = () => {
                   variant="success"
                   className="block-btn"
                   onClick={() => {
-                    console.log("Nueva seccion", currentSection);
+                    // console.log("Nueva seccion", currentSection);
                     if (sectionIsComplete) {
                       setSections([...sections, currentSection]);
                     }
@@ -193,32 +199,43 @@ const TemplateEditor = () => {
 
 // SUBCOMPONENTS
 
+/* FormSectionConfig: muestra las opciones de configuración
+para una sección del tipo formulario. El componente permite
+indicar cuantos campos va a contener la seccion de formulario
+y brinda una lista de inputs donde permite asignarle un nombre
+una clase (numero o texto) y una unidad a cada campo. */
+
 const FormSectionConfig = (props) => {
-  const emptyField = { id: "", name: "", order: 0, type: "", unit: "" };
+  const emptyField = {
+    id: "",
+    name: "",
+    order: 0,
+    type: "text",
+    unit: "",
+  };
   const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
   const [fields, setFields] = useState([emptyField]);
 
   const handleFields = (fieldNum, currentFields) => {
-    console.log("Current fields", currentFields);
-    console.log("Current fields length", currentFields.length);
-    console.log("fieldNum", fieldNum);
+    // console.log("Current fields", currentFields);
+    // console.log("Current fields length", currentFields.length);
+    // console.log("fieldNum", fieldNum);
 
     let flds = [...currentFields];
     let delta = fieldNum - currentFields.length;
 
     if (delta > 0) {
-      console.log("hay campos de menos");
+      // console.log("hay campos de menos");
       for (var y = 0; y < delta; y++) {
-        console.log({ ...emptyField, order: y });
-        flds.push({ ...emptyField, order: y });
+        flds.push({ ...emptyField, order: y+1, id: Utils.makeId(16) });
       }
     } else {
-      console.log("hay campos de mas");
+      // console.log("hay campos de mas");
       let k = -1 * delta;
       // flds = [...fields];
       for (var z = 0; z < k; z++) {
         flds.pop();
-        console.log("pop!");
+        // console.log("pop!");
       }
     }
 
@@ -242,26 +259,96 @@ const FormSectionConfig = (props) => {
   );
 };
 
+/* FormSectionFieldList: genera la lista de inputs para cada campo,
+a partir del número de campos a generar, que recibe por props. Además,
+maneja los cambios de cada uno de los campos y los recopila en un
+array que le pasa al componente padre FormSectionConfig */
+
 const FormSectionFieldList = (props) => {
-  return props.fields.map((field) => {
+  const [editedFields, setEditedFields] = useState(props.fields);
+
+  useEffect(() => {
+    setEditedFields(props.fields);
+  }, [props]);
+
+  const handleNameChange = (fieldId, name) => {
+    // console.log("editando nombre. Edited fields:", editedFields);
+    const newFields = editedFields.map((field) => {
+      if (fieldId === field.id) {
+        field.name = name;
+      }
+      return field;
+    });
+    setEditedFields(newFields);
+    console.log("HandleNameChange dice campo editado:", newFields);
+  };
+
+  const handleClassChange = (fieldId, fieldClass) => {
+    // console.log("editando nombre. Edited fields:", editedFields);
+    const newFields = editedFields.map((field) => {
+      if (fieldId === field.id) {
+        field.type = fieldClass;
+      }
+      return field;
+    });
+    setEditedFields(newFields);
+    console.log("HanldeClassChange dice campo editado:", newFields);
+  };
+
+  const handleUnitChange = (fieldId, unit) => {
+    // console.log("editando nombre. Edited fields:", editedFields);
+    const newFields = editedFields.map((field) => {
+      if (fieldId === field.id) {
+        field.unit = unit;
+      }
+      return field;
+    });
+    setEditedFields(newFields);
+    console.log("campo editado:", newFields);
+  };
+
+  return props.fields.map((field, index) => {
+    // console.log("FIeld es:", field);
     return (
-      <div key={`field-${field.order}`}>
-        <div>
-          <label>Nombre:</label>
-          <input type="text"></input>
-        </div>
-        <div>
-          <label>Clase:</label>
-          <select>
-            <option value=""></option>
-            <option value="text">Texto</option>
-            <option value="number">Numero</option>
-          </select>
-        </div>
-        <div>
-          <label>Unidad:</label>
-          <input type="text"></input>
-        </div>
+      <div key={field.id} style={{ margin: "10px 0px" }}>
+        <Form>
+          <Row>
+            <Col sm={1}>{field.order+1}</Col>
+            <Col sm={4}>
+              <Form.Control
+              style={{marginBottom: "10px"}}
+                placeholder="Nombre"
+                value={field.name}
+                onChange={(e) => {
+                  handleNameChange(field.id, e.target.value);
+                }}
+              />
+            </Col>
+            <Col sm={4}>
+              <Form.Control
+              style={{marginBottom: "10px"}}
+                as="select"
+                value={field.class}
+                onChange={(e) => {
+                  handleClassChange(field.id, e.target.value);
+                }}
+              >
+                <option value="text">Texto</option>
+                <option value="number">Numero</option>
+              </Form.Control>
+            </Col>
+            <Col sm={3}>
+              <Form.Control
+              style={{marginBottom: "10px"}}
+                placeholder="Unidad (opcional)"
+                value={field.unit}
+                onChange={(e) => {
+                  handleUnitChange(field.id, e.target.value);
+                }}
+              />
+            </Col>
+          </Row>
+        </Form>
       </div>
     );
   });
@@ -274,21 +361,21 @@ const TableSectionConfig = (props) => {
 
   // Efects
   const handleColumns = (colNum, currentCols) => {
-    console.log("Current cols", currentCols);
-    console.log("Current cols length", currentCols.length);
-    console.log("colNum", colNum);
+    // console.log("Current cols", currentCols);
+    // console.log("Current cols length", currentCols.length);
+    // console.log("colNum", colNum);
 
     let cols = currentCols;
     let delta = colNum - currentCols.length;
 
     if (delta > 0) {
-      console.log("hay columnas de menos");
+      // console.log("hay columnas de menos");
       for (var y = 0; y < delta; y++) {
-        console.log({ ...emptyCol, order: y });
+        // console.log({ ...emptyCol, order: y });
         cols.push({ ...emptyCol, order: y });
       }
     } else {
-      console.log("hay columnas de mas");
+      // console.log("hay columnas de mas");
       let k = -1 * delta;
       cols = columns;
       for (var z = 0; z < k; z++) {
