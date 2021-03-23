@@ -101,6 +101,9 @@ const FormSectionConfig = (props) => {
 };
 
 const FormSectionFieldList = (props) => {
+  const { dictionary } = useContext(LanguageContext);
+  // const txt = dictionary.subcomponents.FormSectionConfig;
+  const gtxt = dictionary.general;
   const [loadedFields, setLoadedFields] = useState(props.fields);
 
   useEffect(() => {
@@ -158,7 +161,7 @@ const FormSectionFieldList = (props) => {
                 <Col sm={4}>
                   <Form.Control
                     style={{ marginBottom: "10px" }}
-                    placeholder="Nombre"
+                    placeholder={gtxt.name}
                     value={field.name}
                     onChange={(e) => {
                       handleNameChange(field.id, e.target.value);
@@ -177,15 +180,15 @@ const FormSectionFieldList = (props) => {
                       }
                     }}
                   >
-                    <option value="text">Texto</option>
-                    <option value="number">Numero</option>
+                    <option value="text">{gtxt.text}</option>
+                    <option value="number">{gtxt.number}</option>
                   </Form.Control>
                 </Col>
                 <Col sm={3}>
                   <Form.Control
                     readOnly={field.type === "text"}
                     style={{ marginBottom: "10px" }}
-                    placeholder="Unidad"
+                    placeholder={gtxt.unit}
                     value={field.unit}
                     onChange={(e) => {
                       handleUnitChange(field.id, e.target.value);

@@ -8,7 +8,10 @@
     "email": "Email",
     "password": "Password",
     "signIn": "Log In",
-    "signUp": "Sign Up"
+    "signUp": "Sign Up",
+    "Text": "Text",
+    "Number": "Number",
+    "Unit": "Unit"
   },
   "components": {
     "dashboard": { "title": "Home", "templateEditor": "Template Editor" },
@@ -50,6 +53,11 @@
     "FormSectionConfig": {
       "title": "Form Section Configurarion",
       "explanation": "This section adds a form composed by fields that can be completed with short strings of text or numbers. If a number field is selected, a unit can be asigned to it. This component is particularly suitable for the situation where a group of succint data needs to be recorded.",
+      "saveSection": "Save and add to template"
+    },
+    "TableSectionConfig": {
+      "title": "Table Section Configurarion",
+      "explanation": "This section provides a table, in wich the different categories of data are distributed in columns, while entries are added as rows. Columns can be composed of text or numbers. If you choose a number column, you can asing a unit to it.",
       "saveSection": "Save and add to template"
     }
   }

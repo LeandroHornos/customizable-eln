@@ -23,6 +23,9 @@ import { LanguageContext } from "../../Lang";
 import Utils from "../../utilities";
 
 const TableSectionConfig = (props) => {
+  const { dictionary } = useContext(LanguageContext);
+  const txt = dictionary.subcomponents.TableSectionConfig;
+  const gtxt = dictionary.general;
   const emptyCol = {
     id: "",
     name: "",
@@ -70,8 +73,8 @@ const TableSectionConfig = (props) => {
   };
   return (
     <div className="section-config-box">
-      <h3>Table section config</h3>
-      <p>How many columns must the form have?</p>
+      <h3>{txt.title}</h3>
+      <p>{txt.explanation}</p>
       <select
         value={columns.length}
         onChange={(e) => {
@@ -96,7 +99,7 @@ const TableSectionConfig = (props) => {
           props.saveSection({ columns });
         }}
       >
-        Agregar Nueva seccion
+        {txt.saveSection}
       </Button>
     </div>
   );
