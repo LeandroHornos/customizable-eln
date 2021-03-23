@@ -45,5 +45,12 @@
       "title": "Template Editor"
     },
     "welcome": {}
+  },
+  "subcomponents": {
+    "FormSectionConfig": {
+      "title": "Form Section Configurarion",
+      "explanation": "This section adds a form composed by fields that can be completed with short strings of text or numbers. If a number field is selected, a unit can be asigned to it. This component is particularly suitable for the situation where a group of succint data needs to be recorded.",
+      "saveSection": "Save and add to template"
+    }
   }
 }

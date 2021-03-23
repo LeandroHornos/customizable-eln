@@ -17,6 +17,9 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
+// Context
+import { LanguageContext } from "../../Lang";
+
 import Utils from "../../utilities";
 
 const TableSectionConfig = (props) => {
@@ -67,9 +70,10 @@ const TableSectionConfig = (props) => {
   };
   return (
     <div className="section-config-box">
-      <h3>Column Section Config Sarasaaaa</h3>
+      <h3>Table section config</h3>
       <p>How many columns must the form have?</p>
       <select
+        value={columns.length}
         onChange={(e) => {
           handleColumns(e.target.value, columns);
           console.log(columns);
@@ -89,7 +93,7 @@ const TableSectionConfig = (props) => {
         variant="success"
         className="block-btn"
         onClick={() => {
-          props.saveColumns({ columns });
+          props.saveSection({ columns });
         }}
       >
         Agregar Nueva seccion

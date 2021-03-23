@@ -45,9 +45,15 @@
       "tempNamePlaceholder": "Ej: plantilla general",
       "tempTitlePlaceholder": "Ej: Reporte",
       "title": "Editor de Plantillas"
-
     },
     "signout": {},
     "welcome": {}
+  },
+  "subcomponents": {
+    "FormSectionConfig": {
+      "title": "Configura la Sección de Formulario",
+      "explanation": "Esta sección brinda un formulario con campos que pueden ser completados con cadenas cortas de texto o números. Si el tipo de dato a ingresar es un número, se puede especificar una unidad para el mismo. Este componente es ideal cuando es necesario registrar una serie de datos concretos.",
+      "saveSection": "Guardar y agregar a la plantilla"
+    }
   }
 }

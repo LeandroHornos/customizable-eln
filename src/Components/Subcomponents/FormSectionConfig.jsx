@@ -17,9 +17,15 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
+// Context
+import { LanguageContext } from "../../Lang";
+
 import Utils from "../../utilities";
 
 const FormSectionConfig = (props) => {
+  const { dictionary } = useContext(LanguageContext);
+  const txt = dictionary.subcomponents.FormSectionConfig;
+  const gtxt = dictionary.general;
   const emptyField = {
     id: "",
     name: "",
@@ -63,9 +69,10 @@ const FormSectionConfig = (props) => {
   };
   return (
     <div className="section-config-box">
-      <h3>Form Section Config</h3>
-      <p>How many fields must the form have?</p>
+      <h3>{txt.title}</h3>
+      <p>{txt.explanation}</p>
       <select
+        value={fields.length}
         onChange={(e) => {
           handleFields(e.target.value, fields);
         }}
@@ -84,10 +91,10 @@ const FormSectionConfig = (props) => {
         variant="success"
         className="block-btn"
         onClick={() => {
-          props.saveFields({ fields });
+          props.saveSection({ fields });
         }}
       >
-        Agregar Nueva seccion
+        {txt.saveSection}
       </Button>
     </div>
   );

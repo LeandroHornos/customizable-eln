@@ -9,6 +9,10 @@
   width: 100%;
   box-sizing: border-box;
 }
+p {
+  font-size: 0.9em;
+  padding: 10px;
+}
 
 h1 {
   font-size: 2em;

@@ -20,6 +20,7 @@ import templateSchema from "../Models/templateSchema";
 import NavigationBar from "./NavigationBar";
 import FormSectionConfig from "./Subcomponents/FormSectionConfig";
 import TableSectionConfig from "./Subcomponents/TableSectionConfig";
+import TextSectionConfig from "./Subcomponents/TextSectionConfig";
 
 import Utils from "../utilities";
 
@@ -60,7 +61,11 @@ const TemplateEditor = () => {
   };
 
   const addCurrentSectionToTemplate = (sectionData) => {
+    /* Recibe el objeto de un componente de configuración
+    y guarda la sección con dicho objeto en data. */
+
     const newSection = { ...currentSection, data: sectionData };
+
     // Compruebo si ya existe una seccion con el id de la actual:
     const sectionExists = sections.some(
       (section) => section.id === currentSection.id
@@ -160,10 +165,13 @@ const TemplateEditor = () => {
                 <option value="form-section">{txt.compNames.form}</option>
               </select>
               {currentSection.component === "table-section" && (
-                <TableSectionConfig saveColumns={addCurrentSectionToTemplate} />
+                <TableSectionConfig saveSection={addCurrentSectionToTemplate} />
               )}
               {currentSection.component === "form-section" && (
-                <FormSectionConfig saveFields={addCurrentSectionToTemplate} />
+                <FormSectionConfig saveSection={addCurrentSectionToTemplate} />
+              )}
+              {currentSection.component === "text-section" && (
+                <TextSectionConfig saveSection={addCurrentSectionToTemplate} />
               )}
               <div>
                 <Button block variant="outline-dark" className="block-btn">
