@@ -8,6 +8,7 @@ import firebaseApp from "../firebaseApp";
 
 // Context
 import { LanguageContext } from "../Lang";
+import { AuthContext } from "../Auth";
 
 // Router
 import { useHistory } from "react-router-dom";
@@ -33,6 +34,7 @@ const TemplateEditor = () => {
   const history = useHistory();
 
   const { dictionary } = useContext(LanguageContext);
+  const { currentUser } = useContext(AuthContext);
   const txt = dictionary.components.templateEditor;
   const gtxt = dictionary.general;
 
@@ -52,15 +54,21 @@ const TemplateEditor = () => {
   };
 
   const saveNewTemplate = async () => {
-    let template = { ...templateSchema, title, sections, creatorId: "" };
+    let template = {
+      ...templateSchema,
+      title,
+      sections,
+      creatorId: currentUser.uid,
+    };
 
     console.log("vamos a grabar esta template:", template);
     try {
       await db.collection("templates").add(template);
       console.log("Nueva template creada con exito");
+      console.log("Esta es la nueva plantilla:", template);
       history.push("/");
     } catch (error) {
-      console.log(error);
+      console.log("Ha ocurrido un error al guardar la plantilla", error);
     }
   };
 
@@ -167,7 +175,9 @@ const TemplateEditor = () => {
                 <option value="text-section">{txt.compNames.textBlock}</option>
                 <option value="table-section">{txt.compNames.table}</option>
                 <option value="journal-section">{txt.compNames.journal}</option>
-                <option value="linkbox-section">{txt.compNames.linksBox}</option>
+                <option value="linksbox-section">
+                  {txt.compNames.linksBox}
+                </option>
                 <option value="form-section">{txt.compNames.form}</option>
               </select>
               {currentSection.component === "table-section" && (
@@ -192,7 +202,7 @@ const TemplateEditor = () => {
                   saveSection={addCurrentSectionToTemplate}
                 />
               )}
-              {currentSection.component === "linkbox-section" && (
+              {currentSection.component === "linksbox-section" && (
                 <LinksBoxSectionConfig
                   saveSection={addCurrentSectionToTemplate}
                 />
