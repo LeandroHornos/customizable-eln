@@ -29,9 +29,11 @@
     "templateEditor": {
       "addNewSection": "Add a new section",
       "compNames": {
+        "chem": "Molecules",
         "form": "form",
         "header": "Header",
         "journal": "Journal",
+        "linksBox":"Links Box",
         "table": "Table",
         "textBlock": "Text block"
       },
@@ -50,14 +52,39 @@
     "welcome": {}
   },
   "subcomponents": {
+    "ChemSectionConfig": {
+      "title": "Molecules Section Configuration",
+      "explanation": "This section provides a molecule viewer and a composer, both based on Kekule JS, wich allow the user to draw and display organic molecules.",
+      "saveSection": "Save and add to template"
+    },
     "FormSectionConfig": {
       "title": "Form Section Configurarion",
       "explanation": "This section adds a form composed by fields that can be completed with short strings of text or numbers. If a number field is selected, a unit can be asigned to it. This component is particularly suitable for the situation where a group of succint data needs to be recorded.",
       "saveSection": "Save and add to template"
     },
+    "HeaderSectionConfig": {
+      "title": "Header section configuration",
+      "explanation": "This section shows a group of automatically generated data about the document.",
+      "saveSection": "Save and add to template"
+    },
+    "JournalSectionConfig": {
+      "title": "Journal section configuration",
+      "explanation": "This section provides a journal, based on the recording of short entries. It is ideal for the recording of experimental observations.",
+      "saveSection": "Save and add to template"
+    },
+    "LinksBoxSectionConfig": {
+      "title": "Links Box section configuration",
+      "explanation": "This section allow users to add links to files that are stored in some cloud service. It is usefull to keep related files accesible from the document without having to actually attach them to it. It saves space and prevents having the same file stored in different places.",
+      "saveSection": "Save and add to template"
+    },
     "TableSectionConfig": {
-      "title": "Table Section Configurarion",
+      "title": "Table Section Configuration",
       "explanation": "This section provides a table, in wich the different categories of data are distributed in columns, while entries are added as rows. Columns can be composed of text or numbers. If you choose a number column, you can asing a unit to it.",
+      "saveSection": "Save and add to template"
+    },
+    "TextSectionConfig": {
+      "title": "Text Section Configuration",
+      "explanation": "This sections provides a short plain text field. It is useful when the user has to enter a short text, not longer than a single paragraph.",
       "saveSection": "Save and add to template"
     }
   }

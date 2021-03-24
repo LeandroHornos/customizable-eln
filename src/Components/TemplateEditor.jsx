@@ -18,7 +18,11 @@ import templateSchema from "../Models/templateSchema";
 
 // Components & Subcomponents
 import NavigationBar from "./NavigationBar";
+import ChemSectionConfig from "./Subcomponents/ChemSectionConfig";
 import FormSectionConfig from "./Subcomponents/FormSectionConfig";
+import HeaderSectionConfig from "./Subcomponents/HeaderSectionConfig";
+import JournalSectionConfig from "./Subcomponents/JournalSectionConfig";
+import LinksBoxSectionConfig from "./Subcomponents/LinksBoxSectionConfig";
 import TableSectionConfig from "./Subcomponents/TableSectionConfig";
 import TextSectionConfig from "./Subcomponents/TextSectionConfig";
 
@@ -159,9 +163,11 @@ const TemplateEditor = () => {
               >
                 <option value="">{txt.secClassPlaceholder}</option>
                 <option value="header-section">{txt.compNames.header}</option>
+                <option value="chem-section">{txt.compNames.chem}</option>
                 <option value="text-section">{txt.compNames.textBlock}</option>
                 <option value="table-section">{txt.compNames.table}</option>
                 <option value="journal-section">{txt.compNames.journal}</option>
+                <option value="linkbox-section">{txt.compNames.linksBox}</option>
                 <option value="form-section">{txt.compNames.form}</option>
               </select>
               {currentSection.component === "table-section" && (
@@ -172,6 +178,24 @@ const TemplateEditor = () => {
               )}
               {currentSection.component === "text-section" && (
                 <TextSectionConfig saveSection={addCurrentSectionToTemplate} />
+              )}
+              {currentSection.component === "chem-section" && (
+                <ChemSectionConfig saveSection={addCurrentSectionToTemplate} />
+              )}
+              {currentSection.component === "header-section" && (
+                <HeaderSectionConfig
+                  saveSection={addCurrentSectionToTemplate}
+                />
+              )}
+              {currentSection.component === "journal-section" && (
+                <JournalSectionConfig
+                  saveSection={addCurrentSectionToTemplate}
+                />
+              )}
+              {currentSection.component === "linkbox-section" && (
+                <LinksBoxSectionConfig
+                  saveSection={addCurrentSectionToTemplate}
+                />
               )}
               <div>
                 <Button block variant="outline-dark" className="block-btn">

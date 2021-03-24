@@ -8,9 +8,9 @@ import Utils from "../../utilities";
 // Context
 import { LanguageContext } from "../../Lang";
 
-const ChemSectionConfig = (props) => {
+const LinksBoxSectionConfig = (props) => {
   const { dictionary } = useContext(LanguageContext);
-  const txt = dictionary.subcomponents.ChemSectionConfig;
+  const txt = dictionary.subcomponents.LinksBoxSectionConfig;
 
   return (
     <div className="section-config-box">
@@ -24,7 +24,7 @@ const ChemSectionConfig = (props) => {
           props.saveSection({
             id: Utils.makeId(16),
             info: "",
-            chemObject: "",
+            links: [],
           });
         }}
       >
@@ -34,4 +34,4 @@ const ChemSectionConfig = (props) => {
   );
 };
 
-export default ChemSectionConfig;
+export default LinksBoxSectionConfig;

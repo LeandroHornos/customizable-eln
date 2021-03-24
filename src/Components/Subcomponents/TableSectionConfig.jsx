@@ -25,7 +25,7 @@ import Utils from "../../utilities";
 const TableSectionConfig = (props) => {
   const { dictionary } = useContext(LanguageContext);
   const txt = dictionary.subcomponents.TableSectionConfig;
-  const gtxt = dictionary.general;
+  // const gtxt = dictionary.general;
   const emptyCol = {
     id: "",
     name: "",

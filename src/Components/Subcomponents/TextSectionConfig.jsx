@@ -1,25 +1,21 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 
 // React Bootstrap
 import Button from "react-bootstrap/Button";
 
 import Utils from "../../utilities";
 
-// Context 
+// Context
 import { LanguageContext } from "../../Lang";
 
-const FormSectionConfig = (props) => {
-  const emptyField = {
-    id: "",
-    name: "",
-    order: 0,
-    type: "text",
-    unit: "",
-  };
+const TextSectionConfig = (props) => {
+  const { dictionary } = useContext(LanguageContext);
+  const txt = dictionary.subcomponents.TextSectionConfig;
+
   return (
     <div className="section-config-box">
-      <h3>Text Section Config</h3>
-      <p>How many fields must the form have?</p>
+      <h3>{txt.title}</h3>
+      <p>{txt.explanation}</p>
       <Button
         block
         variant="success"
@@ -28,14 +24,15 @@ const FormSectionConfig = (props) => {
           props.saveSection({
             maxChars: "500",
             id: Utils.makeId(16),
+            info: "",
             text: "",
           });
         }}
       >
-        Agregar Nueva seccion
+        {txt.saveSection}
       </Button>
     </div>
   );
 };
 
-export default FormSectionConfig;
+export default TextSectionConfig;
