@@ -29,7 +29,7 @@ import TextSectionConfig from "./Subcomponents/TextSectionConfig";
 
 import Utils from "../utilities";
 
-const TemplateEditor = () => {
+export const TemplateEditor = () => {
   const db = firebaseApp.firestore();
   const history = useHistory();
 
@@ -253,5 +253,7 @@ const TemplateEditor = () => {
     </div>
   );
 };
+
+
 
 export default TemplateEditor;
