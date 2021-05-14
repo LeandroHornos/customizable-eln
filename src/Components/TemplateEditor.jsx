@@ -6,15 +6,70 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import Utils from "../utilities";
+import { makeId } from "../utilities";
 
 // Components
 import NavigationBar from "./NavigationBar";
 
 const TemplateEditor = () => {
+  const emptySection = {
+    id: makeId(16),
+    name: "",
+    order: 0,
+    description: "",
+    component: "",
+    layout: {},
+  };
+
   const [selectedComponent, setSelectedComponent] = useState("");
+  const [templateName, setTemplateName] = useState(""); // Nombre de la plantilla
+  const [title, setTitle] = useState(""); // Nombre de la plantilla
+  const [sections, setSections] = useState([]);
+  const [currentSection, setCurrentSection] = useState({
+    ...emptySection,
+    id: makeId(16),
+  }); // para comenzar crea un único objeto seccion vacío en secciones, y le asigna un id
+
   const handleSubmit = () => {
     console.log("Submit");
+  };
+
+  const addCurrentSectionToTemplate = (layout) => {
+    /* Recibe el objeto de un componente de configuración
+    y guarda la sección con dicho objeto en data. */
+
+    const newSection = { ...currentSection, layout: layout };
+
+    // Compruebo si ya existe una seccion con el id de la actual:
+    const sectionExists = sections.some(
+      (section) => section.id === currentSection.id
+    );
+
+    // Si la seccion ya existe reemplazo el objeto
+    if (sectionExists) {
+      console.log("la seccion ya existe, actualizando");
+      let updatedSections = sections.map((section) => {
+        if (section.id === currentSection.id) {
+          section = newSection;
+        }
+        return section;
+      });
+      setSections(updatedSections);
+    } else {
+      // Si no existe el objeto agrego uno nuevo:
+      let updatedSections = sections;
+      updatedSections.push(newSection);
+      setSections(updatedSections);
+    }
+
+    clearSectionForm();
+  };
+
+  const clearSectionForm = () => {
+    setCurrentSection({
+      ...emptySection,
+      id: makeId(16),
+    });
   };
 
   return (
@@ -45,11 +100,39 @@ const TemplateEditor = () => {
             <h2 className="text-center">Secciones</h2>
             <h3>Nueva Sección</h3>
             <Form.Group>
+              <Form.Label>Nombre de la sección</Form.Label>
+              <Form.Control
+                onChange={(e) => {
+                  setCurrentSection({
+                    ...currentSection,
+                    name: e.target.value,
+                  });
+                }}
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Descripción</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                onChange={(e) => {
+                  setCurrentSection({
+                    ...currentSection,
+                    description: e.target.value,
+                  });
+                }}
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group>
               <Form.Label>Componente</Form.Label>
               <Form.Control
                 as="select"
                 onChange={(e) => {
                   setSelectedComponent(e.target.value);
+                  setCurrentSection({
+                    ...currentSection,
+                    component: e.target.value,
+                  });
                 }}
               >
                 <option value="">Elije una opción</option>
@@ -58,7 +141,10 @@ const TemplateEditor = () => {
                 <option value="form">Formulario</option>
               </Form.Control>
             </Form.Group>
-            <SectionEditorSwitch component={selectedComponent} />
+            <SectionEditorSwitch
+              component={selectedComponent}
+              saveSection={addCurrentSectionToTemplate}
+            />
             <Button block type="submit">
               Guardar Plantilla
             </Button>
@@ -76,10 +162,10 @@ const SectionEditorSwitch = (props) => {
     tipo de componente seleccionado en el
     editor de secciones
   */
-  const { component } = props;
+  const { component, saveSection } = props;
   switch (component) {
     case "table":
-      return <TableSectionConfig />;
+      return <TableSectionConfig saveSection={saveSection} />;
     default:
       return <div></div>;
   }
@@ -90,6 +176,7 @@ const SectionEditorSwitch = (props) => {
 // Table Section
 
 export const TableSectionConfig = (props) => {
+  const { saveSection } = props;
   const emptyCol = {
     id: "",
     name: "",
@@ -98,19 +185,13 @@ export const TableSectionConfig = (props) => {
     unit: "",
   };
   const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
-  const [columns, setColumns] = useState([
-    { ...emptyCol, id: Utils.makeId(16) },
-  ]);
+  const [columns, setColumns] = useState([{ ...emptyCol, id: makeId(16) }]);
 
   useEffect(() => {
     console.log("Se cambiaron las columnas:", columns);
   }, [columns]);
 
   const handleColumns = (colNum, currentColumns) => {
-    console.log("Current columns", currentColumns);
-    console.log("Current columns length", currentColumns.length);
-    console.log("colNum", colNum);
-
     let cols = [...currentColumns];
     let delta = colNum - currentColumns.length;
 
@@ -120,16 +201,14 @@ export const TableSectionConfig = (props) => {
         cols.push({
           ...emptyCol,
           order: y + currentColumns.length,
-          id: Utils.makeId(16),
+          id: makeId(16),
         });
       }
     } else {
       // console.log("hay campos de mas");
       let k = -1 * delta;
-      // cols = [...columns];
       for (var z = 0; z < k; z++) {
         cols.pop();
-        // console.log("pop!");
       }
     }
 
@@ -137,7 +216,6 @@ export const TableSectionConfig = (props) => {
   };
   return (
     <div className="section-config-box">
-      <h3>Sección tabla</h3>
       <p>
         Esta sección provee una tabla, utiliza los siguientes campos para
         configurar el contenido de las columnas
@@ -146,12 +224,11 @@ export const TableSectionConfig = (props) => {
         value={columns.length}
         onChange={(e) => {
           handleColumns(e.target.value, columns);
-          console.log(columns);
         }}
       >
         {ops.map((cols) => {
           return (
-            <option key={Utils.makeId(4)} value={cols}>
+            <option key={makeId(4)} value={cols}>
               {cols}
             </option>
           );
@@ -163,7 +240,7 @@ export const TableSectionConfig = (props) => {
         variant="success"
         className="block-btn"
         onClick={() => {
-          props.saveSection({ columns });
+          saveSection({ columns });
         }}
       >
         Agregar sección
@@ -181,7 +258,6 @@ export const TableSectionColList = (props) => {
   }, [props]);
 
   const handleNameChange = (colId, name) => {
-    // console.log("editando nombre. Edited columns:", loadedColumns);
     const newColumns = loadedColumns.map((col) => {
       if (colId === col.id) {
         col.name = name;
@@ -194,7 +270,6 @@ export const TableSectionColList = (props) => {
   };
 
   const handleTypeChange = (colId, colClass) => {
-    // console.log("editando nombre. Edited columns:", loadedColumns);
     const newColumns = loadedColumns.map((col) => {
       if (colId === col.id) {
         col.type = colClass;
@@ -207,7 +282,6 @@ export const TableSectionColList = (props) => {
   };
 
   const handleUnitChange = (colId, unit) => {
-    // console.log("editando nombre. Edited columns:", loadedColumns);
     const newColumns = loadedColumns.map((col) => {
       if (colId === col.id) {
         col.unit = unit;

@@ -1,3 +1,14 @@
+export const makeId = (length) => {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+
 const Utils = {
   getTextPreview: (text, charLimit) => {
     if (text.length > charLimit) {
@@ -42,7 +53,7 @@ const Utils = {
   groupAsTriplets: (items) => {
     // Create a 2D array where every element is an array of 3 items.
     // It can be used to make rows with 3 items each.
-  
+
     let triplets = [];
     let triplet = [];
     let count = 0;

@@ -68,11 +68,11 @@ export const TemplateEditor = () => {
     }
   };
 
-  const addCurrentSectionToTemplate = (sectionData) => {
+  const addCurrentSectionToTemplate = (sectionLayout) => {
     /* Recibe el objeto de un componente de configuración
     y guarda la sección con dicho objeto en data. */
 
-    const newSection = { ...currentSection, data: sectionData };
+    const newSection = { ...currentSection, layout: sectionLayout };
 
     // Compruebo si ya existe una seccion con el id de la actual:
     const sectionExists = sections.some(
