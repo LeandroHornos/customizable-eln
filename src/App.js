@@ -6,7 +6,7 @@ import "./App.css";
 
 // Components
 import Dashboard from "./Components/Dashboard";
-import TemplateEditor from "./Components/OldTemplateEditor";
+import TemplateEditor from "./Components/TemplateEditor";
 
 import "./App.css";
 

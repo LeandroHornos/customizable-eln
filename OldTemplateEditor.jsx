@@ -7,7 +7,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
 // Firebase
-import firebaseApp from "../firebaseApp";
+import firebaseApp from "./src/firebaseApp";
 
 // Context
 import { LanguageContext } from "../Lang";
@@ -18,12 +18,12 @@ import { useHistory } from "react-router-dom";
 
 // Data structure
 import sectionSchema from "../Models/sectionSchema";
-import templateSchema from "../Models/templateSchema";
+import templateSchema from "./src/Models/templateSchema";
 
 // Components & Subcomponents
-import NavigationBar from "./NavigationBar";
+import NavigationBar from "./src/Components/NavigationBar";
 
-import Utils from "../utilities";
+import Utils from "./src/utilities";
 
 export const TemplateEditor = () => {
   const db = firebaseApp.firestore();

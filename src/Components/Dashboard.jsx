@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 import { useHistory } from "react-router-dom";
-import { LanguageContext } from "../Lang";
+
 
 //
 import Button from "react-bootstrap/Button";
@@ -10,9 +10,7 @@ import NavigationBar from "./NavigationBar";
 
 const Dashboard = () => {
   const history = useHistory();
-  const { dictionary } = useContext(LanguageContext);
-  const txt = dictionary.components.dashboard;
-  console.log("DICTIONARY:", dictionary);
+
   return (
     <React.Fragment>
       <NavigationBar />
@@ -20,13 +18,13 @@ const Dashboard = () => {
         <div className="col-md-3"></div>
         <div className="col-md-6">
           <div className="center-col-container">
-            <h1>{txt.title}</h1>
+            <h1>LEAN ELN</h1>
             <Button
               onClick={() => {
                 history.push("/template-editor");
               }}
             >
-              {txt.templateEditor}
+              Editar plantillas
             </Button>
             <Button
               onClick={() => {

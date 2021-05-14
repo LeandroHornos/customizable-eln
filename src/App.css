@@ -1,7 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap");
+
+:root {
+  --blue-dark: rgb(43, 58, 78);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: var(--gray-dark);
+  font-family: "Roboto", sans-serif;
+}
+
+h1 {
+  padding: 15px 0px;
+  font-weight: 400;
+  color: var(--blue-dark);
+}
+
+h2 {
+  padding: 10px 0px;
+  font-weight: 300;
+}
+
+h3 {
+  padding: 10px 0px;
+  font-weight: 400;
+  font-size: 1.4em;
+}
+
+p {
+  font-weight: 300;
 }
 
 .row {
