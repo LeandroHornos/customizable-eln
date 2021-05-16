@@ -31,7 +31,17 @@ const TemplateEditor = () => {
   }); // para comenzar crea un único objeto seccion vacío en secciones, y le asigna un id
 
   const handleSubmit = () => {
-    console.log("Submit");
+    const now = new Date();
+    const timestamp = now.getTime();
+    let template = {
+      name: templateName,
+      creationDate: timestamp,
+      lastModified: timestamp,
+      title,
+      sections,
+      creatorId: "",
+    };
+    console.log(template);
   };
 
   const addCurrentSectionToTemplate = (layout) => {

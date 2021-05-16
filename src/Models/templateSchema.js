@@ -6,7 +6,6 @@ const templateSchema = {
   creatorId: String, // Quien creó la plantilla - Admin
   creationDate: Date, // uando fue creada
   lastModified: Date, // Ultima vez que se guardaron cambios
-  teams: Array, // Para compartir la plantilla con un grupo
 };
 
 export default templateSchema;
