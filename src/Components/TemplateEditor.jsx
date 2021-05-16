@@ -67,9 +67,9 @@ const TemplateEditor = () => {
       setSections(updatedSections);
     } else {
       // Si no existe el objeto agrego uno nuevo:
-      let updatedSections = sections;
-      updatedSections.push(newSection);
+      const updatedSections = [...sections, newSection];
       setSections(updatedSections);
+      console.log("secciones actualizadas", updatedSections);
     }
 
     clearSectionForm();
@@ -100,11 +100,21 @@ const TemplateEditor = () => {
 
             <Form.Group>
               <Form.Label>Nombre de la plantilla</Form.Label>
-              <Form.Control></Form.Control>
+              <Form.Control
+                value={templateName}
+                onChange={(e) => {
+                  setTemplateName(e.target.value);
+                }}
+              ></Form.Control>
             </Form.Group>
             <Form.Group>
               <Form.Label>Título</Form.Label>
-              <Form.Control></Form.Control>
+              <Form.Control
+                value={title}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                }}
+              ></Form.Control>
             </Form.Group>
             {/* -------------- SECTIONS EDITOR -------------------- */}
             <h2 className="text-center">Secciones</h2>
@@ -112,6 +122,7 @@ const TemplateEditor = () => {
             <Form.Group>
               <Form.Label>Nombre de la sección</Form.Label>
               <Form.Control
+                value={currentSection.name}
                 onChange={(e) => {
                   setCurrentSection({
                     ...currentSection,
@@ -125,6 +136,7 @@ const TemplateEditor = () => {
               <Form.Control
                 as="textarea"
                 rows={3}
+                value={currentSection.description}
                 onChange={(e) => {
                   setCurrentSection({
                     ...currentSection,
@@ -137,6 +149,7 @@ const TemplateEditor = () => {
               <Form.Label>Componente</Form.Label>
               <Form.Control
                 as="select"
+                value={selectedComponent}
                 onChange={(e) => {
                   setSelectedComponent(e.target.value);
                   setCurrentSection({
@@ -154,6 +167,7 @@ const TemplateEditor = () => {
             <SectionEditorSwitch
               component={selectedComponent}
               saveSection={addCurrentSectionToTemplate}
+              setSelectedComponent={setSelectedComponent}
             />
             <Button block type="submit">
               Guardar Plantilla
@@ -172,10 +186,13 @@ const SectionEditorSwitch = (props) => {
     tipo de componente seleccionado en el
     editor de secciones
   */
-  const { component, saveSection } = props;
+  const { component, saveSection, setSelectedComponent } = props;
+  const reset = () => {
+    setSelectedComponent("");
+  };
   switch (component) {
     case "table":
-      return <TableSectionConfig saveSection={saveSection} />;
+      return <TableSectionConfig saveSection={saveSection} reset={reset} />;
     default:
       return <div></div>;
   }
@@ -183,10 +200,10 @@ const SectionEditorSwitch = (props) => {
 
 /* SECTION EDITORS----------------------------------- */
 
-// Table Section
+// Table Section_____________________________________
 
 export const TableSectionConfig = (props) => {
-  const { saveSection } = props;
+  const { saveSection, reset } = props;
   const emptyCol = {
     id: "",
     name: "",
@@ -197,9 +214,7 @@ export const TableSectionConfig = (props) => {
   const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
   const [columns, setColumns] = useState([{ ...emptyCol, id: makeId(16) }]);
 
-  useEffect(() => {
-    console.log("Se cambiaron las columnas:", columns);
-  }, [columns]);
+  useEffect(() => {}, [columns]);
 
   const handleColumns = (colNum, currentColumns) => {
     let cols = [...currentColumns];
@@ -251,6 +266,7 @@ export const TableSectionConfig = (props) => {
         className="block-btn"
         onClick={() => {
           saveSection({ columns });
+          reset();
         }}
       >
         Agregar sección
@@ -263,7 +279,6 @@ export const TableSectionColList = (props) => {
   const [loadedColumns, setLoadedColumns] = useState(props.columns);
 
   useEffect(() => {
-    console.log("loaded columns:", props.columns);
     setLoadedColumns(props.columns);
   }, [props]);
 
@@ -276,7 +291,6 @@ export const TableSectionColList = (props) => {
     });
     props.setColumns(newColumns);
     // setLoadedColumns(newColumns);
-    console.log("HandleNameChange dice campo editado:", newColumns);
   };
 
   const handleTypeChange = (colId, colClass) => {
@@ -288,7 +302,6 @@ export const TableSectionColList = (props) => {
     });
     props.setColumns(newColumns);
     // setLoadedColumns(newColumns);
-    console.log("HanldeClassChange dice campo editado:", newColumns);
   };
 
   const handleUnitChange = (colId, unit) => {
@@ -300,13 +313,11 @@ export const TableSectionColList = (props) => {
     });
     props.setColumns(newColumns);
     // setLoadedColumns(newColumns);
-    console.log("campo editado:", newColumns);
   };
 
   return (
     <React.Fragment>
       {loadedColumns.map((col) => {
-        console.log("Columna es:", col);
         return (
           <div key={col.id} style={{ margin: "10px 0px" }}>
             <Form>
@@ -357,5 +368,7 @@ export const TableSectionColList = (props) => {
     </React.Fragment>
   );
 };
+
+// Text Section______________________________________
 
 export default TemplateEditor;
