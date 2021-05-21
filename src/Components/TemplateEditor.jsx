@@ -193,6 +193,8 @@ const SectionEditorSwitch = (props) => {
   switch (component) {
     case "table":
       return <TableSectionConfig saveSection={saveSection} reset={reset} />;
+    case "text":
+      return <TextSectionConfig saveSection={saveSection} reset={reset} />;
     default:
       return <div></div>;
   }
@@ -370,5 +372,65 @@ export const TableSectionColList = (props) => {
 };
 
 // Text Section______________________________________
+export const TextSectionConfig = (props) => {
+  const { saveSection, reset } = props;
+  const [chars, setChars] = useState(300);
+  const [rows, setRows] = useState(3);
+  return (
+    <div className="section-config-box">
+      <p>Estas sección provee un bloque de texto</p>
+      <Row>
+        <Col>
+          {" "}
+          <Form.Group>
+            <Form.Label>Caracteres</Form.Label>
+            <Form.Control
+              as="select"
+              value={chars}
+              onChange={(e) => {
+                setChars(parseInt(e.target.value));
+              }}
+            >
+              <option value={300}>300</option>
+              <option value={140}>140</option>
+              <option value={500}>500</option>
+              <option value={800}>800</option>
+            </Form.Control>
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group>
+            <Form.Label>Filas</Form.Label>
+            <Form.Control
+              as="select"
+              value={rows}
+              onChange={(e) => {
+                setRows(parseInt(e.target.value));
+              }}
+            >
+              <option value={3}>3</option>
+              <option value={6}>6</option>
+              <option value={9}>9</option>
+            </Form.Control>
+          </Form.Group>
+        </Col>
+      </Row>
+      <Button
+        block
+        variant="success"
+        className="block-btn"
+        onClick={() => {
+          saveSection({
+            maxChars: chars,
+            rows,
+          });
+          reset();
+        }}
+      >
+        Guardar Sección
+      </Button>
+    </div>
+  );
+};
 
 export default TemplateEditor;
