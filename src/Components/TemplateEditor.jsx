@@ -8,19 +8,27 @@ import Col from "react-bootstrap/Col";
 
 import { makeId } from "../utilities";
 
+// Firebase
+import firebaseApp from "../firebaseApp";
+
+// Router
+import { useHistory } from "react-router-dom";
+
 // Components
 import NavigationBar from "./NavigationBar";
 
 const TemplateEditor = () => {
   const emptySection = {
+    component: "",
+    description: "",
     id: makeId(16),
+    layout: {},
     name: "",
     order: 0,
-    description: "",
-    component: "",
-    layout: {},
   };
 
+  const db = firebaseApp.firestore();
+  const history = useHistory();
   const [selectedComponent, setSelectedComponent] = useState("");
   const [templateName, setTemplateName] = useState(""); // Nombre de la plantilla
   const [title, setTitle] = useState(""); // Nombre de la plantilla
@@ -30,20 +38,30 @@ const TemplateEditor = () => {
     id: makeId(16),
   }); // para comenzar crea un único objeto seccion vacío en secciones, y le asigna un id
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const now = new Date();
     const timestamp = now.getTime();
     let template = {
-      name: templateName,
       creationDate: timestamp,
-      lastModified: timestamp,
-      title,
-      sections,
+      category: "",
       creatorId: "",
+      keywords: [""],
+      lastModified: timestamp,
+      name: templateName,
+      privacy: "public",
+      sections,
+      status: "active",
+      title,
     };
-    console.log(template);
+    try {
+      await db.collection("templates").add(template);
+      console.log("Nueva template creada con exito");
+      console.log("Esta es la nueva plantilla:", template);
+      history.push("/");
+    } catch (error) {
+      console.log("Ha ocurrido un error al guardar la plantilla", error);
+    }
   };
-
   const addCurrentSectionToTemplate = (layout) => {
     /* Recibe el objeto de un componente de configuración
     y guarda la sección con dicho objeto en data. */
@@ -195,6 +213,8 @@ const SectionEditorSwitch = (props) => {
       return <TableSectionConfig saveSection={saveSection} reset={reset} />;
     case "text":
       return <TextSectionConfig saveSection={saveSection} reset={reset} />;
+    case "form":
+      return <FormSectionConfig saveSection={saveSection} reset={reset} />;
     default:
       return <div></div>;
   }
@@ -349,6 +369,7 @@ export const TableSectionColList = (props) => {
                   >
                     <option value="text">Texto</option>
                     <option value="number">Numero</option>
+                    <option value="date">Fecha</option>
                   </Form.Control>
                 </Col>
                 <Col sm={3}>
@@ -430,6 +451,172 @@ export const TextSectionConfig = (props) => {
         Guardar Sección
       </Button>
     </div>
+  );
+};
+
+// Form Section_______________________________________
+export const FormSectionConfig = (props) => {
+  const { saveSection, reset } = props;
+  const emptyField = {
+    id: "",
+    name: "",
+    order: 0,
+    type: "text",
+    unit: "",
+  };
+  const ops = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Opciones del select para el nro de columnas
+  const [fields, setFileds] = useState([{ ...emptyField, id: makeId(16) }]);
+
+  const handleFields = (fieldNum, currentFields) => {
+    let cols = [...currentFields];
+    let delta = fieldNum - currentFields.length;
+
+    if (delta > 0) {
+      // console.log("hay campos de menos");
+      for (var y = 0; y < delta; y++) {
+        cols.push({
+          ...emptyField,
+          order: y + currentFields.length,
+          id: makeId(16),
+        });
+      }
+    } else {
+      // console.log("hay campos de mas");
+      let k = -1 * delta;
+      for (var z = 0; z < k; z++) {
+        cols.pop();
+      }
+    }
+
+    setFileds(cols);
+  };
+  return (
+    <div className="section-config-box">
+      <p>
+        Esta sección provee un formulario sencillo, con campos en los que se
+        puede ingresar texto o números Uiliza los siguientes campos para
+        configurar los campos que confomaran el formulario
+      </p>
+      <select
+        value={fields.length}
+        onChange={(e) => {
+          handleFields(e.target.value, fields);
+        }}
+      >
+        {ops.map((flds) => {
+          return (
+            <option key={makeId(4)} value={flds}>
+              {flds}
+            </option>
+          );
+        })}
+      </select>
+      <FormSectionFieldList fields={fields} setFileds={setFileds} />
+      <Button
+        block
+        variant="success"
+        className="block-btn"
+        onClick={() => {
+          saveSection({ fields });
+          reset();
+        }}
+      >
+        Agregar sección
+      </Button>
+    </div>
+  );
+};
+
+export const FormSectionFieldList = (props) => {
+  const [loadedColumns, setLoadedColumns] = useState(props.fields);
+
+  useEffect(() => {
+    setLoadedColumns(props.fields);
+  }, [props]);
+
+  const handleNameChange = (colId, name) => {
+    const newColumns = loadedColumns.map((col) => {
+      if (colId === col.id) {
+        col.name = name;
+      }
+      return col;
+    });
+    props.setFileds(newColumns);
+    // setLoadedColumns(newColumns);
+  };
+
+  const handleTypeChange = (colId, colClass) => {
+    const newColumns = loadedColumns.map((col) => {
+      if (colId === col.id) {
+        col.type = colClass;
+      }
+      return col;
+    });
+    props.setFileds(newColumns);
+    // setLoadedColumns(newColumns);
+  };
+
+  const handleUnitChange = (colId, unit) => {
+    const newColumns = loadedColumns.map((col) => {
+      if (colId === col.id) {
+        col.unit = unit;
+      }
+      return col;
+    });
+    props.setFileds(newColumns);
+    // setLoadedColumns(newColumns);
+  };
+
+  return (
+    <React.Fragment>
+      {loadedColumns.map((col) => {
+        return (
+          <div key={col.id} style={{ margin: "10px 0px" }}>
+            <Row>
+              <Col sm={1}>{col.order + 1}</Col>
+              <Col sm={4}>
+                <Form.Control
+                  style={{ marginBottom: "10px" }}
+                  placeholder="Nombre"
+                  value={col.name}
+                  onChange={(e) => {
+                    handleNameChange(col.id, e.target.value);
+                  }}
+                />
+              </Col>
+              <Col sm={4}>
+                <Form.Control
+                  style={{ marginBottom: "10px" }}
+                  as="select"
+                  value={col.type}
+                  onChange={(e) => {
+                    handleTypeChange(col.id, e.target.value);
+                    if (e.target.value === "text") {
+                      handleUnitChange(col.id, "");
+                    }
+                  }}
+                >
+                  <option value="text">Texto</option>
+                  <option value="number">Numero</option>
+                  <option value="date">Fecha</option>
+                </Form.Control>
+              </Col>
+              <Col sm={3}>
+                <Form.Control
+                  readOnly={col.type === "text"}
+                  style={{ marginBottom: "10px" }}
+                  placeholder="Unidad"
+                  value={col.unit}
+                  onChange={(e) => {
+                    handleUnitChange(col.id, e.target.value);
+                  }}
+                />
+              </Col>
+            </Row>
+          </div>
+        );
+      })}
+    </React.Fragment>
   );
 };
 
