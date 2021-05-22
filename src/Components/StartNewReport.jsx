@@ -4,6 +4,9 @@ import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
+//Router
+import {useHistory} from "react-router-dom";
+
 // Firebase
 import firebaseApp from "../firebaseApp";
 
@@ -11,6 +14,7 @@ import firebaseApp from "../firebaseApp";
 import NavigationBar from "./NavigationBar";
 
 const StartNewReport = () => {
+  const history = useHistory();
   const db = firebaseApp.firestore();
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +48,7 @@ const StartNewReport = () => {
     return results[0];
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const now = new Date();
     const { isValid, errors } = validateForm();
     if (isValid) {
@@ -66,6 +70,13 @@ const StartNewReport = () => {
         reportNumber: 0,
       };
       console.log(report);
+      try {
+        await db.collection("reports").add(report);
+        console.log("se ha creado el reporte con éxito");
+        history.push("/");
+      } catch (error) {
+        console.log(error);
+      }
     } else console.log(errors);
   };
 
