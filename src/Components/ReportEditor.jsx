@@ -24,21 +24,33 @@ const ReportEditor = () => {
     const fetchData = async () => {
       try {
         let rep = await db.collection("reports").doc(id).get();
-        setReport({ ...rep.data(), id: rep.id });
+        rep = { ...rep.data(), id: rep.id };
+        setReport(rep);
+        console.log(rep);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
   }, [id]);
-  
+
   return (
     <React.Fragment>
       <NavigationBar />
-      <div className="roe">
+      <div className="row">
         <div className="col-md-2"></div>
         <div className="col-md-8">
           <h1 className="text-center">Reporte</h1>
+          {!loading && (
+            <React.Fragment>
+              <h2>Proyecto: {report.projectName}</h2>
+              <h2>Reporte: {report.reportNumber}</h2>
+              <hr />
+              <h3>Descripción:</h3>
+              <p>{report.description}</p>
+            </React.Fragment>
+          )}
         </div>
         <div className="col-md-2"></div>
       </div>

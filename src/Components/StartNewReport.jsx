@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 //Router
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 // Firebase
 import firebaseApp from "../firebaseApp";
@@ -19,6 +19,9 @@ const StartNewReport = () => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTemplate, setSelectedTemplate] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [reportNumber, setReportNumber] = useState(0);
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,18 +60,18 @@ const StartNewReport = () => {
         sections: temp.sections,
         templateId: selectedTemplate,
         creatorId: "",
-        creationDateString: `${now.getDate()}-${
-          now.getMonth() + 1
-        }-${now.getFullYear()}`,
+        creationDate: now,
         creationTimestamp: now.getTime(),
         closingTimestamp: "",
-        closingDateString: "",
+        closingDate: "",
         lastEditTimestamp: now.getTime(),
+        lastEditDate: now,
         status: "active",
         comments: [],
         projectId: "",
-        projectName:"",
-        reportNumber: 0,
+        projectName,
+        reportNumber,
+        description,
       };
       console.log(report);
       try {
@@ -113,6 +116,37 @@ const StartNewReport = () => {
                   })}
                 </Form.Control>
               </Form.Group>
+              <Form.Group>
+                <Form.Label>Proyecto</Form.Label>
+                <Form.Control
+                  value={projectName}
+                  onChange={(e) => {
+                    setProjectName(e.target.value);
+                  }}
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Numero de reporte</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={reportNumber}
+                  onChange={(e) => {
+                    setReportNumber(e.target.value);
+                  }}
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Descripción breve</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows="2"
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                ></Form.Control>
+              </Form.Group>
+
               <Button block type="select">
                 Crear reporte
               </Button>
