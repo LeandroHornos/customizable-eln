@@ -2,6 +2,9 @@
 
 :root {
   --blue-dark: rgb(43, 58, 78);
+  --color-1: rgb(43, 58, 78);
+  --color-1-light: rgb(46, 88, 107);
+  --color-2: rgb(236, 50, 17);
 }
 
 * {
@@ -32,11 +35,26 @@ h3 {
 p {
   font-weight: 300;
 }
+/* FONT COLOR CLASSES*/
+
+.color-2 {
+  color: var(--color-2);
+}
+
+.color-1-light {
+  color: var(--color-1-light);
+}
 
 .row {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.table-container {
+  width: 100%;
+  padding: 0;
+  overflow-x: auto;
 }
 
 form {
