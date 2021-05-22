@@ -67,6 +67,7 @@ const StartNewReport = () => {
         status: "active",
         comments: [],
         projectId: "",
+        projectName:"",
         reportNumber: 0,
       };
       console.log(report);

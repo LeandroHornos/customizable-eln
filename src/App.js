@@ -9,6 +9,7 @@ import Dashboard from "./Components/Dashboard";
 import TemplateEditor from "./Components/TemplateEditor";
 import StartNewReport from "./Components/StartNewReport";
 import Reports from "./Components/Reports";
+import ReportEditor from "./Components/ReportEditor";
 import "./App.css";
 
 function App() {
@@ -28,6 +29,9 @@ function App() {
           </Route>
           <Route exact path="/reports">
             <Reports />
+          </Route>
+          <Route exact path="/report/:id">
+            <ReportEditor />
           </Route>
         </Switch>
       </div>
