@@ -8,7 +8,7 @@ import "./App.css";
 import Dashboard from "./Components/Dashboard";
 import TemplateEditor from "./Components/TemplateEditor";
 import StartNewReport from "./Components/StartNewReport";
-
+import Reports from "./Components/Reports";
 import "./App.css";
 
 function App() {
@@ -25,6 +25,9 @@ function App() {
           </Route>
           <Route exact path="/new-report">
             <StartNewReport />
+          </Route>
+          <Route exact path="/reports">
+            <Reports />
           </Route>
         </Switch>
       </div>

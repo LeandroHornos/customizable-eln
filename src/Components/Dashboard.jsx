@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 
 import { useHistory } from "react-router-dom";
 
-
 //
 import Button from "react-bootstrap/Button";
 
@@ -20,7 +19,7 @@ const Dashboard = () => {
           <div className="center-col-container">
             <h1 className="text-center">Inicio</h1>
             <Button
-            block
+              block
               onClick={() => {
                 history.push("/template-editor");
               }}
@@ -28,12 +27,20 @@ const Dashboard = () => {
               Editar plantillas
             </Button>
             <Button
-            block
+              block
               onClick={() => {
-                history.push("/template-gallery");
+                history.push("/new-report");
               }}
             >
-              ver mis plantillas
+              Nuevo Reporte
+            </Button>
+            <Button
+              block
+              onClick={() => {
+                history.push("/reports");
+              }}
+            >
+              Mis reportes
             </Button>
           </div>
         </div>
