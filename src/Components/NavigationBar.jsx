@@ -14,8 +14,9 @@ const NavigationBar = () => {
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Link href="/templates">Templates</Nav.Link>
-          <Nav.Link href="/reportcreator">New Report</Nav.Link>
+          <Nav.Link href="/">Inicio</Nav.Link>
+          <Nav.Link href="/template-editor">Nueva Plantilla</Nav.Link>
+          <Nav.Link href="/new-report">Nuevo Reporte</Nav.Link>
 
         </Nav>
         <Nav>

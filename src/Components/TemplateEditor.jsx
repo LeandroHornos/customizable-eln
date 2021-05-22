@@ -106,7 +106,7 @@ const TemplateEditor = () => {
       <div className="row">
         <div className="col-md-2 col-lg-3"></div>
         <div className="col-md-8 col-lg-6">
-          <h1 className="text-center">Template Editor</h1>
+          <h1 className="text-center">Nueva Plantilla</h1>
 
           <Form
             onSubmit={(e) => {
@@ -114,7 +114,7 @@ const TemplateEditor = () => {
               handleSubmit();
             }}
           >
-            <h2 className="text-center">Información general</h2>
+            <h2 className="">Información general</h2>
 
             <Form.Group>
               <Form.Label>Nombre de la plantilla</Form.Label>
@@ -135,7 +135,7 @@ const TemplateEditor = () => {
               ></Form.Control>
             </Form.Group>
             {/* -------------- SECTIONS EDITOR -------------------- */}
-            <h2 className="text-center">Secciones</h2>
+            <h2 className="">Secciones</h2>
             <h3>Nueva Sección</h3>
             <Form.Group>
               <Form.Label>Nombre de la sección</Form.Label>

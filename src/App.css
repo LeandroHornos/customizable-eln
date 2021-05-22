@@ -38,3 +38,7 @@ p {
   padding: 0;
   box-sizing: border-box;
 }
+
+form {
+  padding: 20px 0px;
+}

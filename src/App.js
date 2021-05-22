@@ -7,6 +7,7 @@ import "./App.css";
 // Components
 import Dashboard from "./Components/Dashboard";
 import TemplateEditor from "./Components/TemplateEditor";
+import StartNewReport from "./Components/StartNewReport";
 
 import "./App.css";
 
@@ -21,6 +22,9 @@ function App() {
           </Route>
           <Route exact path="/template-editor">
             <TemplateEditor />
+          </Route>
+          <Route exact path="/new-report">
+            <StartNewReport />
           </Route>
         </Switch>
       </div>

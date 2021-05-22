@@ -18,8 +18,9 @@ const Dashboard = () => {
         <div className="col-md-3"></div>
         <div className="col-md-6">
           <div className="center-col-container">
-            <h1>LEAN ELN</h1>
+            <h1 className="text-center">Inicio</h1>
             <Button
+            block
               onClick={() => {
                 history.push("/template-editor");
               }}
@@ -27,6 +28,7 @@ const Dashboard = () => {
               Editar plantillas
             </Button>
             <Button
+            block
               onClick={() => {
                 history.push("/template-gallery");
               }}
