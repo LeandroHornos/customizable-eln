@@ -13,7 +13,6 @@ import NavigationBar from "./NavigationBar";
 import { useParams, useHistory } from "react-router-dom";
 
 import { makeId } from "../utilities";
-import { Row } from "react-bootstrap";
 
 export const ReportEditor = () => {
   const { id } = useParams();
@@ -154,6 +153,9 @@ export const FormSection = (props) => {
 };
 
 export const TableSection = (props) => {
+  let { layout, name, description } = props.section;
+  const [rows, setRows] = useState(layout.rows || {});
+
   const cellObjects = () => {
     /* Devuelve un objeto que contiene como claves los ids
     de las columnas y como valor un objeto que contiene la 
@@ -179,8 +181,6 @@ export const TableSection = (props) => {
     return cells;
   };
 
-  let { layout, name, description } = props.section;
-  const [rows, setRows] = useState(layout.rows || {});
   const [newRow, setNewRow] = useState({
     id: makeId(16),
     order: Object.keys(rows).length,
@@ -216,19 +216,14 @@ export const TableSection = (props) => {
         <Table>
           <thead>
             {layout.columns.map((col) => {
-              return <th key={col.id}>{col.name}</th>;
+              return (
+                <th key={col.id}>{`${col.name} ${col.unit != "" ? " [" : ""}${
+                  col.unit
+                }${col.unit != "" ? "]" : ""}`}</th>
+              );
             })}
           </thead>
           <tbody>
-            <tr>
-              {layout.columns.map((col) => {
-                return (
-                  <td key={`${col.id}-row-0`} style={{ padding: "10px" }}>
-                    0
-                  </td>
-                );
-              })}
-            </tr>
             <TableRows rows={rows} cols={layout.columns} />
             <tr>
               <td style={{ paddingTop: "60px" }}>Nueva Fila</td>
@@ -240,9 +235,7 @@ export const TableSection = (props) => {
                     <input
                       type={col.type}
                       value={newRow.cells[col.id].value}
-                      placeholder={`${col.name} ${
-                        col.unit
-                      }`}
+                      placeholder={`${col.name}`}
                       onChange={(e) => {
                         let val = e.target.value;
                         if (col.type === "number") {
@@ -295,6 +288,17 @@ export const TableRows = (props) => {
   return (
     <React.Fragment>
       {rowsArray.map((row) => {
+        /*
+        A cada row asignarle un boton que al darle click indique que esa fila debe ser editada
+        cargar el id de la row en una variable en el state. Al iterar sobre las filas evaluar si
+        el id de dicha fila coincide con el id de la fila a editar, si es así devolver una fila
+        de inputs como la de "nueva fila" y botones para guardar cambios, cancelar y borrar la fila
+
+        if(editThisRowId === row.id) {
+            return <EditableRow row={row} />
+        }else...
+        
+        */
         return (
           <tr key={row.id}>
             {cols.map((col) => {
