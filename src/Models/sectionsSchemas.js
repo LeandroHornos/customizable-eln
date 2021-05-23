@@ -24,6 +24,51 @@ const tableSectionSchema = {
         unit: String, // Si el dato es un número, unidad de medida asociada al mismo
       },
     ],
+    rows: [
+      {
+        id: String,
+        order: String,
+        data: [
+          {
+            colId: String,
+            colNumber: Number,
+            value: String || Number,
+          },
+        ],
+      },
+    ],
+  },
+};
+
+const tableSectionSchemaV2 = {
+  id: String,
+  name: String,
+  order: Number,
+  description: String,
+  component: String,
+  layout: {
+    columns: {
+      colId: {
+        // Uso como clave el id de cada columna
+        header: String, // Nombre para mostrar como encabezado de la columna -- renombrar a header
+        order: Number, // Posición de la columna dentro de la tabla
+        type: String, // Tipo de dato que se almacena en la columna
+        unit: String, // Si el dato es un número, unidad de medida asociada al mismo
+      },
+    },
+    rows: {
+      rowId: {
+        order: Number,
+        cells: {
+          colId: {
+            colId: String,
+            colNumber: Number,
+            value: String || Number,
+            unit: String,
+          },
+        },
+      },
+    },
   },
 };
 

@@ -5,11 +5,15 @@ import firebaseApp from "../firebaseApp";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
 
 // Components
 import NavigationBar from "./NavigationBar";
 
 import { useParams, useHistory } from "react-router-dom";
+
+import { makeId } from "../utilities";
+import { Row } from "react-bootstrap";
 
 export const ReportEditor = () => {
   const { id } = useParams();
@@ -75,11 +79,12 @@ export const ReportEditor = () => {
               <hr />
               <ReportNavigator />
               <FormSection section={report.sections[0]} />
-              <TextSection section={report.sections[1]}/>
+              <TextSection section={report.sections[1]} />
               <TableSection section={report.sections[3]} />
             </div>
             <div className="col-md-1"></div>
           </div>
+          <footer style={{ minHeight: "100px" }}></footer>
         </React.Fragment>
       )}
     </React.Fragment>
@@ -149,25 +154,157 @@ export const FormSection = (props) => {
 };
 
 export const TableSection = (props) => {
+  const cellObjects = () => {
+    /* Devuelve un objeto que contiene como claves los ids
+    de las columnas y como valor un objeto que contiene la 
+    información correspondiente a la
+    celda en dicha columna dentro de una fila dada.
+    Cada fila (row) contiene uno de estos objetos cells, los cuales
+    guardan todos los valores correspondientes a una fila. De esta manera,
+    cualquier valor de la tabla puede ser llamado como
+    valor = rows[rowId].cells[colId].value
+     */
+    let cells = {};
+
+    layout.columns.forEach((col) => {
+      cells[col.id] = {
+        colId: col.id,
+        colNumber: col.order,
+        value: "",
+        unit: col.unit,
+        type: col.type,
+      };
+    });
+
+    return cells;
+  };
+
   let { layout, name, description } = props.section;
+  const [rows, setRows] = useState(layout.rows || {});
+  const [newRow, setNewRow] = useState({
+    id: makeId(16),
+    order: Object.keys(rows).length,
+    cells: cellObjects(),
+  });
+
+  const updateNewRow = (colId, value) => {
+    let cells = newRow.cells;
+    cells[colId].value = value;
+    setNewRow({ ...newRow, cells: cells });
+    console.log({ ...newRow, cells: cells });
+  };
+
+  const addNewRow = () => {
+    let updatedRows = rows;
+    updatedRows[newRow.id] = newRow;
+    setRows(updatedRows);
+    console.log("Filas", Object.keys(updatedRows).length);
+
+    setNewRow({
+      id: makeId(16),
+      order: Object.keys(updatedRows).length,
+      cells: cellObjects(),
+    });
+    console.log("Se han actualizado las filas:", rows);
+  };
+
   return (
     <React.Fragment>
       <h3 className="color-2">{name}</h3>
       <p>{description}</p>
       <div className="table-container">
         <Table>
-          <tr>
+          <thead>
             {layout.columns.map((col) => {
               return <th key={col.id}>{col.name}</th>;
             })}
-          </tr>
-          <tr>
-            {layout.columns.map((col) => {
-              return <td key={`${col.id}-row-0`}>Empty</td>;
-            })}
-          </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {layout.columns.map((col) => {
+                return (
+                  <td key={`${col.id}-row-0`} style={{ padding: "10px" }}>
+                    0
+                  </td>
+                );
+              })}
+            </tr>
+            <TableRows rows={rows} cols={layout.columns} />
+            <tr>
+              <td style={{ paddingTop: "60px" }}>Nueva Fila</td>
+            </tr>
+            <tr>
+              {layout.columns.map((col) => {
+                return (
+                  <td key={`${col.id}-row-0`} style={{ padding: "0" }}>
+                    <input
+                      type={col.type}
+                      value={newRow.cells[col.id].value}
+                      placeholder={`${col.name} ${
+                        col.unit
+                      }`}
+                      onChange={(e) => {
+                        let val = e.target.value;
+                        if (col.type === "number") {
+                          val = parseFloat(val);
+                        }
+                        updateNewRow(col.id, val);
+                      }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        margin: "0",
+                        border: "none",
+                        padding: "5px",
+                      }}
+                    />
+                  </td>
+                );
+              })}
+            </tr>
+          </tbody>
+          <Button
+            size="sm"
+            variant="outline-primary"
+            style={{ marginTop: "20px" }}
+            onClick={() => {
+              addNewRow();
+            }}
+          >
+            Agregar fila
+          </Button>
         </Table>
       </div>
+    </React.Fragment>
+  );
+};
+
+export const TableRows = (props) => {
+  const { rows, cols } = props;
+
+  // Transformo el objeto rows en un array con las filas:
+  let rowsArray = Object.keys(rows).map((key) => {
+    return { ...rows[key] };
+  });
+
+  // Ordeno el array segun el valor "order":
+  rowsArray.sort((a, b) => {
+    return a.order - b.order;
+  });
+
+  return (
+    <React.Fragment>
+      {rowsArray.map((row) => {
+        return (
+          <tr key={row.id}>
+            {cols.map((col) => {
+              return (
+                <td key={`${row.id}-${col.id}`}>{row.cells[col.id].value}</td>
+              );
+            })}
+          </tr>
+        );
+      })}
     </React.Fragment>
   );
 };
