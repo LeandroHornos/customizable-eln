@@ -1,3 +1,16 @@
+/* 
+REPORT EDITOR
+
+Este componente es el elemento central del trabajo con el cuaderno electrónico. Una vez creado un reporte a partir
+de una plantilla, ReportEditor toma los elementos del layout para construir la interfaz del reporte. 
+Cada tipo de sección se carga en un componente específico que se encarga tanto de mostrar la información como de
+proveer las herramientas necesarias para su edicion. 
+El reporte provee un sistema de navegación que permite pasar entre los distintos componentes, además de dar acceso a 
+herramientas relacionadas.
+Cada componente se encarga de actualizar los cambios de su sección en el reporte
+
+*/
+
 import React, { useState, useEffect, useContext } from "react";
 
 import firebaseApp from "../firebaseApp";
@@ -13,6 +26,31 @@ import NavigationBar from "./NavigationBar";
 import { useParams, useHistory } from "react-router-dom";
 
 import { makeId } from "../utilities";
+
+const cellObjects = (cols) => {
+  /* Devuelve un objeto que contiene como claves los ids
+  de las columnas y como valor un objeto que contiene la 
+  información correspondiente a la
+  celda en dicha columna dentro de una fila dada.
+  Cada fila (row) contiene uno de estos objetos cells, los cuales
+  guardan todos los valores correspondientes a una fila. De esta manera,
+  cualquier valor de la tabla puede ser llamado como
+  valor = rows[rowId].cells[colId].value
+   */
+  let cells = {};
+
+  cols.forEach((col) => {
+    cells[col.id] = {
+      colId: col.id,
+      colNumber: col.order,
+      value: "",
+      unit: col.unit,
+      type: col.type,
+    };
+  });
+
+  return cells;
+};
 
 export const ReportEditor = () => {
   const { id } = useParams();
@@ -111,7 +149,7 @@ export const ReportNavigator = (props) => {
   );
 };
 
-// SECTION EDITORS
+// SECTION EDITORS:
 
 export const FormSection = (props) => {
   let { layout, name, description } = props.section;
@@ -152,39 +190,15 @@ export const FormSection = (props) => {
   );
 };
 
+/* TABLE SECTION  ----------------------------------- */
+
 export const TableSection = (props) => {
   let { layout, name, description } = props.section;
   const [rows, setRows] = useState(layout.rows || {});
-
-  const cellObjects = () => {
-    /* Devuelve un objeto que contiene como claves los ids
-    de las columnas y como valor un objeto que contiene la 
-    información correspondiente a la
-    celda en dicha columna dentro de una fila dada.
-    Cada fila (row) contiene uno de estos objetos cells, los cuales
-    guardan todos los valores correspondientes a una fila. De esta manera,
-    cualquier valor de la tabla puede ser llamado como
-    valor = rows[rowId].cells[colId].value
-     */
-    let cells = {};
-
-    layout.columns.forEach((col) => {
-      cells[col.id] = {
-        colId: col.id,
-        colNumber: col.order,
-        value: "",
-        unit: col.unit,
-        type: col.type,
-      };
-    });
-
-    return cells;
-  };
-
   const [newRow, setNewRow] = useState({
     id: makeId(16),
     order: Object.keys(rows).length,
-    cells: cellObjects(),
+    cells: cellObjects(layout.columns),
   });
 
   const updateNewRow = (colId, value) => {
@@ -194,16 +208,16 @@ export const TableSection = (props) => {
     console.log({ ...newRow, cells: cells });
   };
 
-  const addNewRow = () => {
+  const saveRow = (row) => {
     let updatedRows = rows;
-    updatedRows[newRow.id] = newRow;
+    updatedRows[row.id] = row;
     setRows(updatedRows);
     console.log("Filas", Object.keys(updatedRows).length);
 
     setNewRow({
       id: makeId(16),
       order: Object.keys(updatedRows).length,
-      cells: cellObjects(),
+      cells: cellObjects(layout.columns),
     });
     console.log("Se han actualizado las filas:", rows);
   };
@@ -224,9 +238,11 @@ export const TableSection = (props) => {
             })}
           </thead>
           <tbody>
-            <TableRows rows={rows} cols={layout.columns} />
+            <TableRows rows={rows} cols={layout.columns} saveRow={saveRow} />
             <tr>
-              <td style={{ paddingTop: "60px" }}>Nueva Fila</td>
+              <td style={{ paddingTop: "60px" }} colspane={layout.columns}>
+                Nueva Fila
+              </td>
             </tr>
             <tr>
               {layout.columns.map((col) => {
@@ -261,7 +277,7 @@ export const TableSection = (props) => {
             variant="outline-primary"
             style={{ marginTop: "20px" }}
             onClick={() => {
-              addNewRow();
+              saveRow(newRow);
             }}
           >
             Agregar fila
@@ -273,7 +289,13 @@ export const TableSection = (props) => {
 };
 
 export const TableRows = (props) => {
-  const { rows, cols } = props;
+  /* Muestra el contenido de las filas de la tabla
+  recibe por props un objeto que contiene como claves los
+  ids de las filas(rows). A su vez cada fila contiene un objeto cells
+  con los valores de las columnas como clave.
+  */
+  const { rows, cols, saveRow } = props;
+  const [editThisRow, setEditThisRow] = useState("");
 
   // Transformo el objeto rows en un array con las filas:
   let rowsArray = Object.keys(rows).map((key) => {
@@ -289,29 +311,120 @@ export const TableRows = (props) => {
     <React.Fragment>
       {rowsArray.map((row) => {
         /*
-        A cada row asignarle un boton que al darle click indique que esa fila debe ser editada
-        cargar el id de la row en una variable en el state. Al iterar sobre las filas evaluar si
-        el id de dicha fila coincide con el id de la fila a editar, si es así devolver una fila
-        de inputs como la de "nueva fila" y botones para guardar cambios, cancelar y borrar la fila
-
-        if(editThisRowId === row.id) {
-            return <EditableRow row={row} />
-        }else...
-        
+        Si la fila tiene su id marcado para ser editada, en lugar
+        de mostrar una fila normal se muestra una serie de inputs con un
+        boton que permiten editar y actualizar la tabla.
         */
-        return (
-          <tr key={row.id}>
-            {cols.map((col) => {
-              return (
-                <td key={`${row.id}-${col.id}`}>{row.cells[col.id].value}</td>
-              );
-            })}
-          </tr>
-        );
+        if (editThisRow === row.id) {
+          return (
+            <TableRowEditor
+              row={row}
+              rowsCount={Object.keys(rows).length}
+              mode="edit"
+              cols={cols}
+              cellObjects={cellObjects}
+              setEditThisRow={setEditThisRow}
+              saveRow={saveRow}
+            />
+          );
+        } else {
+          return (
+            <tr key={row.id}>
+              {cols.map((col, index) => {
+                if (index === 0) {
+                  return (
+                    <td key={`${row.id}-${col.id}`}>
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setEditThisRow(row.id);
+                        }}
+                      >
+                        {row.cells[col.id].value}
+                      </a>
+                    </td>
+                  );
+                } else {
+                  return (
+                    <td key={`${row.id}-${col.id}`}>
+                      {row.cells[col.id].value}
+                    </td>
+                  );
+                }
+              })}
+            </tr>
+          );
+        }
       })}
     </React.Fragment>
   );
 };
+
+export const TableRowEditor = (props) => {
+  /* Este componente es igual al que permite crear una nueva fila.
+  Se inserta en la tabla en aquella fila que ha sido seleccionada para ser
+  editada. Utiliza su propio estado para almacenar los valores del input,
+  y luego utiliza la funcion saveRow de la sección tabla para actualizar
+  el contenido de la fila en la tabla */
+  const { row, cols, mode, saveRow, setEditThisRow } = props;
+  const [editedRow, setEditedRow] = useState(row);
+
+  const updateEditedRow = (colId, value) => {
+    let cells = editedRow.cells;
+    cells[colId].value = value;
+    setEditedRow({ ...editedRow, cells: cells });
+    console.log({ ...editedRow, cells: cells });
+  };
+  return (
+    <React.Fragment>
+      <tr>
+        {cols.map((col) => {
+          return (
+            <td key={`${col.id}-row-0`} style={{ padding: "0" }}>
+              <input
+                type={col.type}
+                value={editedRow.cells[col.id].value}
+                placeholder={`${col.name}`}
+                onChange={(e) => {
+                  let val = e.target.value;
+                  if (col.type === "number") {
+                    val = parseFloat(val);
+                  }
+                  updateEditedRow(col.id, val);
+                }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  margin: "0",
+                  border: "none",
+                  padding: "5px",
+                }}
+              />
+            </td>
+          );
+        })}
+      </tr>
+      <tr>
+        <td colspan={cols.length}>
+          <Button
+            size="sm"
+            variant="outline-primary"
+            style={{ marginTop: "20px" }}
+            onClick={() => {
+              saveRow(editedRow);
+              setEditThisRow("");
+            }}
+          >
+            {mode === "edit" ? "Guardar Cambios" : "Agregar fila"}
+          </Button>
+        </td>
+      </tr>
+    </React.Fragment>
+  );
+};
+
+/* TEXT SECTION ------------------------------------- */
 
 export const TextSection = (props) => {
   let { layout, name, description } = props.section;
