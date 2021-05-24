@@ -15,10 +15,12 @@ import React, { useState, useEffect, useContext } from "react";
 
 import firebaseApp from "../firebaseApp";
 
+// React Bootstrap Components
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 // Components
 import NavigationBar from "./NavigationBar";
@@ -208,7 +210,17 @@ export const TableSection = (props) => {
     console.log({ ...newRow, cells: cells });
   };
 
+  const cancelEdit = () => {
+    setNewRow({
+      id: makeId(16),
+      order: Object.keys(rows).length,
+      cells: cellObjects(layout.columns),
+    });
+    console.log("se cancela el edit, estas son las filas", rows);
+  };
+
   const saveRow = (row) => {
+    console.log("asi están las filas antes de guardar cambios", rows);
     let updatedRows = rows;
     updatedRows[row.id] = row;
     setRows(updatedRows);
@@ -238,7 +250,12 @@ export const TableSection = (props) => {
             })}
           </thead>
           <tbody>
-            <TableRows rows={rows} cols={layout.columns} saveRow={saveRow} />
+            <TableRows
+              rows={rows}
+              cols={layout.columns}
+              saveRow={saveRow}
+              cancelEdit={cancelEdit}
+            />
             <tr>
               <td style={{ paddingTop: "60px" }} colspane={layout.columns}>
                 Nueva Fila
@@ -272,16 +289,29 @@ export const TableSection = (props) => {
               })}
             </tr>
           </tbody>
-          <Button
-            size="sm"
-            variant="outline-primary"
-            style={{ marginTop: "20px" }}
-            onClick={() => {
-              saveRow(newRow);
-            }}
-          >
-            Agregar fila
-          </Button>
+          <ButtonGroup>
+            {" "}
+            <Button
+              size="sm"
+              variant="outline-primary"
+              style={{ marginTop: "20px" }}
+              onClick={() => {
+                saveRow(newRow);
+              }}
+            >
+              Agregar fila
+            </Button>
+            <Button
+              size="sm"
+              variant="outline-dark"
+              style={{ marginTop: "20px" }}
+              onClick={() => {
+                cancelEdit();
+              }}
+            >
+              Cancelar
+            </Button>
+          </ButtonGroup>
         </Table>
       </div>
     </React.Fragment>
@@ -294,69 +324,74 @@ export const TableRows = (props) => {
   ids de las filas(rows). A su vez cada fila contiene un objeto cells
   con los valores de las columnas como clave.
   */
-  const { rows, cols, saveRow } = props;
+  const { rows, cols, saveRow, cancelEdit } = props;
   const [editThisRow, setEditThisRow] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [rowsArray, setRowsArray] = useState([]);
 
-  // Transformo el objeto rows en un array con las filas:
-  let rowsArray = Object.keys(rows).map((key) => {
-    return { ...rows[key] };
-  });
-
-  // Ordeno el array segun el valor "order":
-  rowsArray.sort((a, b) => {
-    return a.order - b.order;
-  });
+  useEffect(() => {
+    console.log("han cambiado las filas", rows);
+    let array = Object.keys(rows).map((key) => {
+      return { ...rows[key] };
+    });
+    array.sort((a, b) => {
+      return a.order - b.order;
+    });
+    setRowsArray(array);
+    setLoading(false);
+  }, [props]);
 
   return (
     <React.Fragment>
-      {rowsArray.map((row) => {
-        /*
+      {!loading &&
+        rowsArray.map((row) => {
+          /*
         Si la fila tiene su id marcado para ser editada, en lugar
         de mostrar una fila normal se muestra una serie de inputs con un
         boton que permiten editar y actualizar la tabla.
         */
-        if (editThisRow === row.id) {
-          return (
-            <TableRowEditor
-              row={row}
-              rowsCount={Object.keys(rows).length}
-              mode="edit"
-              cols={cols}
-              cellObjects={cellObjects}
-              setEditThisRow={setEditThisRow}
-              saveRow={saveRow}
-            />
-          );
-        } else {
-          return (
-            <tr key={row.id}>
-              {cols.map((col, index) => {
-                if (index === 0) {
-                  return (
-                    <td key={`${row.id}-${col.id}`}>
-                      <a
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setEditThisRow(row.id);
-                        }}
-                      >
+          if (editThisRow === row.id) {
+            return (
+              <TableRowEditor
+                rowId={row.id}
+                cells={row.cells}
+                order={row.order}
+                mode="edit"
+                cols={cols}
+                setEditThisRow={setEditThisRow}
+                saveRow={saveRow}
+              />
+            );
+          } else {
+            return (
+              <tr key={row.id}>
+                {cols.map((col, index) => {
+                  if (index === 0) {
+                    return (
+                      <td key={`${row.id}-${col.id}`}>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setEditThisRow(row.id);
+                          }}
+                        >
+                          {row.cells[col.id].value}
+                        </a>
+                      </td>
+                    );
+                  } else {
+                    return (
+                      <td key={`${row.id}-${col.id}`}>
                         {row.cells[col.id].value}
-                      </a>
-                    </td>
-                  );
-                } else {
-                  return (
-                    <td key={`${row.id}-${col.id}`}>
-                      {row.cells[col.id].value}
-                    </td>
-                  );
-                }
-              })}
-            </tr>
-          );
-        }
-      })}
+                      </td>
+                    );
+                  }
+                })}
+              </tr>
+            );
+          }
+        })}
     </React.Fragment>
   );
 };
@@ -367,15 +402,19 @@ export const TableRowEditor = (props) => {
   editada. Utiliza su propio estado para almacenar los valores del input,
   y luego utiliza la funcion saveRow de la sección tabla para actualizar
   el contenido de la fila en la tabla */
-  const { row, cols, mode, saveRow, setEditThisRow } = props;
-  const [editedRow, setEditedRow] = useState(row);
+  const { rowId, order, cols, cells, mode, saveRow, setEditThisRow } = props;
+  const [editedRow, setEditedRow] = useState({
+    id: rowId,
+    order: order,
+    cells: cells,
+  });
 
   const updateEditedRow = (colId, value) => {
-    let cells = editedRow.cells;
+    let cells = { ...editedRow.cells };
     cells[colId].value = value;
     setEditedRow({ ...editedRow, cells: cells });
-    console.log({ ...editedRow, cells: cells });
   };
+
   return (
     <React.Fragment>
       <tr>
@@ -406,18 +445,38 @@ export const TableRowEditor = (props) => {
         })}
       </tr>
       <tr>
-        <td colspan={cols.length}>
-          <Button
-            size="sm"
-            variant="outline-primary"
-            style={{ marginTop: "20px" }}
-            onClick={() => {
-              saveRow(editedRow);
-              setEditThisRow("");
-            }}
-          >
-            {mode === "edit" ? "Guardar Cambios" : "Agregar fila"}
-          </Button>
+        <td colspan={cols.length} className="editor-row">
+          <ButtonGroup size="sm">
+            <Button
+              size="sm"
+              variant="outline-primary"
+              onClick={() => {
+                saveRow(editedRow);
+                setEditThisRow("");
+              }}
+            >
+              {mode === "edit" ? "Guardar Cambios" : "Agregar fila"}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline-dark"
+              onClick={() => {
+                console.log("Cancelando");
+                setEditThisRow("");
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              size="sm"
+              variant="outline-danger"
+              onClick={() => {
+                setEditThisRow("");
+              }}
+            >
+              Eliminar Fila
+            </Button>
+          </ButtonGroup>
         </td>
       </tr>
     </React.Fragment>

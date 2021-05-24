@@ -57,6 +57,12 @@ p {
   overflow-x: auto;
 }
 
+.editor-row {
+  padding:20px 20px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: inset 0px 3px 4px 1px rgba(0,0,0,0.2);
+}
+
 form {
   padding: 20px 0px;
 }
