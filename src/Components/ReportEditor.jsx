@@ -159,11 +159,8 @@ export const ReportEditor = () => {
             <div className="col-md-1"></div>
             <div className="col-md-10">
               <hr />
-              <ReportNavigator />
-              <FormSection section={report.sections["86UI4KIBFlcGUkED"]} />
-              <TextSection section={report.sections["9SCg2OA9V9eRZS0p"]} />
-              <TableSection
-                section={JSON.stringify(report.sections["SVAPAyssNFPJOQ65"])}
+              <ReportNavigator
+                sections={JSON.stringify(report.sections)}
                 saveSection={saveSection}
               />
             </div>
@@ -177,24 +174,87 @@ export const ReportEditor = () => {
 };
 
 export const ReportNavigator = (props) => {
+  const { saveSection } = props;
+  const sections = JSON.parse(props.sections);
+  const [activeSection, setActiveSection] = useState("");
+  const [sectionsArray, setSectionsArray] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!sections) {
+      return <p>No hay secciones</p>;
+    }
+    const keys = Object.keys(sections);
+
+    let sArray = keys.map((id) => {
+      return {
+        id,
+        order: sections[id].order,
+        name: sections[id].name,
+        type: sections[id].type,
+      };
+    });
+
+    sArray = sArray.sort((a, b) => {
+      return a.order - b.order;
+    });
+    setSectionsArray(sArray);
+    setActiveSection(sArray[0].id);
+    setLoading(false);
+  }, []);
   return (
-    <Nav fill variant="tabs" defaultActiveKey="/home">
-      <Nav.Item>
-        <Nav.Link href="/home">Active</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="link-1">Loooonger NavLink</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="link-2">Link</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="disabled" disabled>
-          Disabled
-        </Nav.Link>
-      </Nav.Item>
-    </Nav>
+    <React.Fragment>
+      <Nav fill variant="tabs" defaultActiveKey="/home">
+        {!loading &&
+          sectionsArray.map((section) => {
+            return (
+              <Nav.Item key={`nav-${section.id}`}>
+                <Nav.Link
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log("seteando seccion", section.id);
+                    setActiveSection(section.id);
+                  }}
+                >
+                  {section.name}
+                </Nav.Link>
+              </Nav.Item>
+            );
+          })}
+      </Nav>
+      <SectionSwitch
+        sections={sections}
+        activeSection={activeSection}
+        saveSection={saveSection}
+      />
+    </React.Fragment>
   );
+};
+
+const SectionSwitch = (props) => {
+  const { sections, activeSection, saveSection } = props;
+  if (activeSection === "") {
+    return <div></div>;
+  }
+
+  const section = sections[activeSection];
+  console.log("SectionsSwitch dice: esta es la sección", section);
+  switch (section.component) {
+    case "table":
+      return (
+        <TableSection
+          section={JSON.stringify(section)}
+          saveSection={saveSection}
+        />
+      );
+    case "text":
+      return <TextSection section={section} saveSection={saveSection} />;
+    case "form":
+      return <FormSection section={section} saveSection={saveSection} />;
+    default:
+      return <div></div>;
+  }
 };
 
 // SECTION EDITORS:
