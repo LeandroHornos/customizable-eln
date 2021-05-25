@@ -73,7 +73,7 @@ export const ReportEditor = () => {
         let rep = await db.collection("reports").doc(id).get();
         rep = { ...rep.data(), id: rep.id };
         setReport(rep);
-        console.log(rep);
+        console.log("Se descargo este reporte", rep);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -82,12 +82,46 @@ export const ReportEditor = () => {
     fetchData();
   }, [id]);
 
-  const saveSection = (sectionObj) => {
+  // const convertSectionsArrayIntObject = async () => {
+  //   let sectionsArray = JSON.parse(JSON.stringify(report.sections));
+  //   let sectionObject = {};
+  //   sectionsArray.forEach((sect) => {
+  //     sectionObject[sect.id] = sect;
+  //   });
+  //   console.log("Se han convertido las secciones en un objeto", sectionObject);
+  //   try {
+  //     await db
+  //       .collection("reports")
+  //       .doc(id)
+  //       .update({ sections: sectionObject });
+  //     console.log("se ha actualizado con exito el reporte");
+  //   } catch (err) {
+  //     console.log(
+  //       "Ha ocurrido un error al querer guadar el objeto secciones en la base de datos",
+  //       err
+  //     );
+  //   }
+  // };
+
+  const saveSection = async (sectionObj) => {
     /* Esta funcion se pasa a los componentes para que puedan guardar
     la seccion en el reporte y actualizar la base de datos. Esta función
     permite salvar en el documento los cambios generados localmente en cada
     componente asociado a una sección.  */
-    console.log("Salvando cambios en la sección", sectionObj);
+    let sectionsCopy = JSON.parse(JSON.stringify(report.sections));
+    console.log(
+      "Esta es la copia de la seccion que se va a actualizar",
+      sectionsCopy[sectionObj.id]
+    );
+    sectionsCopy[sectionObj.id] = sectionObj;
+    console.log("Salvando cambios en la sección", sectionsCopy[sectionObj.id]);
+    try {
+      await db.collection("reports").doc(id).update({ sections: sectionsCopy });
+      console.log("se han guardado los cambios en la base de datos");
+      setReport({ ...report, sections: sectionsCopy });
+    } catch (error) {
+      console.log(error);
+    }
     return;
   };
 
@@ -126,9 +160,12 @@ export const ReportEditor = () => {
             <div className="col-md-10">
               <hr />
               <ReportNavigator />
-              <FormSection section={report.sections[0]} />
-              <TextSection section={report.sections[1]} />
-              <TableSection section={report.sections[3]} />
+              <FormSection section={report.sections["86UI4KIBFlcGUkED"]} />
+              <TextSection section={report.sections["9SCg2OA9V9eRZS0p"]} />
+              <TableSection
+                section={JSON.stringify(report.sections["SVAPAyssNFPJOQ65"])}
+                saveSection={saveSection}
+              />
             </div>
             <div className="col-md-1"></div>
           </div>
@@ -204,7 +241,9 @@ export const FormSection = (props) => {
 /* TABLE SECTION  ----------------------------------- */
 
 export const TableSection = (props) => {
-  let { layout, name, description } = props.section;
+  const { saveSection } = props;
+  const section = JSON.parse(props.section);
+  const { layout, name, description } = section;
   const [rows, setRows] = useState(layout.rows || {});
   const [newRow, setNewRow] = useState({
     id: makeId(16),
@@ -229,11 +268,18 @@ export const TableSection = (props) => {
   };
 
   const saveRow = (row) => {
-    console.log("asi están las filas antes de guardar cambios", rows);
-    let updatedRows = rows;
+    /* Crea una copia del objeto rows, luego modifica
+    la fila correspondiente en la copia y finalmente
+    actualiza rows en el state. Si no hiciera la copia del objeto
+    al modificar el valor de la clave se modifica directamente
+    rows por fuera del setState() */
+    let updatedRows = JSON.parse(JSON.stringify(rows)); // Para que no se modifique directamente rows
     updatedRows[row.id] = row;
     setRows(updatedRows);
-    console.log("Filas", Object.keys(updatedRows).length);
+    saveSection({
+      ...section,
+      layout: { ...section.layout, rows: updatedRows },
+    });
 
     setNewRow({
       id: makeId(16),
