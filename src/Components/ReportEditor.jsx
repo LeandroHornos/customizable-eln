@@ -82,6 +82,15 @@ export const ReportEditor = () => {
     fetchData();
   }, [id]);
 
+  const saveSection = (sectionObj) => {
+    /* Esta funcion se pasa a los componentes para que puedan guardar
+    la seccion en el reporte y actualizar la base de datos. Esta función
+    permite salvar en el documento los cambios generados localmente en cada
+    componente asociado a una sección.  */
+    console.log("Salvando cambios en la sección", sectionObj);
+    return;
+  };
+
   return (
     <React.Fragment>
       <NavigationBar />
@@ -251,7 +260,7 @@ export const TableSection = (props) => {
           </thead>
           <tbody>
             <TableRows
-              rows={rows}
+              rows={JSON.stringify(rows)}
               cols={layout.columns}
               saveRow={saveRow}
               cancelEdit={cancelEdit}
@@ -324,13 +333,20 @@ export const TableRows = (props) => {
   ids de las filas(rows). A su vez cada fila contiene un objeto cells
   con los valores de las columnas como clave.
   */
-  const { rows, cols, saveRow, cancelEdit } = props;
+  const { cols, saveRow } = props;
   const [editThisRow, setEditThisRow] = useState("");
   const [loading, setLoading] = useState(true);
   const [rowsArray, setRowsArray] = useState([]);
+  const [editedRow, setEditedRow] = useState({});
+
+  const updateEditedRow = (colId, rowId, value) => {
+    let { id, order, cells } = editedRow;
+    cells[colId].value = value;
+    setEditedRow({ id, order, cells });
+  };
 
   useEffect(() => {
-    console.log("han cambiado las filas", rows);
+    const rows = JSON.parse(props.rows);
     let array = Object.keys(rows).map((key) => {
       return { ...rows[key] };
     });
@@ -339,7 +355,7 @@ export const TableRows = (props) => {
     });
     setRowsArray(array);
     setLoading(false);
-  }, [props]);
+  }, [props, editThisRow]);
 
   return (
     <React.Fragment>
@@ -352,15 +368,72 @@ export const TableRows = (props) => {
         */
           if (editThisRow === row.id) {
             return (
-              <TableRowEditor
-                rowId={row.id}
-                cells={row.cells}
-                order={row.order}
-                mode="edit"
-                cols={cols}
-                setEditThisRow={setEditThisRow}
-                saveRow={saveRow}
-              />
+              <React.Fragment>
+                <tr>
+                  {cols.map((col) => {
+                    return (
+                      <td key={`${col.id}-row-0`} style={{ padding: "0" }}>
+                        <input
+                          type={col.type}
+                          value={editedRow.cells[col.id].value}
+                          placeholder={`${col.name}`}
+                          onChange={(e) => {
+                            let val = e.target.value;
+                            if (col.type === "number") {
+                              val = parseFloat(val);
+                            }
+                            updateEditedRow(col.id, row.id, val);
+                          }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            margin: "0",
+                            border: "none",
+                            padding: "5px",
+                          }}
+                        />
+                      </td>
+                    );
+                  })}
+                </tr>
+                <tr>
+                  <td colspan={cols.length} className="editor-row">
+                    <ButtonGroup size="sm">
+                      <Button
+                        size="sm"
+                        variant="outline-primary"
+                        onClick={() => {
+                          saveRow(editedRow);
+
+                          setEditThisRow("");
+                        }}
+                      >
+                        Guardar Cambios
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline-dark"
+                        onClick={() => {
+                          console.log("Json: ", JSON.parse(props.rows));
+                          // resetRow(row.id);
+                          setEditThisRow("");
+                        }}
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline-danger"
+                        onClick={() => {
+                          setEditThisRow("");
+                        }}
+                      >
+                        Eliminar Fila
+                      </Button>
+                    </ButtonGroup>
+                  </td>
+                </tr>
+              </React.Fragment>
             );
           } else {
             return (
@@ -373,6 +446,7 @@ export const TableRows = (props) => {
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
+                            setEditedRow(row);
                             setEditThisRow(row.id);
                           }}
                         >
@@ -392,93 +466,6 @@ export const TableRows = (props) => {
             );
           }
         })}
-    </React.Fragment>
-  );
-};
-
-export const TableRowEditor = (props) => {
-  /* Este componente es igual al que permite crear una nueva fila.
-  Se inserta en la tabla en aquella fila que ha sido seleccionada para ser
-  editada. Utiliza su propio estado para almacenar los valores del input,
-  y luego utiliza la funcion saveRow de la sección tabla para actualizar
-  el contenido de la fila en la tabla */
-  const { rowId, order, cols, cells, mode, saveRow, setEditThisRow } = props;
-  const [editedRow, setEditedRow] = useState({
-    id: rowId,
-    order: order,
-    cells: cells,
-  });
-
-  const updateEditedRow = (colId, value) => {
-    let cells = { ...editedRow.cells };
-    cells[colId].value = value;
-    setEditedRow({ ...editedRow, cells: cells });
-  };
-
-  return (
-    <React.Fragment>
-      <tr>
-        {cols.map((col) => {
-          return (
-            <td key={`${col.id}-row-0`} style={{ padding: "0" }}>
-              <input
-                type={col.type}
-                value={editedRow.cells[col.id].value}
-                placeholder={`${col.name}`}
-                onChange={(e) => {
-                  let val = e.target.value;
-                  if (col.type === "number") {
-                    val = parseFloat(val);
-                  }
-                  updateEditedRow(col.id, val);
-                }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  margin: "0",
-                  border: "none",
-                  padding: "5px",
-                }}
-              />
-            </td>
-          );
-        })}
-      </tr>
-      <tr>
-        <td colspan={cols.length} className="editor-row">
-          <ButtonGroup size="sm">
-            <Button
-              size="sm"
-              variant="outline-primary"
-              onClick={() => {
-                saveRow(editedRow);
-                setEditThisRow("");
-              }}
-            >
-              {mode === "edit" ? "Guardar Cambios" : "Agregar fila"}
-            </Button>
-            <Button
-              size="sm"
-              variant="outline-dark"
-              onClick={() => {
-                console.log("Cancelando");
-                setEditThisRow("");
-              }}
-            >
-              Cancelar
-            </Button>
-            <Button
-              size="sm"
-              variant="outline-danger"
-              onClick={() => {
-                setEditThisRow("");
-              }}
-            >
-              Eliminar Fila
-            </Button>
-          </ButtonGroup>
-        </td>
-      </tr>
     </React.Fragment>
   );
 };
