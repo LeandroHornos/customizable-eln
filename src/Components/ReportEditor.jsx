@@ -304,7 +304,7 @@ export const TableSection = (props) => {
   const { saveSection } = props;
   const section = JSON.parse(props.section);
   const { layout, name, description } = section;
-  const [rows, setRows] = useState(layout.rows || {});
+  const [rows, setRows] = useState(layout.rows);
   const [newRow, setNewRow] = useState({
     id: makeId(16),
     order: Object.keys(rows).length,
@@ -318,7 +318,7 @@ export const TableSection = (props) => {
     console.log({ ...newRow, cells: cells });
   };
 
-  const cancelEdit = () => {
+  const cancelNewRow = () => {
     setNewRow({
       id: makeId(16),
       order: Object.keys(rows).length,
@@ -349,6 +349,30 @@ export const TableSection = (props) => {
     console.log("Se han actualizado las filas:", rows);
   };
 
+  const deleteRow = (rowId) => {
+    let updatedRows = JSON.parse(JSON.stringify(rows)); // Obtengo una copia del objeto rows
+    console.log(
+      "Estas son las filas antes de la eliminación",
+      JSON.parse(JSON.stringify(rows))
+    );
+    const order = updatedRows[rowId].order;
+    delete updatedRows[rowId]; // Elimino la fila indicada por id
+    const keys = Object.keys(updatedRows);
+    if (keys && keys.length > 0) {
+      keys.forEach((key) => {
+        if (updatedRows[key].order > order) {
+          updatedRows[key].order = updatedRows[key].order - 1;
+        }
+      });
+    }
+    console.log("estas son las filas luego de la eliminación", updatedRows);
+    saveSection({
+      ...section,
+      layout: { ...section.layout, rows: updatedRows },
+    });
+    setRows(updatedRows);
+  };
+
   return (
     <React.Fragment>
       <h3 className="color-2">{name}</h3>
@@ -369,7 +393,7 @@ export const TableSection = (props) => {
               rows={JSON.stringify(rows)}
               cols={layout.columns}
               saveRow={saveRow}
-              cancelEdit={cancelEdit}
+              deleteRow={deleteRow}
             />
             <tr>
               <td style={{ paddingTop: "60px" }} colspane={layout.columns}>
@@ -421,7 +445,7 @@ export const TableSection = (props) => {
               variant="outline-dark"
               style={{ marginTop: "20px" }}
               onClick={() => {
-                cancelEdit();
+                cancelNewRow();
               }}
             >
               Cancelar
@@ -434,12 +458,20 @@ export const TableSection = (props) => {
 };
 
 export const TableRows = (props) => {
-  /* Muestra el contenido de las filas de la tabla
-  recibe por props un objeto que contiene como claves los
+  /* Muestra el contenido de las filas de la tabla.
+  Recibe por props un JSON que contiene como claves los
   ids de las filas(rows). A su vez cada fila contiene un objeto cells
-  con los valores de las columnas como clave.
+  con los ids de las columnas como clave. O sea que cada celda se puede acceder como
+  rows[rowId].cells[colId] al parsear el json como objeto.
+  Al cargar el componente, actualizarse las props o cambiar el id de la fila a editar,
+  useEffect toma el json, lo extrae a un objeto y lo convierte en un array
+  el cual se itera para mostrar las filas.
+  Se usa un JSON para trabajar sobre una copia del objeto rows sin modificar el original. 
+  Se trabaja sobre la copia y se actualiza el reporte al guardar una fila,
+  cargando nuevamente el componente con los nuevos valores que
+  recibe por props.
   */
-  const { cols, saveRow } = props;
+  const { cols, saveRow, deleteRow } = props;
   const [editThisRow, setEditThisRow] = useState("");
   const [loading, setLoading] = useState(true);
   const [rowsArray, setRowsArray] = useState([]);
@@ -453,6 +485,11 @@ export const TableRows = (props) => {
 
   useEffect(() => {
     const rows = JSON.parse(props.rows);
+    if (!rows) {
+      console.log("no hay filas que mostrar");
+      return;
+    }
+
     let array = Object.keys(rows).map((key) => {
       return { ...rows[key] };
     });
@@ -531,7 +568,7 @@ export const TableRows = (props) => {
                         size="sm"
                         variant="outline-danger"
                         onClick={() => {
-                          setEditThisRow("");
+                          deleteRow(row.id);
                         }}
                       >
                         Eliminar Fila
