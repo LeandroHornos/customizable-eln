@@ -302,14 +302,30 @@ export const FormSection = (props) => {
 
 export const TableSection = (props) => {
   const { saveSection } = props;
-  const section = JSON.parse(props.section);
-  const { layout, name, description } = section;
-  const [rows, setRows] = useState(layout.rows);
-  const [newRow, setNewRow] = useState({
-    id: makeId(16),
-    order: Object.keys(rows).length,
-    cells: cellObjects(layout.columns),
-  });
+  const [section, setSection] = useState({});
+  const [layout, setLayout] = useState({});
+  const [rows, setRows] = useState({});
+  const [rowsAsArray, setRowsAsArray] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [newRow, setNewRow] = useState({});
+
+  useEffect(() => {
+    const newSection = JSON.parse(props.section);
+    setSection(newSection);
+    setLayout(newSection.layout);
+    if (newSection.layout.rows) {
+      setRows(newSection.layout.rows);
+    } else {
+      setRows({});
+    }
+    setRowsAsArray(rowsObjToArray(newSection.layout.rows));
+    setNewRow({
+      id: makeId(16),
+      order: rows ? Object.keys(rows).length : 0,
+      cells: cellObjects(newSection.layout.columns),
+    });
+    setLoading(false);
+  }, [props]);
 
   const updateNewRow = (colId, value) => {
     let cells = newRow.cells;
@@ -335,7 +351,7 @@ export const TableSection = (props) => {
     rows por fuera del setState() */
     let updatedRows = JSON.parse(JSON.stringify(rows)); // Para que no se modifique directamente rows
     updatedRows[row.id] = row;
-    setRows(updatedRows);
+    // setRows(updatedRows);
     saveSection({
       ...section,
       layout: { ...section.layout, rows: updatedRows },
@@ -373,85 +389,102 @@ export const TableSection = (props) => {
     setRows(updatedRows);
   };
 
+  const rowsObjToArray = (rowsObj) => {
+    if (!rowsObj) {
+      console.log("no hay filas que mostrar");
+      return [];
+    }
+
+    let array = Object.keys(rowsObj).map((key) => {
+      return { ...rowsObj[key] };
+    });
+    array.sort((a, b) => {
+      return a.order - b.order;
+    });
+    return array;
+  };
+
   return (
     <React.Fragment>
-      <h3 className="color-2">{name}</h3>
-      <p>{description}</p>
+      <h3 className="color-2">{section.name}</h3>
+      <p>{section.description}</p>
       <div className="table-container">
-        <Table>
-          <thead>
-            {layout.columns.map((col) => {
-              return (
-                <th key={col.id}>{`${col.name} ${col.unit != "" ? " [" : ""}${
-                  col.unit
-                }${col.unit != "" ? "]" : ""}`}</th>
-              );
-            })}
-          </thead>
-          <tbody>
-            <TableRows
-              rows={JSON.stringify(rows)}
-              cols={layout.columns}
-              saveRow={saveRow}
-              deleteRow={deleteRow}
-            />
-            <tr>
-              <td style={{ paddingTop: "60px" }} colspane={layout.columns}>
-                Nueva Fila
-              </td>
-            </tr>
-            <tr>
+        {!loading && (
+          <Table>
+            <thead>
               {layout.columns.map((col) => {
                 return (
-                  <td key={`${col.id}-row-0`} style={{ padding: "0" }}>
-                    <input
-                      type={col.type}
-                      value={newRow.cells[col.id].value}
-                      placeholder={`${col.name}`}
-                      onChange={(e) => {
-                        let val = e.target.value;
-                        if (col.type === "number") {
-                          val = parseFloat(val);
-                        }
-                        updateNewRow(col.id, val);
-                      }}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        margin: "0",
-                        border: "none",
-                        padding: "5px",
-                      }}
-                    />
-                  </td>
+                  <th key={col.id}>{`${col.name} ${col.unit != "" ? " [" : ""}${
+                    col.unit
+                  }${col.unit != "" ? "]" : ""}`}</th>
                 );
               })}
-            </tr>
-          </tbody>
-          <ButtonGroup>
-            {" "}
-            <Button
-              size="sm"
-              variant="outline-primary"
-              style={{ marginTop: "20px" }}
-              onClick={() => {
-                saveRow(newRow);
-              }}
-            >
-              Agregar fila
-            </Button>
-            <Button
-              size="sm"
-              variant="outline-dark"
-              style={{ marginTop: "20px" }}
-              onClick={() => {
-                cancelNewRow();
-              }}
-            >
-              Cancelar
-            </Button>
-          </ButtonGroup>
-        </Table>
+            </thead>
+            <tbody>
+              <TableRows
+                rows={JSON.stringify(rows)}
+                rowsAsArray={rowsAsArray}
+                cols={layout.columns}
+                saveRow={saveRow}
+                deleteRow={deleteRow}
+              />
+              <tr>
+                <td style={{ paddingTop: "60px" }} colspane={layout.columns}>
+                  Nueva Fila
+                </td>
+              </tr>
+              <tr>
+                {layout.columns.map((col) => {
+                  return (
+                    <td key={`${col.id}-row-0`} style={{ padding: "0" }}>
+                      <input
+                        type={col.type}
+                        value={newRow.cells[col.id].value}
+                        placeholder={`${col.name}`}
+                        onChange={(e) => {
+                          let val = e.target.value;
+                          if (col.type === "number") {
+                            val = parseFloat(val);
+                          }
+                          updateNewRow(col.id, val);
+                        }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          margin: "0",
+                          border: "none",
+                          padding: "5px",
+                        }}
+                      />
+                    </td>
+                  );
+                })}
+              </tr>
+            </tbody>
+            <ButtonGroup>
+              <Button
+                size="sm"
+                variant="outline-primary"
+                style={{ marginTop: "20px" }}
+                onClick={() => {
+                  saveRow(newRow);
+                }}
+              >
+                Agregar fila
+              </Button>
+              <Button
+                size="sm"
+                variant="outline-dark"
+                style={{ marginTop: "20px" }}
+                onClick={() => {
+                  cancelNewRow();
+                }}
+              >
+                Cancelar
+              </Button>
+            </ButtonGroup>
+          </Table>
+        )}
       </div>
     </React.Fragment>
   );
@@ -459,23 +492,22 @@ export const TableSection = (props) => {
 
 export const TableRows = (props) => {
   /* Muestra el contenido de las filas de la tabla.
-  Recibe por props un JSON que contiene como claves los
-  ids de las filas(rows). A su vez cada fila contiene un objeto cells
-  con los ids de las columnas como clave. O sea que cada celda se puede acceder como
-  rows[rowId].cells[colId] al parsear el json como objeto.
-  Al cargar el componente, actualizarse las props o cambiar el id de la fila a editar,
-  useEffect toma el json, lo extrae a un objeto y lo convierte en un array
-  el cual se itera para mostrar las filas.
-  Se usa un JSON para trabajar sobre una copia del objeto rows sin modificar el original. 
-  Se trabaja sobre la copia y se actualiza el reporte al guardar una fila,
-  cargando nuevamente el componente con los nuevos valores que
-  recibe por props.
+  Recibe por props un array con las filas (rows) construido
+  a partir del objeto rows: report.sections[sectionId].layout.rows
+  Permite identificar una fila a editar por su Id haciendo click
+  en el primer elemento de la fila. Al hacerlo, muestra para esa fila
+  un conjunto de celdas con inputs para poder modificar los valores de
+  cada celda, y un conjunto de botones que permiten guardar los cambios,
+  descartarlos o borrar la fila entera. Las funciones son provistas por
+  el componente padre TableSection
+  Cuando se aplican los cambios a la fila, la función correspondiente se
+  encarga de actualizar el documento dentro de la base de datos y volver a 
+  cargar el contenido.
   */
   const { cols, saveRow, deleteRow } = props;
-  const [editThisRow, setEditThisRow] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [rowsArray, setRowsArray] = useState([]);
-  const [editedRow, setEditedRow] = useState({});
+  const [editThisRow, setEditThisRow] = useState(""); // Recibe el id de la fila a editar
+  const [loading, setLoading] = useState(false);
+  const [editedRow, setEditedRow] = useState({}); // Guarda los datos que se estan editando
 
   const updateEditedRow = (colId, rowId, value) => {
     let { id, order, cells } = editedRow;
@@ -483,27 +515,10 @@ export const TableRows = (props) => {
     setEditedRow({ id, order, cells });
   };
 
-  useEffect(() => {
-    const rows = JSON.parse(props.rows);
-    if (!rows) {
-      console.log("no hay filas que mostrar");
-      return;
-    }
-
-    let array = Object.keys(rows).map((key) => {
-      return { ...rows[key] };
-    });
-    array.sort((a, b) => {
-      return a.order - b.order;
-    });
-    setRowsArray(array);
-    setLoading(false);
-  }, [props, editThisRow]);
-
   return (
     <React.Fragment>
       {!loading &&
-        rowsArray.map((row) => {
+        props.rowsAsArray.map((row) => {
           /*
         Si la fila tiene su id marcado para ser editada, en lugar
         de mostrar una fila normal se muestra una serie de inputs con un
@@ -557,8 +572,6 @@ export const TableRows = (props) => {
                         size="sm"
                         variant="outline-dark"
                         onClick={() => {
-                          console.log("Json: ", JSON.parse(props.rows));
-                          // resetRow(row.id);
                           setEditThisRow("");
                         }}
                       >
