@@ -177,13 +177,14 @@ export const ReportNavigator = (props) => {
   }, []);
   return (
     <React.Fragment>
-      <Nav fill variant="tabs" defaultActiveKey="/home">
-        {!loading &&
-          sectionsArray.map((section) => {
+      {!loading && (
+        <Nav fill variant="tabs" defaultActiveKey={sectionsArray[0].name}>
+          {sectionsArray.map((section) => {
             return (
               <Nav.Item key={`nav-${section.id}`}>
                 <Nav.Link
                   href="#"
+                  eventKey={section.name}
                   onClick={(e) => {
                     e.preventDefault();
                     console.log("seteando seccion", section.id);
@@ -195,7 +196,8 @@ export const ReportNavigator = (props) => {
               </Nav.Item>
             );
           })}
-      </Nav>
+        </Nav>
+      )}
       <SectionSwitch
         sections={sections}
         activeSection={activeSection}
