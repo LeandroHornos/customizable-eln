@@ -39,7 +39,7 @@ const StartNewProject = () => {
         reportsCount: 0,
       };
       console.log("Creando proyecto", project);
-      await db.collection("projects").add(project);
+      // await db.collection("projects").add(project);
       return;
     } else {
       errors.forEach((err) => {
@@ -64,6 +64,7 @@ const StartNewProject = () => {
           <Form
             onSubmit={(e) => {
               e.preventDefault();
+              handleSubmit();
             }}
           >
             <Form.Group>

@@ -12,6 +12,7 @@ import firebaseApp from "../firebaseApp";
 
 // Components
 import NavigationBar from "./NavigationBar";
+import SpinnerAndText from "./SpinnerAndText";
 
 const StartNewReport = () => {
   const history = useHistory();
@@ -91,7 +92,9 @@ const StartNewReport = () => {
         <div className="col-md-2"></div>
         <div className="col-md-8">
           <h1 className="text-center">Nuevo reporte</h1>
-          {!loading && (
+          {loading ? (
+            <SpinnerAndText text="cargando..." />
+          ) : (
             <Form
               onSubmit={(e) => {
                 e.preventDefault();
