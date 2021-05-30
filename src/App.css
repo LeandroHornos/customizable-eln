@@ -67,6 +67,13 @@ p {
   margin-top: 60px;
 }
 
+.component-explanation {
+  font-size: 0.7em;
+  font-style: italic;
+  color: var(--info);
+  padding: 5px 0px;
+}
+
 form {
   padding: 20px 0px;
 }

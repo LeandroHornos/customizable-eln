@@ -150,10 +150,17 @@ export const TableSection = (props) => {
     <React.Fragment>
       <h3 className="color-2 section-title">{section.name}</h3>
       <p>{section.description}</p>
+      <p className="component-explanation">
+        Haz click sobre el número de la fila para editarla
+      </p>
       <div className="table-container">
         {!loading && (
           <Table>
             <thead>
+              <th scope="col">
+                #
+              </th>{" "}
+              {/* Columna vacia para los botones */}
               {layout.columns.map((col) => {
                 return (
                   <th key={col.id}>{`${col.name} ${col.unit != "" ? " [" : ""}${
@@ -171,7 +178,7 @@ export const TableSection = (props) => {
                 deleteRow={deleteRow}
               />
               <tr>
-                <td style={{ paddingTop: "60px" }} colspane={layout.columns}>
+                <td style={{ paddingTop: "60px" }} colSpan={layout.columns + 1}>
                   Nueva Fila
                 </td>
               </tr>
@@ -274,7 +281,7 @@ export const TableRows = (props) => {
   return (
     <React.Fragment>
       {!loading &&
-        props.rowsAsArray.map((row) => {
+        props.rowsAsArray.map((row, index) => {
           /*
           Si la fila tiene su id marcado para ser editada, en lugar
           de mostrar una fila normal se muestra una serie de inputs con un
@@ -284,6 +291,16 @@ export const TableRows = (props) => {
             return (
               <React.Fragment>
                 <tr>
+                  <th scope="row">
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setEditThisRow("");
+                      }}
+                    >
+                      {index + 1}
+                    </a>
+                  </th>
                   {cols.map((col) => {
                     return (
                       <td key={`${col.id}-row-0`} style={{ padding: "0" }}>
@@ -311,7 +328,7 @@ export const TableRows = (props) => {
                   })}
                 </tr>
                 <tr>
-                  <td colspan={cols.length} className="editor-row">
+                  <td colSpan={cols.length + 1} className="editor-row">
                     <ButtonGroup size="sm">
                       <Button
                         size="sm"
@@ -355,29 +372,24 @@ export const TableRows = (props) => {
           } else {
             return (
               <tr key={row.id}>
-                {cols.map((col, index) => {
-                  if (index === 0) {
-                    return (
-                      <td key={`${row.id}-${col.id}`}>
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setEditedRow(row);
-                            setEditThisRow(row.id);
-                          }}
-                        >
-                          {row.cells[col.id].value}
-                        </a>
-                      </td>
-                    );
-                  } else {
-                    return (
-                      <td key={`${row.id}-${col.id}`}>
-                        {row.cells[col.id].value}
-                      </td>
-                    );
-                  }
+                <th scope="row">
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setEditedRow(row);
+                      setEditThisRow(row.id);
+                    }}
+                  >
+                    {index + 1}
+                  </a>
+                </th>
+                {cols.map((col) => {
+                  return (
+                    <td key={`${row.id}-${col.id}`}>
+                      {row.cells[col.id].value}
+                    </td>
+                  );
                 })}
               </tr>
             );
