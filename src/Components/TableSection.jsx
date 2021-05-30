@@ -37,30 +37,33 @@ const cellObjects = (cols) => {
 /* TABLE SECTION  ----------------------------------- */
 
 export const TableSection = (props) => {
-  const { saveSection } = props;
-  const [section, setSection] = useState({});
-  const [layout, setLayout] = useState({});
-  const [rows, setRows] = useState({});
-  const [rowsAsArray, setRowsAsArray] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [newRow, setNewRow] = useState({});
+  const { saveSection } = props; // Actualiza la tabla en la base de datos
+  const [section, setSection] = useState({}); // Toda la info de la sección
+  const [layout, setLayout] = useState({}); // Info para presentar la GUI
+  const [data, setData] = useState({}); // Aquí se almacena el contenido de la tabla
+  const [rows, setRows] = useState({}); // Filas de la tabla
+  const [rowsAsArray, setRowsAsArray] = useState([]); // Array de las filas, para mostrar en pantalla
+  const [loading, setLoading] = useState(true); // Permite cargar la info antes de renderizar el componente
+  const [newRow, setNewRow] = useState({}); // Almacena el contenido de los inputs al editar
 
   useEffect(() => {
-    const newSection = JSON.parse(props.section);
-    setSection(newSection);
-    setLayout(newSection.layout);
-    if (newSection.layout.rows) {
-      setRows(newSection.layout.rows);
-    } else {
-      setRows({});
-    }
-    setRowsAsArray(rowsObjToArray(newSection.layout.rows));
-    setNewRow({
-      id: makeId(16),
-      order: rows ? Object.keys(rows).length : 0,
-      cells: cellObjects(newSection.layout.columns),
-    });
-    setLoading(false);
+    const loadDataFromProps = () => {
+      const newSection = JSON.parse(props.section);
+      const emptySection = { data: { rows: {} } }; // Si la sección no tiene data proveo un objeto vacío
+      const sect = { ...emptySection, ...newSection }; // Si hay data, piso el objeto vacío
+      setSection(sect);
+      setLayout(sect.layout);
+      setData(sect.data);
+      setRows(sect.data.rows);
+      setRowsAsArray(rowsObjToArray(sect.data.rows));
+      setNewRow({
+        id: makeId(16),
+        order: rows ? Object.keys(rows).length : 0,
+        cells: cellObjects(sect.layout.columns),
+      });
+      setLoading(false);
+    };
+    loadDataFromProps();
   }, [props]);
 
   const updateNewRow = (colId, value) => {
@@ -90,7 +93,7 @@ export const TableSection = (props) => {
     // setRows(updatedRows);
     saveSection({
       ...section,
-      layout: { ...section.layout, rows: updatedRows },
+      data: { ...data, rows: updatedRows },
     });
 
     setNewRow({
@@ -120,7 +123,7 @@ export const TableSection = (props) => {
     console.log("estas son las filas luego de la eliminación", updatedRows);
     saveSection({
       ...section,
-      layout: { ...section.layout, rows: updatedRows },
+      data: { ...data, rows: updatedRows },
     });
     setRows(updatedRows);
   };
@@ -245,7 +248,7 @@ export const TableRows = (props) => {
   const [loading, setLoading] = useState(false);
   const [editedRow, setEditedRow] = useState({}); // Guarda los datos que se estan editando
 
-  const updateEditedRow = (colId, rowId, value) => {
+  const updateEditedRow = (colId, value) => {
     let { id, order, cells } = editedRow;
     cells[colId].value = value;
     setEditedRow({ id, order, cells });
@@ -276,7 +279,7 @@ export const TableRows = (props) => {
                             if (col.type === "number") {
                               val = parseFloat(val);
                             }
-                            updateEditedRow(col.id, row.id, val);
+                            updateEditedRow(col.id, val);
                           }}
                           style={{
                             width: "100%",

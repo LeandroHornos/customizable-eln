@@ -33,7 +33,6 @@ import { useParams, useHistory } from "react-router-dom";
 export const ReportEditor = () => {
   const { id } = useParams();
   const db = firebaseApp.firestore();
-  const history = useHistory();
   const [report, setReport] = useState({});
   const [loading, setLoading] = useState(true);
 
