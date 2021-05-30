@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import NavigationBar from "./NavigationBar";
+import SpinnerAndText from "./SpinnerAndText";
 
 import firebaseApp from "../firebaseApp";
 
@@ -31,7 +32,9 @@ const Reports = () => {
         <div className="col-md-2"></div>
         <div className="col-md-8">
           <h1 className="text-center">Reportes</h1>
-          {!loading && (
+          {loading ? (
+            <SpinnerAndText text="cargando reportes..."/>
+          ) : (
             <ul>
               {reports.map((rep) => {
                 return (

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-import firebaseApp from "../firebaseApp";
-
 // React Bootstrap Components
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+
+import ButtonSpinner from "./ButtonSpinner";
 
 import { makeId } from "../utilities";
 
@@ -43,6 +43,7 @@ export const TableSection = (props) => {
   const [data, setData] = useState({}); // Aquí se almacena el contenido de la tabla
   const [rows, setRows] = useState({}); // Filas de la tabla
   const [rowsAsArray, setRowsAsArray] = useState([]); // Array de las filas, para mostrar en pantalla
+  const [savingChanges, setSavingChanges] = useState(false);
   const [loading, setLoading] = useState(true); // Permite cargar la info antes de renderizar el componente
   const [newRow, setNewRow] = useState({}); // Almacena el contenido de los inputs al editar
 
@@ -61,9 +62,11 @@ export const TableSection = (props) => {
         order: rows ? Object.keys(rows).length : 0,
         cells: cellObjects(sect.layout.columns),
       });
-      setLoading(false);
     };
+
     loadDataFromProps();
+    setSavingChanges(false);
+    setLoading(false);
   }, [props]);
 
   const updateNewRow = (colId, value) => {
@@ -199,29 +202,38 @@ export const TableSection = (props) => {
                   );
                 })}
               </tr>
+              <tr>
+                <td colSpan={layout.columns.length}>
+                  <ButtonGroup>
+                    <Button
+                      size="sm"
+                      variant="outline-primary"
+                      style={{ marginTop: "20px" }}
+                      onClick={() => {
+                        setSavingChanges(true);
+                        saveRow(newRow);
+                      }}
+                    >
+                      {savingChanges ? (
+                        <ButtonSpinner text="Guardando..." />
+                      ) : (
+                        "Agregar fila"
+                      )}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline-dark"
+                      style={{ marginTop: "20px" }}
+                      onClick={() => {
+                        cancelNewRow();
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                  </ButtonGroup>
+                </td>
+              </tr>
             </tbody>
-            <ButtonGroup>
-              <Button
-                size="sm"
-                variant="outline-primary"
-                style={{ marginTop: "20px" }}
-                onClick={() => {
-                  saveRow(newRow);
-                }}
-              >
-                Agregar fila
-              </Button>
-              <Button
-                size="sm"
-                variant="outline-dark"
-                style={{ marginTop: "20px" }}
-                onClick={() => {
-                  cancelNewRow();
-                }}
-              >
-                Cancelar
-              </Button>
-            </ButtonGroup>
           </Table>
         )}
       </div>
@@ -244,6 +256,7 @@ export const TableRows = (props) => {
     cargar el contenido.
     */
   const { cols, saveRow, deleteRow } = props;
+  const [savingChanges, setSavingChanges] = useState(false);
   const [editThisRow, setEditThisRow] = useState(""); // Recibe el id de la fila a editar
   const [loading, setLoading] = useState(false);
   const [editedRow, setEditedRow] = useState({}); // Guarda los datos que se estan editando
@@ -253,6 +266,10 @@ export const TableRows = (props) => {
     cells[colId].value = value;
     setEditedRow({ id, order, cells });
   };
+
+  useEffect(() => {
+    setSavingChanges(false);
+  }, [props]);
 
   return (
     <React.Fragment>
@@ -301,11 +318,15 @@ export const TableRows = (props) => {
                         variant="outline-primary"
                         onClick={() => {
                           saveRow(editedRow);
-
                           setEditThisRow("");
+                          setSavingChanges(true);
                         }}
                       >
-                        Guardar Cambios
+                        {savingChanges ? (
+                          <ButtonSpinner text="Guardando..." />
+                        ) : (
+                          "Guardar Cambios"
+                        )}
                       </Button>
                       <Button
                         size="sm"
@@ -320,10 +341,11 @@ export const TableRows = (props) => {
                         size="sm"
                         variant="outline-danger"
                         onClick={() => {
+                          setSavingChanges(true);
                           deleteRow(row.id);
                         }}
                       >
-                        Eliminar Fila
+                        Eliminar
                       </Button>
                     </ButtonGroup>
                   </td>

@@ -19,16 +19,12 @@ import firebaseApp from "../firebaseApp";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 
-
 // Components
 import NavigationBar from "./NavigationBar";
-import TableSection from "./TableSection"
+import SpinnerAndText from "./SpinnerAndText";
+import TableSection from "./TableSection";
 
 import { useParams, useHistory } from "react-router-dom";
-
-
-
-
 
 export const ReportEditor = () => {
   const { id } = useParams();
@@ -110,7 +106,9 @@ export const ReportEditor = () => {
           </h1>
         </div>
       </div>
-      {!loading && (
+      {loading ? (
+        <SpinnerAndText text="cargando..." />
+      ) : (
         <React.Fragment>
           <div className="row">
             <div className="col-md-1"></div>
