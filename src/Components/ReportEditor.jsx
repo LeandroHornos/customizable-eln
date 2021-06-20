@@ -207,7 +207,7 @@ export const ReportNavigator = (props) => {
   );
 };
 
-const SectionSwitch = (props) => {
+export const SectionSwitch = (props) => {
   const { sections, activeSection, saveSection } = props;
   if (activeSection === "") {
     return <div></div>;

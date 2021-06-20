@@ -41,8 +41,8 @@ const TemplateEditor = () => {
   const sectionArrayToObject = () => {
     let sectionsArray = [...sections];
     let sectionObject = {};
-    sectionsArray.forEach((sect) => {
-      sectionObject[sect.id] = sect;
+    sectionsArray.forEach((sect, index) => {
+      sectionObject[sect.id] = { ...sect, order: index };
     });
     return sectionObject;
   };
