@@ -10,7 +10,7 @@ import TemplateEditor from "./Components/TemplateEditor";
 import StartNewReport from "./Components/StartNewReport";
 import Reports from "./Components/Reports";
 import ReportEditor from "./Components/ReportEditor";
-import "./App.css";
+
 
 function App() {
   // const currentLang = "es";

@@ -38,6 +38,15 @@ const TemplateEditor = () => {
     id: makeId(16),
   }); // para comenzar crea un único objeto seccion vacío en secciones, y le asigna un id
 
+  const sectionArrayToObject = () => {
+    let sectionsArray = [...sections];
+    let sectionObject = {};
+    sectionsArray.forEach((sect) => {
+      sectionObject[sect.id] = sect;
+    });
+    return sectionObject;
+  };
+
   const handleSubmit = async () => {
     const now = new Date();
     const timestamp = now.getTime();
@@ -49,7 +58,7 @@ const TemplateEditor = () => {
       lastModified: timestamp,
       name: templateName,
       privacy: "public",
-      sections,
+      sections: sectionArrayToObject(),
       status: "active",
       title,
     };
