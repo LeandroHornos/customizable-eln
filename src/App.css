@@ -85,6 +85,24 @@ a {
   padding: 5px 0px;
 }
 
+.journal-cards-container {
+  background-color: rgb(230, 230, 230);
+  border-radius: 5px;
+  padding: 10px;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+.journal-card {
+  box-shadow: 2px 1px 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+.journal-card-header {
+  font-size: 0.8em;
+}
+.journal-card-body {
+  font-size: 1em;
+}
+
 form {
   padding: 20px 0px;
 }

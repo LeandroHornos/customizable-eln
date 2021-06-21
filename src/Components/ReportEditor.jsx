@@ -127,7 +127,6 @@ export const ReportEditor = () => {
           <div className="row">
             <div className="col-md-1"></div>
             <div className="col-md-10">
-              <hr />
               <ReportNavigator
                 sections={JSON.stringify(report.sections)}
                 saveSection={saveSection}

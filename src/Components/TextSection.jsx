@@ -36,11 +36,12 @@ export const TextSection = (props) => {
     setCurrentText(data.text);
     setShowButtons(false);
     setLoading(false);
+    console.log("Text section", section);
   }, [props]);
 
   const saveText = () => {
-    saveSection({ ...section, data: { text: currentText } });
-    console.log("Guardando texto...");
+    const updatedSection = { ...section, data: { text: currentText } };
+    saveSection(updatedSection);
   };
   return (
     !loading && (
