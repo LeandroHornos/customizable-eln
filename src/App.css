@@ -32,8 +32,19 @@ h3 {
   font-size: 1.4em;
 }
 
-p {
-  font-weight: 300;
+h4 {
+  padding: 10px 0px;
+  font-weight: 400;
+  font-size: 1.1em;
+}
+
+p,
+th,
+tr,
+td,
+label,
+a {
+  font-size: 0.9em;
 }
 /* FONT COLOR CLASSES*/
 

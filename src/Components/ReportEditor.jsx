@@ -101,26 +101,19 @@ export const ReportEditor = () => {
   return (
     <React.Fragment>
       <NavigationBar />
-      <div className="row">
-        <div className="col-12">
-          <h1 className="text-center" style={{ paddingBottom: "40px" }}>
-            Reporte
-          </h1>
-        </div>
-      </div>
       {loading ? (
         <SpinnerAndText text="cargando..." />
       ) : (
         <React.Fragment>
-          <div className="row">
+          <div className="row" style={{ paddingTop: "50px" }}>
             <div className="col-md-1"></div>
             <div className="col-md-5">
               <div>
                 <h2 className="color-1-light">
-                  Proyecto: {report.projectName}
+                  <strong>Proyecto:</strong> {report.projectName}
                 </h2>
                 <h2 className="color-1-light">
-                  Reporte: {report.reportNumber}
+                  <small>Reporte: {report.reportNumber}</small>
                 </h2>
               </div>
             </div>
@@ -254,7 +247,8 @@ export const SectionSwitch = (props) => {
 // SECTION EDITORS:
 
 export const FormSection = (props) => {
-  let { layout, name, description } = props.section;
+  const section = JSON.parse(props.section)
+  let { layout, name, description } = section;
 
   return (
     <React.Fragment>

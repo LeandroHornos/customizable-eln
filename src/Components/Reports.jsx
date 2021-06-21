@@ -21,6 +21,7 @@ const Reports = () => {
       });
       setReports(reps);
       setLoading(false);
+      console.log("reports:", reps);
     };
     fetchData();
   }, []);
@@ -33,7 +34,7 @@ const Reports = () => {
         <div className="col-md-8">
           <h1 className="text-center">Reportes</h1>
           {loading ? (
-            <SpinnerAndText text="cargando reportes..."/>
+            <SpinnerAndText text="cargando reportes..." />
           ) : (
             <ul>
               {reports.map((rep) => {

@@ -10,9 +10,19 @@ const FileLinksSection = (props) => {
   const { saveSection } = props; // Actualiza la tabla en la base de datos
   const section = JSON.parse(props.section);
   let { name, description, data } = section;
+  if (data === undefined) {
+    data = { links: [] };
+  } else if (!("links" in data)) {
+    data = { ...data, links: [] };
+  }
+
+  useEffect(() => {
+    console.log("File link Section: ", JSON.parse(props.section));
+  }, [props]);
 
   const saveFileLink = (obj) => {
     console.log("Se va a salvar el siguiente link", obj);
+    saveSection({ ...section, data: { links: [...data.links, obj] } });
   };
 
   return (
@@ -26,30 +36,29 @@ const FileLinksSection = (props) => {
           <th>Link</th>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <img src="/img/icons/xls.png" alt="" srcset="" height="60px" />
-            </td>
-            <td>Tabla de reactivos.xls</td>
-            <td>http...</td>
-          </tr>
-          <tr>
-            <td>
-              <img src="/img/icons/pdf.png" alt="" srcset="" height="60px" />
-            </td>
-            <td>Tabla de reactivos.xls</td>
-            <td>http...</td>
-          </tr>
-          <tr>
-            <td>
-              <img src="/img/icons/zip.png" alt="" srcset="" height="60px" />
-            </td>
-            <td>Tabla de reactivos.xls</td>
-            <td>http...</td>
-          </tr>
+          {data.links.map((link) => {
+            return (
+              <tr key={link.url}>
+                <td>
+                  <img
+                    src={`/img/icons/${link.type}.png`}
+                    alt=""
+                    srcset=""
+                    height="40px"
+                  />
+                </td>
+                <td>{link.description}</td>
+                <td>
+                  <a style={{ overflowX: "hidden" }} href={link.url} target="_blank">
+                    {link.url.substr(0, 30) + "..."}
+                  </a>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
-      <h3>Nuevo Archivo enlazado</h3>
+      <h4>Nuevo Archivo enlazado</h4>
       <NewLinkForm saveFileLink={saveFileLink} />
     </React.Fragment>
   );
