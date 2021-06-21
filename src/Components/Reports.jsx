@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-import NavigationBar from "./NavigationBar";
-import SpinnerAndText from "./SpinnerAndText";
-
+// Firebase
 import firebaseApp from "../firebaseApp";
 
+// React Router
 import { useHistory } from "react-router-dom";
+
+// React Bootstrap
+import Table from "react-bootstrap/Table";
+
+// Components
+import NavigationBar from "./NavigationBar";
+import SpinnerAndText from "./SpinnerAndText";
+import { reduceRight } from "async";
 
 const Reports = () => {
   const db = firebaseApp.firestore();
@@ -36,29 +43,51 @@ const Reports = () => {
           {loading ? (
             <SpinnerAndText text="cargando reportes..." />
           ) : (
-            <ul>
-              {reports.map((rep) => {
-                return (
-                  <li key={rep.id}>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        console.log("vamo a", `/report/${rep.id}`);
-                        history.push(`/report/${rep.id}`);
-                      }}
-                    >
-                      {rep.id}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
+            <ReportsInfoTable reports={reports} />
           )}
         </div>
         <div className="col-md-2"></div>
       </div>
     </React.Fragment>
+  );
+};
+
+export const ReportsInfoTable = (props) => {
+  const history = useHistory();
+  const { reports } = props;
+  return (
+    <Table>
+      <thead>
+        <th>Proyecto</th>
+        <th>Reporte Nro</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Link</th>
+      </thead>
+      <tbody>
+        {reports.map((rep) => {
+          return (
+            <tr key={rep.id}>
+              <td>{rep.projectName}</td>
+              <td>{rep.reportNumber}</td>
+              <td>{rep.description}</td>
+              <td>{rep.status}</td>
+              <td>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    history.push(`/report/${rep.id}`);
+                  }}
+                >
+                  Ver
+                </a>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </Table>
   );
 };
 

@@ -25,10 +25,36 @@ saveSection(sectionObject): función
         dentro del documento correspondiente en la base de datos.
 */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const JournalSection = (props) => {
-  return <React.Fragment></React.Fragment>;
+  const { saveSection } = props;
+  const section = JSON.parse(props.section);
+  let { name, description, data } = section;
+  if (data === undefined) {
+    data = { entries: [] };
+  } else if (!("entries" in data)) {
+    data = { ...data, entries: [] };
+  }
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    /*
+      Reinicio el state cuando entran nuevas props.
+      Evita permanencia del texto al cambiar entre solapas 
+      con el mismo componente
+      */
+    setLoading(false);
+  }, [props]);
+
+  return (
+    <React.Fragment>
+      <h3 className="color-2">{name}</h3>
+      <p>{description}</p>
+      <div></div>
+    </React.Fragment>
+  );
 };
 
 export default JournalSection;
