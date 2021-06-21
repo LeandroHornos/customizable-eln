@@ -23,6 +23,7 @@ import Nav from "react-bootstrap/Nav";
 import NavigationBar from "./NavigationBar";
 import SpinnerAndText from "./SpinnerAndText";
 import TableSection from "./TableSection";
+import TextSection from "./TextSection";
 
 import { useParams, useHistory } from "react-router-dom";
 
@@ -224,9 +225,19 @@ export const SectionSwitch = (props) => {
         />
       );
     case "text":
-      return <TextSection section={section} saveSection={saveSection} />;
+      return (
+        <TextSection
+          section={JSON.stringify(section)}
+          saveSection={saveSection}
+        />
+      );
     case "form":
-      return <FormSection section={section} saveSection={saveSection} />;
+      return (
+        <FormSection
+          section={JSON.stringify(section)}
+          saveSection={saveSection}
+        />
+      );
     default:
       return <div></div>;
   }
@@ -268,23 +279,6 @@ export const FormSection = (props) => {
             </Form.Group>
           );
         })}
-      </Form>
-    </React.Fragment>
-  );
-};
-
-/* TEXT SECTION ------------------------------------- */
-
-export const TextSection = (props) => {
-  let { layout, name, description } = props.section;
-  return (
-    <React.Fragment>
-      <h3 className="color-2 section-title">{name}</h3>
-      <p>{description}</p>
-      <Form>
-        <Form.Group>
-          <Form.Control as="textarea"></Form.Control>
-        </Form.Group>
       </Form>
     </React.Fragment>
   );
