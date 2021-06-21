@@ -189,6 +189,7 @@ const TemplateEditor = () => {
                 <option value="text">Bloque de texto</option>
                 <option value="table">Tabla</option>
                 <option value="form">Formulario</option>
+                <option value="file-links">Archivos enlazados</option>
               </Form.Control>
             </Form.Group>
             <SectionEditorSwitch
@@ -224,6 +225,8 @@ const SectionEditorSwitch = (props) => {
       return <TextSectionConfig saveSection={saveSection} reset={reset} />;
     case "form":
       return <FormSectionConfig saveSection={saveSection} reset={reset} />;
+    case "file-links":
+      return <FileLinksSectionConfig saveSection={saveSection} reset={reset} />;
     default:
       return <div></div>;
   }
@@ -293,6 +296,7 @@ export const TableSectionConfig = (props) => {
       <TableSectionColList columns={columns} setColumns={setColumns} />
       <Button
         block
+        style={{ margin: "10px 0px" }}
         variant="success"
         className="block-btn"
         onClick={() => {
@@ -411,7 +415,6 @@ export const TextSectionConfig = (props) => {
       <p>Estas sección provee un bloque de texto</p>
       <Row>
         <Col>
-          {" "}
           <Form.Group>
             <Form.Label>Caracteres</Form.Label>
             <Form.Control
@@ -447,6 +450,7 @@ export const TextSectionConfig = (props) => {
       </Row>
       <Button
         block
+        style={{ margin: "10px 0px" }}
         variant="success"
         className="block-btn"
         onClick={() => {
@@ -523,6 +527,7 @@ export const FormSectionConfig = (props) => {
       <FormSectionFieldList fields={fields} setFileds={setFileds} />
       <Button
         block
+        style={{ margin: "10px 0px" }}
         variant="success"
         className="block-btn"
         onClick={() => {
@@ -626,6 +631,39 @@ export const FormSectionFieldList = (props) => {
         );
       })}
     </React.Fragment>
+  );
+};
+
+// FileLinks Section__________________________________
+
+export const FileLinksSectionConfig = (props) => {
+  const { saveSection, reset } = props;
+
+  return (
+    <div className="section-config-box">
+      <p>
+        Esta sección provee una caja en la cual se puede crear una lista de
+        archivos asociados a un vínculo externo. En lugar de almacenar los
+        archivos directamente en el documento, permite relacionar el reporte con
+        los archivos almacenados en un servicio externo como GoogleDocs,
+        GoogleDrive, OneDrive, Office365, etc.
+      </p>
+      <p>
+        Esta sección <strong>no requiere configuración</strong>
+      </p>
+      <Button
+        block
+        style={{ margin: "10px 0px" }}
+        variant="success"
+        className="block-btn"
+        onClick={() => {
+          saveSection({}); // Esta sección no tiene un layout configurable
+          reset();
+        }}
+      >
+        Agregar sección
+      </Button>
+    </div>
   );
 };
 
