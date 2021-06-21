@@ -24,6 +24,7 @@ import NavigationBar from "./NavigationBar";
 import SpinnerAndText from "./SpinnerAndText";
 import TableSection from "./TableSection";
 import TextSection from "./TextSection";
+import FileLinksSection from "./FileLinksSection";
 
 import { useParams, useHistory } from "react-router-dom";
 
@@ -234,6 +235,13 @@ export const SectionSwitch = (props) => {
     case "form":
       return (
         <FormSection
+          section={JSON.stringify(section)}
+          saveSection={saveSection}
+        />
+      );
+    case "file-links":
+      return (
+        <FileLinksSection
           section={JSON.stringify(section)}
           saveSection={saveSection}
         />
