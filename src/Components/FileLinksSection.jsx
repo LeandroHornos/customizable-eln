@@ -1,3 +1,36 @@
+/*
+File Links Section
+
+<ReportEditor />
+        |
+        -- <FileLinksSection />
+
+Uno de los componentes de seccion dentro de <ReportEditor />
+Este componente muestra y administra una caja con links
+a archivos almacenados en la nube. 
+ 
+Recibe la información de la sección por props, así como
+una función para actualizar la sección dentro del reporte
+y guardar cambios en la base de datos
+
+Muestra los links en una tabla junto con una descripción
+y un ícono que identifica el tipo de archivo.
+Presenta además un formulario para crear nuevos links.
+
+Props: 
+
+section: objeto JSON
+        contiene la información correspondiente a la sección.
+        En section.layout está la información para dibujar el componente
+        (no en este caso)
+        En section.data se almacena la información ingresada por el usuario.
+
+saveSection(sectionObject): función
+        función que toma la sección actualizada y la guarda
+        dentro del documento correspondiente en la base de datos.
+*/
+
+
 import React, { useState, useEffect } from "react";
 
 import Button from "react-bootstrap/Button";

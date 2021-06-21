@@ -190,6 +190,7 @@ const TemplateEditor = () => {
                 <option value="table">Tabla</option>
                 <option value="form">Formulario</option>
                 <option value="file-links">Archivos enlazados</option>
+                <option value="journal">Bitácora</option>
               </Form.Control>
             </Form.Group>
             <SectionEditorSwitch
@@ -227,6 +228,8 @@ const SectionEditorSwitch = (props) => {
       return <FormSectionConfig saveSection={saveSection} reset={reset} />;
     case "file-links":
       return <FileLinksSectionConfig saveSection={saveSection} reset={reset} />;
+    case "journal":
+      return <JournalSectionConfig saveSection={saveSection} reset={reset} />;
     default:
       return <div></div>;
   }
@@ -635,7 +638,6 @@ export const FormSectionFieldList = (props) => {
 };
 
 // FileLinks Section__________________________________
-
 export const FileLinksSectionConfig = (props) => {
   const { saveSection, reset } = props;
 
@@ -647,6 +649,37 @@ export const FileLinksSectionConfig = (props) => {
         archivos directamente en el documento, permite relacionar el reporte con
         los archivos almacenados en un servicio externo como GoogleDocs,
         GoogleDrive, OneDrive, Office365, etc.
+      </p>
+      <p>
+        Esta sección <strong>no requiere configuración</strong>
+      </p>
+      <Button
+        block
+        style={{ margin: "10px 0px" }}
+        variant="success"
+        className="block-btn"
+        onClick={() => {
+          saveSection({}); // Esta sección no tiene un layout configurable
+          reset();
+        }}
+      >
+        Agregar sección
+      </Button>
+    </div>
+  );
+};
+
+// journal Section____________________________________
+export const JournalSectionConfig = (props) => {
+  const { saveSection, reset } = props;
+
+  return (
+    <div className="section-config-box">
+      <p>
+        La sección de Bitácora contiene una lista de entradas cortas de texto,
+        identificadas por la hora a la que fueron realizadas. Funcionan como si
+        fueran una ventana de chat, y permiten registrar acciones u
+        observaciones en el desarrollo de un experimento.
       </p>
       <p>
         Esta sección <strong>no requiere configuración</strong>

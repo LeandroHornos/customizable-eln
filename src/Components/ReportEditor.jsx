@@ -25,8 +25,9 @@ import SpinnerAndText from "./SpinnerAndText";
 import TableSection from "./TableSection";
 import TextSection from "./TextSection";
 import FileLinksSection from "./FileLinksSection";
+import JournalSection from "./JournalSection";
 
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export const ReportEditor = () => {
   const { id } = useParams();
@@ -239,6 +240,13 @@ export const SectionSwitch = (props) => {
           saveSection={saveSection}
         />
       );
+    case "journal":
+      return (
+        <JournalSection
+          section={JSON.stringify(section)}
+          saveSection={saveSection}
+        />
+      );
     default:
       return <div></div>;
   }
@@ -247,7 +255,7 @@ export const SectionSwitch = (props) => {
 // SECTION EDITORS:
 
 export const FormSection = (props) => {
-  const section = JSON.parse(props.section)
+  const section = JSON.parse(props.section);
   let { layout, name, description } = section;
 
   return (
