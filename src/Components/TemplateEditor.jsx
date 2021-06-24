@@ -47,6 +47,19 @@ const TemplateEditor = () => {
     return sectionObject;
   };
 
+  const removeIds = (array) => {
+    /* Esta función me permite eliminar los 
+    ids provisorios que usé para trackear las secciones
+    durante su creación. Los elimino para poder guardar
+    las secciones en una subcolección dentro del documento
+    correspondiente al reporte */
+    const updatedArray = array.map((item) => {
+      delete item.id;
+      return item;
+    });
+    return updatedArray;
+  };
+
   const handleSubmit = async () => {
     const now = new Date();
     const timestamp = now.getTime();
@@ -58,7 +71,7 @@ const TemplateEditor = () => {
       lastModified: timestamp,
       name: templateName,
       privacy: "public",
-      sections,
+      sections: removeIds(sections),
       status: "active",
       title,
     };

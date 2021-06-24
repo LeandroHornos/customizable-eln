@@ -53,12 +53,12 @@ const StartNewReport = () => {
   };
 
   const handleSubmit = async () => {
+    const batch = db.batch();
     const now = new Date();
     const { isValid, errors } = validateForm();
     if (isValid) {
       const temp = getTemplateById(selectedTemplate);
       let report = {
-        sections: temp.sections,
         templateId: selectedTemplate,
         version: 0,
         creatorId: "",
@@ -77,9 +77,20 @@ const StartNewReport = () => {
       };
       console.log(report);
       try {
-        const createdReport = await db.collection("reports").add(report);
-        console.log("se ha creado el reporte con éxito", createdReport.id);
-        history.push("/");
+        // Creo el reporte en la base de datos
+        const rep = await db.collection("reports").add(report);
+        console.log("se ha creado el reporte con éxito, id:", rep.id);
+        // Creo la subcoleccion de secciones
+        temp.sections.forEach((doc) => {
+          var docRef = db
+            .collection("reports")
+            .doc(rep.id)
+            .collection("sections")
+            .doc(); // Generar el id automaticamente
+          batch.set(docRef, doc);
+        });
+        await batch.commit();
+        console.log("Se guardaron las secciones!");
       } catch (error) {
         console.log(error);
       }
