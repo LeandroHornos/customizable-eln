@@ -60,6 +60,7 @@ const StartNewReport = () => {
       let report = {
         sections: temp.sections,
         templateId: selectedTemplate,
+        version: 0,
         creatorId: "",
         creationDate: now,
         creationTimestamp: now.getTime(),
@@ -76,8 +77,8 @@ const StartNewReport = () => {
       };
       console.log(report);
       try {
-        await db.collection("reports").add(report);
-        console.log("se ha creado el reporte con éxito");
+        const createdReport = await db.collection("reports").add(report);
+        console.log("se ha creado el reporte con éxito", createdReport.id);
         history.push("/");
       } catch (error) {
         console.log(error);

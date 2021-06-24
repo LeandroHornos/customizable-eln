@@ -58,7 +58,7 @@ const TemplateEditor = () => {
       lastModified: timestamp,
       name: templateName,
       privacy: "public",
-      sections: sectionArrayToObject(),
+      sections,
       status: "active",
       title,
     };
