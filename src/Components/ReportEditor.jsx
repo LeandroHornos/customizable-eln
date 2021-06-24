@@ -68,21 +68,13 @@ export const ReportEditor = () => {
   }, [id]);
 
   const saveSection = async (sectionObj) => {
-    /* Esta funcion se pasa a los componentes para que puedan guardar
-    la seccion en el reporte y actualizar la base de datos. Esta función
-    permite salvar en el documento los cambios generados localmente en cada
-    componente asociado a una sección.  */
-    let sectionsCopy = JSON.parse(JSON.stringify(report.sections));
-    console.log(
-      "Esta es la copia de la seccion que se va a actualizar",
-      sectionsCopy[sectionObj.id]
-    );
-    sectionsCopy[sectionObj.id] = sectionObj;
-    console.log("Salvando cambios en la sección", sectionsCopy[sectionObj.id]);
     try {
-      await db.collection("reports").doc(id).update({ sections: sectionsCopy });
-      console.log("se han guardado los cambios en la base de datos");
-      setReport({ ...report, sections: sectionsCopy });
+      await db
+        .collection("reports")
+        .doc(id)
+        .collection("sections")
+        .doc(sectionObj.id)
+        .update(sectionObj);
     } catch (error) {
       console.log(error);
     }
