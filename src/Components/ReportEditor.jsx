@@ -33,6 +33,7 @@ export const ReportEditor = () => {
   const { id } = useParams();
   const db = firebaseApp.firestore();
   const [report, setReport] = useState({});
+  const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,9 +46,19 @@ export const ReportEditor = () => {
     const fetchData = async () => {
       try {
         let rep = await db.collection("reports").doc(id).get();
+        let sects = await db
+          .collection("reports")
+          .doc(id)
+          .collection("sections")
+          .get();
         rep = { ...rep.data(), id: rep.id };
+        sects = sects.docs.map((sec) => {
+          return { ...sec.data(), id: sec.id };
+        });
         setReport(rep);
+        setSections(sects);
         console.log("Se descargo este reporte", rep);
+        console.log("Se descargaron las secciones", sects);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -55,27 +66,6 @@ export const ReportEditor = () => {
     };
     fetchData();
   }, [id]);
-
-  // const convertSectionsArrayIntObject = async () => {
-  //   let sectionsArray = JSON.parse(JSON.stringify(report.sections));
-  //   let sectionObject = {};
-  //   sectionsArray.forEach((sect) => {
-  //     sectionObject[sect.id] = sect;
-  //   });
-  //   console.log("Se han convertido las secciones en un objeto", sectionObject);
-  //   try {
-  //     await db
-  //       .collection("reports")
-  //       .doc(id)
-  //       .update({ sections: sectionObject });
-  //     console.log("se ha actualizado con exito el reporte");
-  //   } catch (err) {
-  //     console.log(
-  //       "Ha ocurrido un error al querer guadar el objeto secciones en la base de datos",
-  //       err
-  //     );
-  //   }
-  // };
 
   const saveSection = async (sectionObj) => {
     /* Esta funcion se pasa a los componentes para que puedan guardar
@@ -128,7 +118,7 @@ export const ReportEditor = () => {
             <div className="col-md-1"></div>
             <div className="col-md-10">
               <ReportNavigator
-                sections={JSON.stringify(report.sections)}
+                sections={JSON.stringify(sections)}
                 saveSection={saveSection}
               />
             </div>
@@ -153,20 +143,11 @@ export const ReportNavigator = (props) => {
       return <p>No hay secciones</p>;
     }
     const keys = Object.keys(sections);
-
-    let sArray = keys.map((id) => {
-      return {
-        id,
-        order: sections[id].order,
-        name: sections[id].name,
-        type: sections[id].type,
-      };
-    });
-
-    sArray = sArray.sort((a, b) => {
+    const sArray = sections.sort((a, b) => {
       return a.order - b.order;
     });
     setSectionsArray(sArray);
+    console.log("Sections array:", sArray);
     setActiveSection(sArray[0].id);
     setLoading(false);
   }, []);
@@ -204,11 +185,15 @@ export const ReportNavigator = (props) => {
 
 export const SectionSwitch = (props) => {
   const { sections, activeSection, saveSection } = props;
+  const sectionsObject = {};
+  sections.forEach((sect) => {
+    sectionsObject[sect.id] = { ...sect };
+  });
   if (activeSection === "") {
     return <div></div>;
   }
 
-  const section = sections[activeSection];
+  const section = sectionsObject[activeSection];
   console.log("SectionsSwitch dice: esta es la sección", section);
   switch (section.component) {
     case "table":
