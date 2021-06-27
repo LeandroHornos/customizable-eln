@@ -12,7 +12,6 @@ import Table from "react-bootstrap/Table";
 // Components
 import NavigationBar from "./NavigationBar";
 import SpinnerAndText from "./SpinnerAndText";
-import { reduceRight } from "async";
 
 const Reports = () => {
   const db = firebaseApp.firestore();

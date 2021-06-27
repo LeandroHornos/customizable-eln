@@ -2,14 +2,18 @@ import React, { useContext } from "react";
 
 import { useHistory } from "react-router-dom";
 
-//
+// React Bootstrap
 import Button from "react-bootstrap/Button";
 
+// Components
 import NavigationBar from "./NavigationBar";
+
+// Dev
+import { peter } from "../demoUsers";
 
 const Dashboard = () => {
   const history = useHistory();
-
+  const user = { ...peter };
   return (
     <React.Fragment>
       <NavigationBar />
@@ -41,6 +45,14 @@ const Dashboard = () => {
               }}
             >
               Mis reportes
+            </Button>
+            <Button
+              block
+              onClick={() => {
+                history.push(`/groups/user/${user.id}`);
+              }}
+            >
+              Mis Grupos
             </Button>
           </div>
         </div>
