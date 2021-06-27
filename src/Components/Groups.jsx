@@ -10,7 +10,7 @@ import { history } from "react-router-dom";
 // Components
 import NavigationBar from "./NavigationBar";
 
-export const Projects = () => {
+const Groups = () => {
   return (
     <React.Fragment>
       <NavigationBar />
@@ -18,8 +18,8 @@ export const Projects = () => {
   );
 };
 
-export const NewProjectForm = (props) => {
-  const { saveProject } = props;
+export const NewGroupForm = (props) => {
+  const { saveGroup } = props;
 
   const handleSubmit = () => {
     return;
@@ -37,16 +37,11 @@ export const NewProjectForm = (props) => {
         <Form.Control type="text"></Form.Control>
       </Form.Group>
       <Form.Group>
-        <Form.Label>Número</Form.Label>
-        <Form.Control type="number"></Form.Control>
-      </Form.Group>
-      <Form.Group>
         <Form.Label>Descripción</Form.Label>
         <Form.Control as="textarea" rows={3}></Form.Control>
       </Form.Group>
-      <Button type="submit">Crear Proyecto</Button>
+      <Button type="submit">Crear Grupo</Button>
     </Form>
   );
 };
-
-export default Projects;
+export default Groups;
