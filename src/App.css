@@ -103,6 +103,23 @@ a {
   font-size: 1em;
 }
 
+.project-card {
+  margin: 20px 0px;
+}
+
+.project-card-header {
+  background-color: var(--dark);
+  color: white;
+  padding: 0px;
+}
+
+.project-card-title {
+  color: white;
+  padding: 5px;
+  margin: 0;
+  font-size: 1.2em;
+}
+
 form {
   padding: 20px 0px;
 }

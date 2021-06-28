@@ -12,6 +12,7 @@ import TemplateEditor from "./Components/TemplateEditor";
 import StartNewReport from "./Components/StartNewReport";
 import Reports from "./Components/Reports";
 import ReportEditor from "./Components/ReportEditor";
+import Project from "./Components/Project";
 
 function App() {
   // const currentLang = "es";
@@ -39,6 +40,9 @@ function App() {
           </Route>
           <Route exact path="/groups/group/:id">
             <Group />
+          </Route>
+          <Route exact path="/group/:gid/project/:pid">
+            <Project />
           </Route>
         </Switch>
       </div>

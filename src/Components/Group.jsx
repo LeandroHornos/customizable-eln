@@ -16,7 +16,7 @@ import NavigationBar from "./NavigationBar";
 
 import { peter } from "../demoUsers";
 
-const Group = () => {
+export const Group = () => {
   const user = peter;
   const { id } = useParams();
   const db = firebaseApp.firestore();
@@ -34,16 +34,17 @@ const Group = () => {
           groupSnap = { ...groupSnap.data(), id: groupSnap.id };
           setGroup(groupSnap);
           // Cargo los proyectos del grupo
+          console.log("voy a buscar este id", groupSnap.id);
           let projSnap = await db
-            .collection("groups")
-            .doc(groupSnap.id)
             .collection("projects")
+            .where("groupId", "==", groupSnap.id)
             .get();
-          if (projSnap.exists) {
+          if (projSnap) {
             projSnap = projSnap.docs.map((doc) => {
               return { ...doc.data(), id: doc.id };
             });
             setProjects(projSnap);
+            console.log("proyectos:", projSnap);
           } else {
             // Si no hay proyectos:
             console.log("no hay proyectos");
@@ -66,6 +67,7 @@ const Group = () => {
     const now = new Date();
     let project = {
       ...projectData,
+      groupId: id,
       creator: user.id,
       creationDate: now.toLocaleString(),
       creationTimestamp: now.getTime(),
@@ -75,7 +77,7 @@ const Group = () => {
     };
 
     try {
-      await db.collection("groups").doc(id).collection("projects").add(project);
+      await db.collection("projects").add(project);
       console.log("Proyecto creado con éxito");
     } catch (err) {
       console.log(err);
@@ -96,7 +98,7 @@ const Group = () => {
       <div className="row">
         <div className="col-md-2"></div>
         <div className="col-md-8">
-          {!loading && <ProjectsList projects={projects} />}
+          {!loading && <ProjectsList projects={projects} id={id} />}
         </div>
         <div className="col-md-2"></div>
       </div>
@@ -116,18 +118,49 @@ export const GroupInfo = (props) => {
   const { group } = props;
   return (
     <React.Fragment>
-      <h2>{group.name}</h2>
+      <h1>{group.name}</h1>
       <p>{group.description}</p>
     </React.Fragment>
   );
 };
 
 export const ProjectsList = (props) => {
-  const { projects } = props;
+  const history = useHistory();
+  const { projects, id } = props;
   return (
     <React.Fragment>
       <h2>Proyectos</h2>
-      {projects.length > 0 ? <p>Hay proyectos</p> : <p>No hay proyectos</p>}
+      {projects.length > 0 ? (
+        projects.map((project) => {
+          return (
+            <Card key={project.id} className="project-card">
+              <Card.Header
+                style={{ padding: "5px" }}
+                className="project-card-header"
+              >
+                <Card.Title className="project-card-title">
+                  {project.name}
+                </Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <h4>CÓDIGO: {project.code}</h4>
+
+                <p>{project.description}</p>
+              </Card.Body>
+              <Button
+                variant="outline-dark"
+                onClick={(e) => {
+                  history.push(`/group/${id}/project/${project.id}`);
+                }}
+              >
+                Ver
+              </Button>
+            </Card>
+          );
+        })
+      ) : (
+        <p>No hay proyectos</p>
+      )}
     </React.Fragment>
   );
 };
