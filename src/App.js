@@ -23,7 +23,7 @@ function App() {
           <Route exact path="/">
             <Dashboard />
           </Route>
-          <Route exact path="/template-editor">
+          <Route exact path="/templates/new/group/:gid">
             <TemplateEditor />
           </Route>
           <Route exact path="/new-report">

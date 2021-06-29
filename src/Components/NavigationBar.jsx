@@ -15,7 +15,6 @@ const NavigationBar = () => {
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
           <Nav.Link href="/">Inicio</Nav.Link>
-          <Nav.Link href="/template-editor">Nueva Plantilla</Nav.Link>
           <Nav.Link href="/new-report">Nuevo Reporte</Nav.Link>
 
         </Nav>

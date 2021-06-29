@@ -24,20 +24,52 @@ export const Project = () => {
   const db = firebaseApp.firestore();
   const [loading, setLoading] = useState(true);
   const [project, setProject] = useState({});
+  const [group, setGroup] = useState({});
   const [reports, setReports] = useState([]);
   const [templates, setTemplates] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("buscando proyecto", pid);
+        // Obtengo el grupo
+        let snapGroup = await db.collection("groups").doc(gid).get();
+        if (snapGroup) {
+          snapGroup = { ...snapGroup.data(), id: snapGroup.id };
+          setGroup(snapGroup);
+          console.log("Obtuve el grupo", snapGroup);
+        }
+        // Obtengo proyecto
         let snapProject = await db.collection("projects").doc(pid).get();
         if (snapProject) {
           snapProject = { ...snapProject.data(), id: snapProject.id };
           setProject(snapProject);
-          console.log("Se ha encontrado el proyecto", snapProject);
-          setLoading(false);
+          console.log("Obtuve el proyecto", snapProject);
         }
+        // Obtengo los reportes
+        let snapReports = await db
+          .collection("reports")
+          .where("projectId", "==", pid)
+          .get();
+        if (snapReports) {
+          snapReports = snapReports.docs.map((doc) => {
+            return { ...doc.data(), id: doc.id };
+          });
+          setReports(snapReports);
+          console.log("Obtuve los reportes", snapReports);
+        }
+        // Obtengo los templates
+        let snapTemplates = await db
+          .collection("templates")
+          .where("groupId", "==", gid)
+          .get();
+        if (snapTemplates) {
+          snapTemplates = snapTemplates.docs.map((doc) => {
+            return { ...doc.data(), id: doc.id };
+          });
+          setTemplates(snapTemplates);
+          console.log("Obtuve los templates", snapTemplates);
+        }
+        setLoading(false);
       } catch (err) {
         console.log("Ha ocurrido un error", err);
       }

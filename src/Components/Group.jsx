@@ -19,6 +19,7 @@ import { peter } from "../demoUsers";
 export const Group = () => {
   const user = peter;
   const { id } = useParams();
+  const history = useHistory();
   const db = firebaseApp.firestore();
   const [group, setGroup] = useState({});
   const [projects, setProjects] = useState({});
@@ -92,6 +93,14 @@ export const Group = () => {
         <div className="col-md-2"></div>
         <div className="col-md-8">
           {loading ? "Cargando" : <GroupInfo group={group} />}
+          <Button
+            variant="link"
+            onClick={() => {
+              history.push(`/templates/new/group/${group.id}`);
+            }}
+          >
+            Nueva Plantilla
+          </Button>
         </div>
         <div className="col-md-2"></div>
       </div>

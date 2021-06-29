@@ -12,7 +12,7 @@ import { makeId } from "../utilities";
 import firebaseApp from "../firebaseApp";
 
 // Router
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 // Components
 import NavigationBar from "./NavigationBar";
@@ -27,6 +27,7 @@ const TemplateEditor = () => {
     order: 0,
   };
 
+  const { gid } = useParams();
   const db = firebaseApp.firestore();
   const history = useHistory();
   const [selectedComponent, setSelectedComponent] = useState("");
@@ -64,6 +65,7 @@ const TemplateEditor = () => {
     const now = new Date();
     const timestamp = now.getTime();
     let template = {
+      groupId: gid,
       creationDate: timestamp,
       category: "",
       creatorId: "",
