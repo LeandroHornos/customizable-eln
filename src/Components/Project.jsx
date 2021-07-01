@@ -17,9 +17,12 @@ import NavigationBar from "./NavigationBar";
 import SpinnerAndText from "./SpinnerAndText";
 
 // Functions
-import { checkObj } from "../utilities";
+import { checkObj, checkArray } from "../utilities";
+
+import { peter } from "../demoUsers";
 
 export const Project = () => {
+  const uid = peter.id;
   const { gid, pid } = useParams();
   const db = firebaseApp.firestore();
   const [loading, setLoading] = useState(true);
@@ -75,8 +78,10 @@ export const Project = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if (loading) {
+      fetchData();
+    }
+  }, [loading]);
   return (
     <React.Fragment>
       <NavigationBar />
@@ -89,7 +94,32 @@ export const Project = () => {
       </div>
       <div className="row">
         <div className="col-md-2"></div>
-        <div className="col-md-8">{loading && "pepito"}</div>
+        <div className="col-md-8">
+          {!loading && (
+            <React.Fragment>
+              <h2>Nuevo Reporte</h2>
+              <NewReportForm
+                gid={gid}
+                pid={pid}
+                uid={uid}
+                templates={templates}
+                setLoading={setLoading}
+              />
+            </React.Fragment>
+          )}
+        </div>
+        <div className="col-md-2"></div>
+      </div>
+      <div className="row">
+        <div className="col-md-2"></div>
+        <div className="col-md-8">
+          {!loading && (
+            <React.Fragment>
+              <h2>Reportes</h2>
+              <ReportList reports={reports} />
+            </React.Fragment>
+          )}
+        </div>
         <div className="col-md-2"></div>
       </div>
     </React.Fragment>
@@ -115,7 +145,8 @@ export const ProjectInfo = (props) => {
 
 export const NewReportForm = (props) => {
   const db = firebaseApp.firestore();
-  const { templates, uid, gid, pid } = props;
+  const history = useHistory();
+  const { templates, uid, gid, pid, setLoading } = props;
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [projectName, setProjectName] = useState("");
   const [reportNumber, setReportNumber] = useState(0);
@@ -140,6 +171,7 @@ export const NewReportForm = (props) => {
     const now = new Date();
     const { isValid, errors } = validateForm();
     if (isValid) {
+      console.log("select template", selectedTemplate);
       const temp = getTemplateById(selectedTemplate);
       let report = {
         templateId: selectedTemplate,
@@ -165,6 +197,7 @@ export const NewReportForm = (props) => {
         const rep = await db.collection("reports").add(report);
         console.log("se ha creado el reporte con éxito, id:", rep.id);
         // Creo la subcoleccion de secciones
+        console.log("vamos a guardar estas secciones", temp.sections);
         temp.sections.forEach((doc) => {
           var docRef = db
             .collection("reports")
@@ -175,6 +208,7 @@ export const NewReportForm = (props) => {
         });
         await batch.commit();
         console.log("Se guardaron las secciones!");
+        setLoading(true);
       } catch (error) {
         console.log(error);
       }
@@ -198,6 +232,7 @@ export const NewReportForm = (props) => {
               setSelectedTemplate(e.target.value);
             }}
           >
+            <option value="">Elije una plantilla</option>
             {templates.map((temp) => {
               return (
                 <option value={temp.id} key={temp.id}>
@@ -206,15 +241,6 @@ export const NewReportForm = (props) => {
               );
             })}
           </Form.Control>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>Proyecto</Form.Label>
-          <Form.Control
-            value={projectName}
-            onChange={(e) => {
-              setProjectName(e.target.value);
-            }}
-          ></Form.Control>
         </Form.Group>
         <Form.Group>
           <Form.Label>Numero de reporte</Form.Label>
@@ -249,40 +275,45 @@ export const NewReportForm = (props) => {
 export const ReportList = (props) => {
   const history = useHistory();
   const { reports } = props;
-  return (
-    <Table>
-      <thead>
-        <th>Proyecto</th>
-        <th>Reporte Nro</th>
-        <th>Descripción</th>
-        <th>Estado</th>
-        <th>Link</th>
-      </thead>
-      <tbody>
-        {reports.map((rep) => {
-          return (
-            <tr key={rep.id}>
-              <td>{rep.projectName}</td>
-              <td>{rep.reportNumber}</td>
-              <td>{rep.description}</td>
-              <td>{rep.status}</td>
-              <td>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    history.push(`/report/${rep.id}`);
-                  }}
-                >
-                  Ver
-                </a>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </Table>
-  );
+  const { exists, isEmpty } = checkArray(reports);
+  if (!exists || isEmpty) {
+    return <p>No hay reportes</p>;
+  } else {
+    return (
+      <Table>
+        <thead>
+          <th>Proyecto</th>
+          <th>Reporte Nro</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th>Link</th>
+        </thead>
+        <tbody>
+          {reports.map((rep) => {
+            return (
+              <tr key={rep.id}>
+                <td>{rep.projectName}</td>
+                <td>{rep.reportNumber}</td>
+                <td>{rep.description}</td>
+                <td>{rep.status}</td>
+                <td>
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      history.push(`/report/${rep.id}`);
+                    }}
+                  >
+                    Ver
+                  </a>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+    );
+  }
 };
 
 export default Project;

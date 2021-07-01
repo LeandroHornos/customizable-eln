@@ -102,14 +102,17 @@ const TemplateEditor = () => {
       console.log("la seccion ya existe, actualizando");
       let updatedSections = sections.map((section) => {
         if (section.id === currentSection.id) {
-          section = newSection;
+          section = { ...newSection, order: section.order };
         }
         return section;
       });
       setSections(updatedSections);
     } else {
       // Si no existe el objeto agrego uno nuevo:
-      const updatedSections = [...sections, newSection];
+      const updatedSections = [
+        ...sections,
+        { ...newSection, order: sections.length },
+      ];
       setSections(updatedSections);
       console.log("secciones actualizadas", updatedSections);
     }

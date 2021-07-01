@@ -42,10 +42,26 @@ export const groupAsTriplets = (items) => {
 
 export const checkObj = (obj) => {
   let exists = false;
-  let isEmpty =
-    obj && Object.keys(obj).length === 0 && obj.constructor === Object;
+  let isEmpty = true;
   if (obj) {
     exists = true;
+    isEmpty = Object.keys(obj).length === 0 && obj.constructor === Object;
+    if (obj) {
+      exists = true;
+    }
+  }
+
+  return { exists, isEmpty };
+};
+
+export const checkArray = (array) => {
+  let exists = false;
+  let isEmpty = true;
+  if (array) {
+    exists = true;
+    if (array.length > 0) {
+      isEmpty = false;
+    }
   }
   return { exists, isEmpty };
 };
