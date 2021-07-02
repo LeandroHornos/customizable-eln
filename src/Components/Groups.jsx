@@ -13,9 +13,14 @@ import firebaseApp from "../firebaseApp";
 
 // Components
 import NavigationBar from "./NavigationBar";
+import SpinnerAndText from "./SpinnerAndText";
+import AppFooter from "./AppFooter";
 
-const Groups = () => {
-  const { uid } = useParams();
+// Dev
+import { peter } from "../demoUsers";
+
+export const Groups = () => {
+  const uid = peter.id;
   const db = firebaseApp.firestore();
   const [saving, setSaving] = useState(false);
   const [groups, setGroups] = useState([]);
@@ -72,23 +77,13 @@ const Groups = () => {
   };
   return (
     <React.Fragment>
-      <NavigationBar />
-      <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
-          <h1>Mis Grupos</h1>
-          {!loading && <GroupList groups={groups} />}
+      {loading ? (
+        <div className="page-spinner-container">
+          <SpinnerAndText text="cargando grupos..." />
         </div>
-        <div className="col-md-2"></div>
-      </div>
-      <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
-          <h2>Nuevo Grupo</h2>
-          <NewGroupForm saveGroup={saveGroup} saving={saving} />
-        </div>
-        <div className="col-md-2"></div>
-      </div>
+      ) : (
+        <GroupList groups={groups} saveGroup={saveGroup} saving={saving} />
+      )}
     </React.Fragment>
   );
 };
@@ -163,26 +158,58 @@ export const NewGroupForm = (props) => {
 
 export const GroupList = (props) => {
   const history = useHistory();
-  const { groups } = props;
+  const { groups, saveGroup, saving } = props;
+  const [showNewForm, setShowNewForm] = useState(false);
 
   return (
     <React.Fragment>
-      {groups.map((group) => {
-        return (
-          <Card key={group.id}>
-            <Card.Title>{group.name}</Card.Title>
-            <Card.Body>{group.description}</Card.Body>
+      <Card className="group-card new-group-card">
+        <Card.Title className="new-group-card-title">Nuevo Grupo</Card.Title>
+        <Card.Body className="group-card-body">
+          <Card.Text className="new-group-card-text">
             <Button
+              style={{
+                padding: "0px",
+                color: showNewForm ? "rgb(250,80,50)" : "rgb(150,180,250)",
+              }}
+              variant="link"
               onClick={() => {
-                history.push(`/groups/group/${group.id}`);
+                setShowNewForm(!showNewForm);
               }}
             >
-              Ver Grupo
+              {!showNewForm
+                ? "Haz click aquí para crear un nuevo grupo"
+                : "Cancelar"}
             </Button>
-          </Card>
+          </Card.Text>
+          {showNewForm && (
+            <NewGroupForm saveGroup={saveGroup} saving={saving} />
+          )}
+        </Card.Body>
+      </Card>
+      {groups.map((group) => {
+        return (
+          <button
+            className="group-card-btn-wrap"
+            style={{ width: "100%" }}
+            key={group.id}
+            onClick={() => {
+              history.push(`/groups/group/${group.id}`);
+            }}
+          >
+            <Card className="group-card">
+              <Card.Title className="group-card-title">{group.name}</Card.Title>
+              <Card.Body className="group-card-body">
+                <Card.Text className="group-card-text">
+                  {group.description}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </button>
         );
       })}
     </React.Fragment>
   );
 };
+
 export default Groups;

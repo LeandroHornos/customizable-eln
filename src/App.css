@@ -4,7 +4,10 @@
   --blue-dark: rgb(43, 58, 78);
   --color-1: rgb(43, 58, 78);
   --color-1-light: rgb(46, 88, 107);
-  --color-2: rgb(236, 50, 17);
+  --danger: rgb(248, 99, 39);
+  --primary: rgb(18, 78, 207);
+  --info: rgb(45, 127, 194);
+  --light-gray: rgb(220, 220, 220);
 }
 
 * {
@@ -49,7 +52,7 @@ a {
 /* FONT COLOR CLASSES*/
 
 .color-2 {
-  color: var(--color-2);
+  color: var(--danger);
 }
 
 .color-1-light {
@@ -103,6 +106,78 @@ a {
   font-size: 1em;
 }
 
+.app-footer {
+  min-height: 60px;
+}
+
+/*
+GROUP CARDS:
+
+Estas tarjetas se usan para mostrar los grupos y los
+proyectos. Hay un estilo general para las tarjetas y 
+uno para una tarjeta especial que muestra el formulario
+para crear un nuevo Grupo o Proyecto
+
+*/
+
+.group-card-btn-wrap {
+  border: none;
+  border-radius: 25px 5px 5px 5px;
+  box-shadow: 2px 2px 8px 1px rgba(0, 0, 0, 0.3);
+  margin: 10px 0px;
+  padding: 0px;
+}
+
+.group-card {
+  margin: 0px;
+  padding: 20px;
+  text-align: left;
+  background-color: white;
+  border-radius: 25px 5px 5px 5px;
+}
+
+.group-card-title {
+  color: var(--danger);
+}
+
+.new-group-card {
+  box-shadow: 2px 2px 8px 1px rgba(0, 0, 0, 0.1);
+  background-color: var(--dark);
+  color: white;
+}
+
+.new-group-card label {
+  color: white;
+}
+
+.new-group-card-title {
+  color: white;
+}
+
+.new-group-card-text {
+  color: white;
+}
+
+.group-card:hover {
+  background-color: var(--info);
+}
+
+.group-card:hover .group-card-title {
+  color: white;
+}
+
+.new-group-card:hover {
+  background-color: var(--dark);
+}
+
+.group-card-body {
+  padding: 20px 0px;
+}
+
+.group-card:hover .group-card-text {
+  color: var(--light-gray);
+}
+
 .project-card {
   margin: 20px 0px;
 }
@@ -115,9 +190,20 @@ a {
 
 .project-card-title {
   color: white;
-  padding: 5px;
-  margin: 0;
   font-size: 1.2em;
+  margin: 0;
+  padding: 5px;
+}
+
+/*
+SPINNERS
+*/
+
+.page-spinner-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 25vh;
 }
 
 form {
