@@ -203,7 +203,7 @@ SPINNERS
   align-items: center;
   display: flex;
   justify-content: center;
-  min-height: 25vh;
+  min-height: 50vh;
 }
 
 form {

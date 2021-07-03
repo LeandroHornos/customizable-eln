@@ -13,6 +13,7 @@ import firebaseApp from "../firebaseApp";
 
 // Components
 import NavigationBar from "./NavigationBar";
+import SpinnerAndText from "./SpinnerAndText";
 
 import { peter } from "../demoUsers";
 
@@ -90,34 +91,31 @@ export const Group = () => {
     <React.Fragment>
       <NavigationBar />
       <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
-          {loading ? "Cargando" : <GroupInfo group={group} />}
-          <Button
-            variant="link"
-            onClick={() => {
-              history.push(`/templates/new/group/${group.id}`);
-            }}
-          >
-            Nueva Plantilla
-          </Button>
+        <div className="col-md-1"></div>
+        <div className="col-md-10">
+          {loading ? (
+            <div className="page-spinner-container">
+              <SpinnerAndText text="Cargando..." />
+            </div>
+          ) : (
+            <React.Fragment>
+              <GroupInfo group={group} />
+              <Button
+                variant="link"
+                onClick={() => {
+                  history.push(`/templates/new/group/${group.id}`);
+                }}
+              >
+                Nueva Plantilla
+              </Button>
+              <h2>Proyectos</h2>
+              <ProjectsList projects={projects} id={id} />
+              <h2>Nuevo proyecto</h2>
+              <NewProjectForm saveProject={saveProject} />
+            </React.Fragment>
+          )}
         </div>
-        <div className="col-md-2"></div>
-      </div>
-      <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
-          {!loading && <ProjectsList projects={projects} id={id} />}
-        </div>
-        <div className="col-md-2"></div>
-      </div>
-      <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
-          <h2>Nuevo proyecto</h2>
-          {!loading && <NewProjectForm saveProject={saveProject} />}
-        </div>
-        <div className="col-md-2"></div>
+        <div className="col-md-1"></div>
       </div>
     </React.Fragment>
   );
@@ -138,7 +136,6 @@ export const ProjectsList = (props) => {
   const { projects, id } = props;
   return (
     <React.Fragment>
-      <h2>Proyectos</h2>
       {projects.length > 0 ? (
         projects.map((project) => {
           return (
