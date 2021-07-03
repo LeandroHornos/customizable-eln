@@ -21,7 +21,7 @@ const Dashboard = () => {
       <div className="row">
         <div className="col-md-1"></div>
         <div className="col-md-10">
-          <h1>Mis grupos</h1>
+          <h1>Mis grupos de trabajo</h1>
           <Groups />
         </div>
         <div className="col-md-1"></div>
