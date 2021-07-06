@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import Table from "react-bootstrap/Table";
 
 // React router
 import { useHistory, useParams } from "react-router-dom";
@@ -81,6 +82,8 @@ export const Group = () => {
     try {
       await db.collection("projects").add(project);
       console.log("Proyecto creado con éxito");
+      history.push("/blank");
+      history.goBack();
     } catch (err) {
       console.log(err);
     }
@@ -109,9 +112,8 @@ export const Group = () => {
                 Nueva Plantilla
               </Button>
               <h2>Proyectos</h2>
-              <ProjectsList projects={projects} id={id} />
-              <h2>Nuevo proyecto</h2>
-              <NewProjectForm saveProject={saveProject} />
+              <NewProjectCard saveProject={saveProject} />
+              <ProjectTable projects={projects} id={id} />
             </React.Fragment>
           )}
         </div>
@@ -171,6 +173,49 @@ export const ProjectsList = (props) => {
   );
 };
 
+export const ProjectTable = (props) => {
+  const history = useHistory();
+  const { projects, id } = props;
+  return (
+    <React.Fragment>
+      <Table>
+        <thead>
+          <th>Codigo</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Link</th>
+        </thead>
+        <tbody>
+          {projects.length > 0 ? (
+            projects.map((project) => {
+              return (
+                <tr key={project.id}>
+                  <td>{project.code}</td>
+                  <td>{project.name}</td>
+                  <td>{project.description}</td>
+                  <td>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        history.push(`/group/${id}/project/${project.id}`);
+                      }}
+                    >
+                      ver
+                    </a>
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <p>No hay proyectos</p>
+          )}
+        </tbody>
+      </Table>
+    </React.Fragment>
+  );
+};
+
 export const NewProjectForm = (props) => {
   const { saveProject } = props;
   const [name, setName] = useState("");
@@ -222,9 +267,39 @@ export const NewProjectForm = (props) => {
         ></Form.Control>
       </Form.Group>
       <Button type="submit">
-        {saving ? "Creando Proyecto..." : "Crear Proyecto"}
+        {saving ? "Guardando..." : "Crear Proyecto"}
       </Button>
     </Form>
+  );
+};
+
+export const NewProjectCard = (props) => {
+  const { saveProject } = props;
+  const [showNewForm, setShowNewForm] = useState(false);
+
+  return (
+    <Card className="group-card new-group-card">
+      <Card.Title className="new-group-card-title">Nuevo Proyecto</Card.Title>
+      <Card.Body className="group-card-body">
+        <Card.Text className="new-group-card-text">
+          <Button
+            style={{
+              padding: "0px",
+              color: showNewForm ? "rgb(250,80,50)" : "rgb(150,180,250)",
+            }}
+            variant="link"
+            onClick={() => {
+              setShowNewForm(!showNewForm);
+            }}
+          >
+            {!showNewForm
+              ? "Haz click aquí para crear un nuevo proyecto"
+              : "Cancelar"}
+          </Button>
+        </Card.Text>
+        {showNewForm && <NewProjectForm saveProject={saveProject} />}
+      </Card.Body>
+    </Card>
   );
 };
 

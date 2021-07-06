@@ -282,7 +282,6 @@ export const ReportList = (props) => {
     return (
       <Table>
         <thead>
-          <th>Proyecto</th>
           <th>Reporte Nro</th>
           <th>Descripción</th>
           <th>Estado</th>
@@ -292,7 +291,6 @@ export const ReportList = (props) => {
           {reports.map((rep) => {
             return (
               <tr key={rep.id}>
-                <td>{rep.projectName}</td>
                 <td>{rep.reportNumber}</td>
                 <td>{rep.description}</td>
                 <td>{rep.status}</td>
