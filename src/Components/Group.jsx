@@ -98,7 +98,7 @@ export const Group = () => {
         <div className="col-md-10">
           {loading ? (
             <div className="page-spinner-container">
-              <SpinnerAndText text="Cargando..." />
+              <SpinnerAndText text="Cargando Grupo..." />
             </div>
           ) : (
             <React.Fragment>

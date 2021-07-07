@@ -85,7 +85,9 @@ export const ReportEditor = () => {
     <React.Fragment>
       <NavigationBar />
       {loading ? (
-        <SpinnerAndText text="cargando..." />
+        <div className="page-spinner-container">
+          <SpinnerAndText text="cargando..." />
+        </div>
       ) : (
         <React.Fragment>
           <div className="row" style={{ paddingTop: "50px" }}>

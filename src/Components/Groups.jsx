@@ -6,15 +6,15 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
 // React router
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 // Firebase
 import firebaseApp from "../firebaseApp";
 
 // Components
-import NavigationBar from "./NavigationBar";
+
 import SpinnerAndText from "./SpinnerAndText";
-import AppFooter from "./AppFooter";
+
 
 // Dev
 import { peter } from "../demoUsers";

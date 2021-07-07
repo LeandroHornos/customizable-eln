@@ -88,35 +88,22 @@ export const Project = () => {
       <div className="row">
         <div className="col-md-2"></div>
         <div className="col-md-8">
-          {loading ? <p>Cargando</p> : <ProjectInfo project={project} />}
-        </div>
-        <div className="col-md-2"></div>
-      </div>
-      <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
-          {!loading && (
+          {loading ? (
+            <div className="page-spinner-container">
+              <SpinnerAndText text="Cargando Proyecto..." />
+            </div>
+          ) : (
             <React.Fragment>
-              <h2>Nuevo Reporte</h2>
-              <NewReportForm
+              <ProjectInfo project={project} />
+              <h2>Reportes</h2>
+              <NewReportCard
                 gid={gid}
                 pid={pid}
                 uid={uid}
                 templates={templates}
                 setLoading={setLoading}
               />
-            </React.Fragment>
-          )}
-        </div>
-        <div className="col-md-2"></div>
-      </div>
-      <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
-          {!loading && (
-            <React.Fragment>
-              <h2>Reportes</h2>
-              <ReportList reports={reports} />
+              <ReportTable reports={reports} />
             </React.Fragment>
           )}
         </div>
@@ -272,7 +259,45 @@ export const NewReportForm = (props) => {
   );
 };
 
-export const ReportList = (props) => {
+export const NewReportCard = (props) => {
+  const { gid, pid, uid, templates, setLoading } = props;
+  const [showNewForm, setShowNewForm] = useState(false);
+
+  return (
+    <Card className="group-card new-group-card">
+      <Card.Title className="new-group-card-title">Nuevo Reporte</Card.Title>
+      <Card.Body className="group-card-body">
+        <Card.Text className="new-group-card-text">
+          <Button
+            style={{
+              padding: "0px",
+              color: showNewForm ? "rgb(250,80,50)" : "rgb(150,180,250)",
+            }}
+            variant="link"
+            onClick={() => {
+              setShowNewForm(!showNewForm);
+            }}
+          >
+            {!showNewForm
+              ? "Haz click aquí para crear un nuevo reporte"
+              : "Cancelar"}
+          </Button>
+        </Card.Text>
+        {showNewForm && (
+          <NewReportForm
+            gid={gid}
+            pid={pid}
+            uid={uid}
+            templates={templates}
+            setLoading={setLoading}
+          />
+        )}
+      </Card.Body>
+    </Card>
+  );
+};
+
+export const ReportTable = (props) => {
   const history = useHistory();
   const { reports } = props;
   const { exists, isEmpty } = checkArray(reports);
