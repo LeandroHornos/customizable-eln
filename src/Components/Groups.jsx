@@ -44,6 +44,7 @@ export const Groups = () => {
       }
     };
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   const saveGroup = async (groupData) => {

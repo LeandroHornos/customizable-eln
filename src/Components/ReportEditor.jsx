@@ -65,6 +65,7 @@ export const ReportEditor = () => {
       }
     };
     fetchData();
+    // eslint-disable-next-line
   }, [id]);
 
   const saveSection = async (sectionObj) => {
@@ -136,7 +137,6 @@ export const ReportNavigator = (props) => {
     if (!sections) {
       return <p>No hay secciones</p>;
     }
-    const keys = Object.keys(sections);
     const sArray = sections.sort((a, b) => {
       return a.order - b.order;
     });
@@ -144,6 +144,7 @@ export const ReportNavigator = (props) => {
     console.log("Sections array:", sArray);
     setActiveSection(sArray[0].id);
     setLoading(false);
+    // eslint-disable-next-line
   }, []);
   return (
     <React.Fragment>

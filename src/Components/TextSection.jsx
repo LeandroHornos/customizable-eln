@@ -37,6 +37,7 @@ export const TextSection = (props) => {
     setShowButtons(false);
     setLoading(false);
     console.log("Text section", section);
+    // eslint-disable-next-line
   }, [props]);
 
   const saveText = () => {

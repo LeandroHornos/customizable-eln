@@ -81,6 +81,7 @@ export const Project = () => {
     if (loading) {
       fetchData();
     }
+    // eslint-disable-next-line
   }, [loading]);
   return (
     <React.Fragment>
@@ -132,7 +133,6 @@ export const ProjectInfo = (props) => {
 
 export const NewReportForm = (props) => {
   const db = firebaseApp.firestore();
-  const history = useHistory();
   const { templates, uid, gid, pid, setLoading } = props;
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [projectName, setProjectName] = useState("");
@@ -320,15 +320,15 @@ export const ReportTable = (props) => {
                 <td>{rep.description}</td>
                 <td>{rep.status}</td>
                 <td>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
+                  <Button
+                    style={{ padding: "0px" }}
+                    variant="link"
+                    onClick={() => {
                       history.push(`/report/${rep.id}`);
                     }}
                   >
                     Ver
-                  </a>
+                  </Button>
                 </td>
               </tr>
             );

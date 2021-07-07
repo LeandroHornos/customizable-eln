@@ -8,7 +8,6 @@ import "./App.css";
 import Dashboard from "./Components/Dashboard";
 import Group from "./Components/Group";
 import TemplateEditor from "./Components/TemplateEditor";
-import StartNewReport from "./Components/StartNewReport";
 import ReportEditor from "./Components/ReportEditor";
 import Project from "./Components/Project";
 import Blank from "./Components/Blank";
@@ -25,9 +24,6 @@ function App() {
           </Route>
           <Route exact path="/templates/new/group/:gid">
             <TemplateEditor />
-          </Route>
-          <Route exact path="/new-report">
-            <StartNewReport />
           </Route>
           <Route exact path="/report/:id">
             <ReportEditor />

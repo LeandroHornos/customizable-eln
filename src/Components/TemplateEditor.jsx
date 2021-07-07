@@ -39,15 +39,6 @@ const TemplateEditor = () => {
     id: makeId(16),
   }); // para comenzar crea un único objeto seccion vacío en secciones, y le asigna un id
 
-  const sectionArrayToObject = () => {
-    let sectionsArray = [...sections];
-    let sectionObject = {};
-    sectionsArray.forEach((sect, index) => {
-      sectionObject[sect.id] = { ...sect, order: index };
-    });
-    return sectionObject;
-  };
-
   const removeIds = (array) => {
     /* Esta función me permite eliminar los 
     ids provisorios que usé para trackear las secciones

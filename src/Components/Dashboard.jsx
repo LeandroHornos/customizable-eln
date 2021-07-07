@@ -1,20 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 
-import { useHistory } from "react-router-dom";
 
-// React Bootstrap
-import Button from "react-bootstrap/Button";
 
 // Components
 import NavigationBar from "./NavigationBar";
 import Groups from "./Groups";
 import AppFooter from "./AppFooter";
 
-// Dev
-import { peter } from "../demoUsers";
-
 const Dashboard = () => {
-  const user = { ...peter };
+
   return (
     <React.Fragment>
       <NavigationBar />

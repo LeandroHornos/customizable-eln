@@ -42,8 +42,6 @@ export const JournalSection = (props) => {
     data = { ...data, entries: [] };
   }
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     /*
       Reinicio el state cuando entran nuevas props.
@@ -51,11 +49,12 @@ export const JournalSection = (props) => {
       con el mismo componente
       */
     console.log("Seccion de Journal", section);
-    setLoading(false);
+    // eslint-disable-next-line
   }, [props]);
 
   const addNewEntry = (entry) => {
     saveSection({ ...section, data: { entries: [...data.entries, entry] } });
+    
   };
 
   return (

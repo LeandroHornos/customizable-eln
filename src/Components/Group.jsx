@@ -64,6 +64,7 @@ export const Group = () => {
     };
 
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   const saveProject = async (projectData) => {
@@ -194,15 +195,14 @@ export const ProjectTable = (props) => {
                   <td>{project.name}</td>
                   <td>{project.description}</td>
                   <td>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
+                    <Button
+                      variant="link"
+                      onClick={() => {
                         history.push(`/group/${id}/project/${project.id}`);
                       }}
                     >
                       ver
-                    </a>
+                    </Button>
                   </td>
                 </tr>
               );

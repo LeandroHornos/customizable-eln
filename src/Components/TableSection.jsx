@@ -67,6 +67,7 @@ export const TableSection = (props) => {
     loadDataFromProps();
     setSavingChanges(false);
     setLoading(false);
+    // eslint-disable-next-line
   }, [props]);
 
   const updateNewRow = (colId, value) => {
@@ -157,15 +158,12 @@ export const TableSection = (props) => {
         {!loading && (
           <Table>
             <thead>
-              <th scope="col">
-                #
-              </th>{" "}
-              {/* Columna vacia para los botones */}
+              <th scope="col">#</th> {/* Columna vacia para los botones */}
               {layout.columns.map((col) => {
                 return (
-                  <th key={col.id}>{`${col.name} ${col.unit != "" ? " [" : ""}${
-                    col.unit
-                  }${col.unit != "" ? "]" : ""}`}</th>
+                  <th key={col.id}>{`${col.name} ${
+                    col.unit !== "" ? " [" : ""
+                  }${col.unit}${col.unit !== "" ? "]" : ""}`}</th>
                 );
               })}
             </thead>
@@ -292,14 +290,15 @@ export const TableRows = (props) => {
               <React.Fragment>
                 <tr>
                   <th scope="row">
-                    <a
-                      onClick={(e) => {
-                        e.preventDefault();
+                    <Button
+                      style={{ padding: "0px" }}
+                      variant="link"
+                      onClick={() => {
                         setEditThisRow("");
                       }}
                     >
                       {index + 1}
-                    </a>
+                    </Button>
                   </th>
                   {cols.map((col) => {
                     return (
@@ -373,16 +372,16 @@ export const TableRows = (props) => {
             return (
               <tr key={row.id}>
                 <th scope="row">
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
+                  <Button
+                    style={{ padding: "0px" }}
+                    variant="link"
+                    onClick={() => {
                       setEditedRow(row);
                       setEditThisRow(row.id);
                     }}
                   >
                     {index + 1}
-                  </a>
+                  </Button>
                 </th>
                 {cols.map((col) => {
                   return (

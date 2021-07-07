@@ -82,7 +82,7 @@ const FileLinksSection = (props) => {
                 </td>
                 <td>{link.description}</td>
                 <td>
-                  <a style={{ overflowX: "hidden" }} href={link.url} target="_blank">
+                  <a style={{ overflowX: "hidden" }} href={link.url} target="_blank" rel="noreferrer">
                     {link.url.substr(0, 30) + "..."}
                   </a>
                 </td>
