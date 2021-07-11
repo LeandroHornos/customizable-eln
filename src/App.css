@@ -22,11 +22,13 @@ h1 {
   padding: 15px 0px;
   font-weight: 400;
   color: var(--blue-dark);
+  animation: inner-left 0.5s 0.5s ease both;
 }
 
 h2 {
   padding: 10px 0px;
   font-weight: 300;
+  animation: inner-left 0.75s 0.75s ease both;
 }
 
 h3 {
@@ -48,6 +50,10 @@ td,
 label,
 a {
   font-size: 0.9em;
+}
+
+.sect-h2 {
+  padding: 20px;
 }
 /* FONT COLOR CLASSES*/
 
@@ -206,6 +212,31 @@ SPINNERS
   min-height: 50vh;
 }
 
+.page-head {
+  overflow-x: hidden;
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png"),
+    linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(223, 234, 236) 100%);
+  padding: 20px;
+}
+
 form {
   padding: 20px 0px;
+}
+
+@keyframes outer-left {
+  from {
+    transform: translateX(50%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes inner-left {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: none;
+  }
 }

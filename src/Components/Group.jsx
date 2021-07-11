@@ -96,7 +96,7 @@ export const Group = () => {
       <NavigationBar />
       <div className="row">
         <div className="col-md-1"></div>
-        <div className="col-md-10">
+        <div className="col-md-10" style={{ overflowX: "hidden" }}>
           {loading ? (
             <div className="page-spinner-container">
               <SpinnerAndText text="Cargando Grupo..." />
@@ -104,15 +104,9 @@ export const Group = () => {
           ) : (
             <React.Fragment>
               <GroupInfo group={group} />
-              <Button
-                variant="link"
-                onClick={() => {
-                  history.push(`/templates/new/group/${group.id}`);
-                }}
-              >
-                Nueva Plantilla
-              </Button>
-              <h2>Proyectos</h2>
+              <h2 className="sect-h2">Plantillas</h2>
+              <TemplatesBlock goupId={group.id} />
+              <h2 className="sect-h2">Proyectos</h2>
               <NewProjectCard saveProject={saveProject} />
               <ProjectTable projects={projects} id={id} />
             </React.Fragment>
@@ -128,48 +122,30 @@ export const GroupInfo = (props) => {
   const { group } = props;
   return (
     <React.Fragment>
-      <h1>{group.name}</h1>
-      <p>{group.description}</p>
+      <div className="page-head">
+        <h1>{group.name}</h1>
+        <p>{group.description}</p>
+      </div>
     </React.Fragment>
   );
 };
 
-export const ProjectsList = (props) => {
+export const TemplatesBlock = (props) => {
   const history = useHistory();
-  const { projects, id } = props;
+  const { groupId } = props;
   return (
     <React.Fragment>
-      {projects.length > 0 ? (
-        projects.map((project) => {
-          return (
-            <Card key={project.id} className="project-card">
-              <Card.Header
-                style={{ padding: "5px" }}
-                className="project-card-header"
-              >
-                <Card.Title className="project-card-title">
-                  {project.name}
-                </Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <h4>CÓDIGO: {project.code}</h4>
-
-                <p>{project.description}</p>
-              </Card.Body>
-              <Button
-                variant="outline-dark"
-                onClick={(e) => {
-                  history.push(`/group/${id}/project/${project.id}`);
-                }}
-              >
-                Ver
-              </Button>
-            </Card>
-          );
-        })
-      ) : (
-        <p>No hay proyectos</p>
-      )}
+      <div style={{ padding: "20px" }}>
+        <Button
+          style={{ padding: "0px" }}
+          variant="link"
+          onClick={() => {
+            history.push(`/templates/new/group/${groupId}`);
+          }}
+        >
+          Nueva Plantilla
+        </Button>
+      </div>
     </React.Fragment>
   );
 };
@@ -186,7 +162,7 @@ export const ProjectTable = (props) => {
           <th>Descripción</th>
           <th>Link</th>
         </thead>
-        <tbody>
+        <tbody style={{ padding: "20px" }}>
           {projects.length > 0 ? (
             projects.map((project) => {
               return (
@@ -196,6 +172,7 @@ export const ProjectTable = (props) => {
                   <td>{project.description}</td>
                   <td>
                     <Button
+                      style={{ padding: "0px", fontSize: "1em" }}
                       variant="link"
                       onClick={() => {
                         history.push(`/group/${id}/project/${project.id}`);

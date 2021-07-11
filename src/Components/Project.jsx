@@ -87,8 +87,8 @@ export const Project = () => {
     <React.Fragment>
       <NavigationBar />
       <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
+        <div className="col-md-1"></div>
+        <div className="col-md-10" style={{ overflowX: "hidden" }}>
           {loading ? (
             <div className="page-spinner-container">
               <SpinnerAndText text="Cargando Proyecto..." />
@@ -96,7 +96,7 @@ export const Project = () => {
           ) : (
             <React.Fragment>
               <ProjectInfo project={project} />
-              <h2>Reportes</h2>
+              <h2 className="sect-h2">Reportes</h2>
               <NewReportCard
                 gid={gid}
                 pid={pid}
@@ -108,7 +108,7 @@ export const Project = () => {
             </React.Fragment>
           )}
         </div>
-        <div className="col-md-2"></div>
+        <div className="col-md-1"></div>
       </div>
     </React.Fragment>
   );
@@ -123,9 +123,11 @@ export const ProjectInfo = (props) => {
   } else {
     return (
       <React.Fragment>
-        <h1>{project.name}</h1>
-        <h2>{project.code}</h2>
-        <p>{project.description}</p>
+        <div className="page-head">
+          <h1>{project.name}</h1>
+          <h2>{project.code}</h2>
+          <p>{project.description}</p>
+        </div>
       </React.Fragment>
     );
   }
