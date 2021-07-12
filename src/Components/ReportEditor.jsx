@@ -119,6 +119,7 @@ export const ReportEditor = () => {
             <div className="col-md-1"></div>
             <div className="col-md-10">
               <ReportNavigator
+                rid={id}
                 sections={JSON.stringify(sections)}
                 saveSection={saveSection}
               />
@@ -133,7 +134,7 @@ export const ReportEditor = () => {
 };
 
 export const ReportNavigator = (props) => {
-  const { saveSection } = props;
+  const { saveSection, rid } = props;
   const sections = JSON.parse(props.sections);
   const [activeSection, setActiveSection] = useState("");
   const [sectionsArray, setSectionsArray] = useState([]);
@@ -176,6 +177,7 @@ export const ReportNavigator = (props) => {
         </Nav>
       )}
       <SectionSwitch
+        rid={rid}
         sections={sections}
         activeSection={activeSection}
         saveSection={saveSection}
@@ -185,7 +187,7 @@ export const ReportNavigator = (props) => {
 };
 
 export const SectionSwitch = (props) => {
-  const { sections, activeSection, saveSection } = props;
+  const { sections, activeSection, saveSection, rid } = props;
   const sectionsObject = {};
   sections.forEach((sect) => {
     sectionsObject[sect.id] = { ...sect };
@@ -228,6 +230,7 @@ export const SectionSwitch = (props) => {
     case "journal":
       return (
         <JournalSection
+          rid={rid}
           section={JSON.stringify(section)}
           saveSection={saveSection}
         />

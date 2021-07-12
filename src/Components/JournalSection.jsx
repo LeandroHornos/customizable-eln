@@ -20,9 +20,7 @@ section: objeto JSON
         (no en este caso)
         En section.data se almacena la información ingresada por el usuario.
 
-saveSection(sectionObject): función
-        función que toma la sección actualizada y la guarda
-        dentro del documento correspondiente en la base de datos.
+rid: id del reporte al que corresponde la sección
 */
 
 import React, { useState, useEffect } from "react";
@@ -31,36 +29,62 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
+import firebaseApp from "../firebaseApp";
+
+import { checkObj } from "../utilities";
 
 export const JournalSection = (props) => {
-  const { saveSection } = props;
-  const section = JSON.parse(props.section);
-  let { name, description, data } = section;
-  if (data === undefined) {
-    data = { entries: [] };
-  } else if (!("entries" in data)) {
-    data = { ...data, entries: [] };
-  }
+  const db = firebaseApp.firestore();
+  const { rid } = props;
+
+  // STATE
+  const [section, setSection] = useState({});
+  const [data, setData] = useState({ entries: [] });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    /*
-      Reinicio el state cuando entran nuevas props.
-      Evita permanencia del texto al cambiar entre solapas 
-      con el mismo componente
-      */
-    console.log("Seccion de Journal", section);
-    // eslint-disable-next-line
-  }, [props]);
+    const setStateFromProps = () => {
+      // Al cargar el componente, cargo la info por props
+      const sect = JSON.parse(props.section);
+      const dt = { ...sect.data };
+      const { exists, isEmpty } = checkObj(sect.data);
+      setSection(sect);
+      if (exists && !isEmpty) {
+        setData(dt);
+      }
+      setLoading(false);
+    };
+
+    setStateFromProps();
+  }, []);
+
+  const saveSection = async (sectionObj) => {
+    // Guarda los cambios en la subcoleccion "sections" del reporte en la db
+    try {
+      await db
+        .collection("reports")
+        .doc(rid)
+        .collection("sections")
+        .doc(sectionObj.id)
+        .update(sectionObj);
+      setSection(sectionObj);
+      setData(sectionObj.data);
+    } catch (error) {
+      console.log(error);
+    }
+    return;
+  };
 
   const addNewEntry = (entry) => {
     saveSection({ ...section, data: { entries: [...data.entries, entry] } });
-    
   };
 
-  return (
+  return loading ? (
+    <div></div>
+  ) : (
     <React.Fragment>
-      <h3 className="color-2">{name}</h3>
-      <p>{description}</p>
+      <h3 className="color-2">{section.name}</h3>
+      <p>{section.description}</p>
       <EntriesList entries={data.entries} />
       <JournalEntryForm addNewEntry={addNewEntry} />
     </React.Fragment>
@@ -70,8 +94,14 @@ export const JournalSection = (props) => {
 export const JournalEntryForm = (props) => {
   const { addNewEntry } = props;
   const [text, setText] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setSaving(false);
+  }, [props]);
 
   const handleSubmit = () => {
+    setSaving(true);
     const now = new Date();
     console.log("submit");
     console.log(now);
@@ -103,43 +133,56 @@ export const JournalEntryForm = (props) => {
             }}
           ></Form.Control>
         </Form.Group>
-        <Button type="sumbit">Agregar Entrada</Button>
+        <Button type="sumbit">
+          {saving ? "Guardando..." : "Agregar Entrada"}
+        </Button>
       </Form>
     </React.Fragment>
   );
 };
 
 export const EntriesList = (props) => {
-  const { entries } = props;
+  const [entries, setEntries] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const setStateFromProps = () => {
+      setEntries(props.entries);
+      setLoading(false);
+    };
+    setStateFromProps();
+  }, [props]);
   return (
-    <React.Fragment>
-      <div className="journal-cards-container">
-        {entries.length === 0 ? (
-          <p>
-            <small>No hay entradas para mostrar</small>
-          </p>
-        ) : (
-          entries.map((entry) => {
-            return (
-              <Card style={{ marginBottom: "10px" }} className="journal-card">
-                <Card.Header
-                  style={{ padding: "5px" }}
-                  className="journal-card-header"
-                >
-                  <small>{entry.dateString}</small>
-                </Card.Header>
-                <Card.Body
-                  style={{ padding: "10px 5px" }}
-                  className="journal-card-header"
-                >
-                  {entry.text}
-                </Card.Body>
-              </Card>
-            );
-          })
-        )}
-      </div>
-    </React.Fragment>
+    !loading && (
+      <React.Fragment>
+        <div className="journal-cards-container">
+          {entries.length === 0 ? (
+            <p>
+              <small>No hay entradas para mostrar</small>
+            </p>
+          ) : (
+            entries.map((entry) => {
+              return (
+                <Card style={{ marginBottom: "10px" }} className="journal-card">
+                  <Card.Header
+                    style={{ padding: "5px" }}
+                    className="journal-card-header"
+                  >
+                    <small>{entry.dateString}</small>
+                  </Card.Header>
+                  <Card.Body
+                    style={{ padding: "10px 5px" }}
+                    className="journal-card-header"
+                  >
+                    {entry.text}
+                  </Card.Body>
+                </Card>
+              );
+            })
+          )}
+        </div>
+      </React.Fragment>
+    )
   );
 };
 
