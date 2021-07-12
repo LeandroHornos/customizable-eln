@@ -122,8 +122,8 @@ const TemplateEditor = () => {
     <React.Fragment>
       <NavigationBar />
       <div className="row">
-        <div className="col-md-2 col-lg-3"></div>
-        <div className="col-md-8 col-lg-6">
+        <div className="col-md-1"></div>
+        <div className="col-md-10" style={{ overflowX: "hidden" }}>
           <h1 className="text-center">Nueva Plantilla</h1>
 
           <Form
@@ -207,12 +207,14 @@ const TemplateEditor = () => {
               saveSection={addCurrentSectionToTemplate}
               setSelectedComponent={setSelectedComponent}
             />
+            <h2>Vista previa</h2>
+            <TemplatePreview sections={sections} title={title} />
             <Button block type="submit">
               Guardar Plantilla
             </Button>
           </Form>
         </div>
-        <div className="col-md-2 col-lg-3"></div>
+        <div className="col-md-1"></div>
       </div>
     </React.Fragment>
   );
@@ -706,6 +708,45 @@ export const JournalSectionConfig = (props) => {
         Agregar sección
       </Button>
     </div>
+  );
+};
+
+// Preview
+
+export const TemplatePreview = (props) => {
+  /* Da una vista previa de las secciones */
+  const { sections, title } = props;
+  return (
+    <React.Fragment>
+      <div style={{ padding: "10px", backgroundColor: "rgb(220,220,220)" }}>
+        <div style={{ padding: "10px", backgroundColor: "white" }}>
+          <h3 className="text-center">
+            <strong>{title}</strong>
+          </h3>
+          <Form.Group>
+            <Form.Control as="select">
+              <option value="">Elije una sección</option>;
+              {sections.map((sect) => {
+                return (
+                  <option key={sect.id} value={sect.id}>
+                    {sect.name}
+                  </option>
+                );
+              })}
+            </Form.Control>
+          </Form.Group>
+          {sections.map((sect) => {
+            return (
+              <div key={sect.name}>
+                <h3>{sect.name}</h3>
+                <p>{sect.description}</p>
+                <p>Componente: {sect.component}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </React.Fragment>
   );
 };
 
