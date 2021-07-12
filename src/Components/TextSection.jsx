@@ -13,18 +13,21 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
+// Firebase
+import firebaseApp from "../firebaseApp";
+
+import { checkObj } from "../utilities";
+
 export const TextSection = (props) => {
-  const { saveSection } = props; // Actualiza la tabla en la base de datos
-  const section = JSON.parse(props.section);
-  let { name, description, data } = section;
-  if (data === undefined) {
-    data = { text: "" };
-  } else if (!("text" in data)) {
-    data = { ...data, text: "" };
-  }
+  const { rid } = props;
+  const db = firebaseApp.firestore();
+
+  // STATE
+  const [section, setSection] = useState({});
   const [currentText, setCurrentText] = useState("");
   const [showButtons, setShowButtons] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     /*
@@ -33,12 +36,47 @@ export const TextSection = (props) => {
     con el mismo componente
     */
 
-    setCurrentText(data.text);
-    setShowButtons(false);
-    setLoading(false);
-    console.log("Text section", section);
+    const setStateFromProps = () => {
+      setSaving(false);
+      setLoading(true);
+      const sect = JSON.parse(props.section);
+      const dt = { ...sect.data };
+      const { exists, isEmpty } = checkObj(dt);
+
+      setSection(sect);
+
+      if (exists && !isEmpty) {
+        setCurrentText(dt.text);
+      } else if (isEmpty) {
+        setCurrentText("");
+      }
+      setShowButtons(false);
+      setLoading(false);
+      console.log("Text section", section);
+    };
+
+    setStateFromProps();
+
     // eslint-disable-next-line
   }, [props]);
+
+  const saveSection = async (sectionObj) => {
+    // Guarda los cambios en la subcoleccion "sections" del reporte en la db
+    try {
+      await db
+        .collection("reports")
+        .doc(rid)
+        .collection("sections")
+        .doc(sectionObj.id)
+        .update(sectionObj);
+      setSection(sectionObj);
+      setCurrentText(sectionObj.data.text);
+      setShowButtons(false);
+    } catch (error) {
+      console.log(error);
+    }
+    return;
+  };
 
   const saveText = () => {
     const updatedSection = { ...section, data: { text: currentText } };
@@ -47,8 +85,8 @@ export const TextSection = (props) => {
   return (
     !loading && (
       <React.Fragment>
-        <h3 className="color-2">{name}</h3>
-        <p>{description}</p>
+        <h3 className="color-2">{section.name}</h3>
+        <p>{section.description}</p>
         <Form>
           <Form.Group>
             <Form.Control
@@ -67,15 +105,16 @@ export const TextSection = (props) => {
               <Button
                 variant="outline-primary"
                 onClick={() => {
+                  setSaving(true);
                   saveText();
                 }}
               >
-                Guardar cambios
+                {saving ? "Guardando..." : "Guardar cambios"}
               </Button>
               <Button
                 variant="outline-danger"
                 onClick={() => {
-                  setCurrentText(data.text);
+                  setCurrentText(section.data.text);
                   setShowButtons(false);
                 }}
               >

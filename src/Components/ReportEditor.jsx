@@ -202,6 +202,7 @@ export const SectionSwitch = (props) => {
     case "table":
       return (
         <TableSection
+          rid={rid}
           section={JSON.stringify(section)}
           saveSection={saveSection}
         />
@@ -209,6 +210,7 @@ export const SectionSwitch = (props) => {
     case "text":
       return (
         <TextSection
+          rid={rid}
           section={JSON.stringify(section)}
           saveSection={saveSection}
         />
@@ -216,6 +218,7 @@ export const SectionSwitch = (props) => {
     case "form":
       return (
         <FormSection
+          rid={rid}
           section={JSON.stringify(section)}
           saveSection={saveSection}
         />
@@ -223,6 +226,7 @@ export const SectionSwitch = (props) => {
     case "file-links":
       return (
         <FileLinksSection
+          rid={rid}
           section={JSON.stringify(section)}
           saveSection={saveSection}
         />

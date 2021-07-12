@@ -29,6 +29,8 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
+
+// Firebase
 import firebaseApp from "../firebaseApp";
 
 import { checkObj } from "../utilities";
@@ -92,20 +94,24 @@ export const JournalSection = (props) => {
 };
 
 export const JournalEntryForm = (props) => {
+  /* Input para agregar una nueva entrada a la bitácora.
+  Al enviar, llama a la función addNewEntry que recibe por props.
+  Dicha función actualiza la base de datos y el state del Journal */
   const { addNewEntry } = props;
   const [text, setText] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    // Cuando entran nuevas props cancelar el estado "saving"
     setSaving(false);
   }, [props]);
 
   const handleSubmit = () => {
+    /* Al enviar el formulario paso el componente
+    al estado "saving" y llamo a la función que se
+    encargará de actualizar la base de datos. */
     setSaving(true);
     const now = new Date();
-    console.log("submit");
-    console.log(now);
-    console.log(now.getTime());
     addNewEntry({
       text,
       dateString: now.toLocaleString(),
