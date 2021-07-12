@@ -15,6 +15,8 @@ import React, { useState, useEffect } from "react";
 
 import firebaseApp from "../firebaseApp";
 
+import { useHistory } from "react-router-dom";
+
 // React Bootstrap Components
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
@@ -31,6 +33,7 @@ import { useParams } from "react-router-dom";
 
 export const ReportEditor = () => {
   const { id } = useParams();
+  const history = useHistory();
   const db = firebaseApp.firestore();
   const [report, setReport] = useState({});
   const [sections, setSections] = useState([]);
@@ -76,6 +79,9 @@ export const ReportEditor = () => {
         .collection("sections")
         .doc(sectionObj.id)
         .update(sectionObj);
+
+      history.push("/blank");
+      history.goBack();
     } catch (error) {
       console.log(error);
     }
