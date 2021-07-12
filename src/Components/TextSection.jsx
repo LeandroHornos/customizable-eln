@@ -10,16 +10,18 @@ como un campo para editarlo, guardar cambios y borrarlo.
 
 import React, { useState, useEffect } from "react";
 
+// React Bootstrap
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 // Firebase
 import firebaseApp from "../firebaseApp";
 
+// Utils
 import { checkObj } from "../utilities";
 
 export const TextSection = (props) => {
-  const { rid } = props;
+  const { rid } = props; // id del reporte al que corresponde el componente
   const db = firebaseApp.firestore();
 
   // STATE
