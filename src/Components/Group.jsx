@@ -15,6 +15,7 @@ import firebaseApp from "../firebaseApp";
 // Components
 import NavigationBar from "./NavigationBar";
 import SpinnerAndText from "./SpinnerAndText";
+import HeadBlock from "./HeadBlock";
 
 import { peter } from "../demoUsers";
 
@@ -94,26 +95,26 @@ export const Group = () => {
   return (
     <React.Fragment>
       <NavigationBar />
-      <div className="row">
-        <div className="col-md-1"></div>
-        <div className="col-md-10" style={{ overflowX: "hidden" }}>
-          {loading ? (
-            <div className="page-spinner-container">
-              <SpinnerAndText text="Cargando Grupo..." />
-            </div>
-          ) : (
-            <React.Fragment>
-              <GroupInfo group={group} />
+      {loading ? (
+        <div className="page-spinner-container">
+          <SpinnerAndText text="Cargando Grupo..." />
+        </div>
+      ) : (
+        <React.Fragment>
+          <GroupInfo group={group} />
+          <div className="row">
+            <div className="col-md-1"></div>
+            <div className="col-md-10">
               <h2 className="sect-h2">Plantillas</h2>
               <TemplatesBlock goupId={group.id} />
               <h2 className="sect-h2">Proyectos</h2>
               <NewProjectCard saveProject={saveProject} />
               <ProjectTable projects={projects} id={id} />
-            </React.Fragment>
-          )}
-        </div>
-        <div className="col-md-1"></div>
-      </div>
+            </div>
+            <div className="col-md-1"></div>
+          </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
@@ -122,10 +123,10 @@ export const GroupInfo = (props) => {
   const { group } = props;
   return (
     <React.Fragment>
-      <div className="page-head">
+      <HeadBlock>
         <h1>{group.name}</h1>
         <p>{group.description}</p>
-      </div>
+      </HeadBlock>
     </React.Fragment>
   );
 };

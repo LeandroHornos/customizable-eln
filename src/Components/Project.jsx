@@ -15,6 +15,7 @@ import firebaseApp from "../firebaseApp";
 // Components
 import NavigationBar from "./NavigationBar";
 import SpinnerAndText from "./SpinnerAndText";
+import HeadBlock from "./HeadBlock";
 
 // Functions
 import { checkObj, checkArray } from "../utilities";
@@ -86,16 +87,16 @@ export const Project = () => {
   return (
     <React.Fragment>
       <NavigationBar />
-      <div className="row">
-        <div className="col-md-1"></div>
-        <div className="col-md-10" style={{ overflowX: "hidden" }}>
-          {loading ? (
-            <div className="page-spinner-container">
-              <SpinnerAndText text="Cargando Proyecto..." />
-            </div>
-          ) : (
-            <React.Fragment>
-              <ProjectInfo project={project} />
+      {loading ? (
+        <div className="page-spinner-container">
+          <SpinnerAndText text="Cargando Proyecto..." />
+        </div>
+      ) : (
+        <React.Fragment>
+          <ProjectInfo project={project} />
+          <div className="row">
+            <div className="col-md-1"></div>
+            <div className="col-md-10">
               <h2 className="sect-h2">Reportes</h2>
               <NewReportCard
                 gid={gid}
@@ -105,11 +106,11 @@ export const Project = () => {
                 setLoading={setLoading}
               />
               <ReportTable reports={reports} />
-            </React.Fragment>
-          )}
-        </div>
-        <div className="col-md-1"></div>
-      </div>
+            </div>
+            <div className="col-md-1"></div>
+          </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
@@ -123,11 +124,11 @@ export const ProjectInfo = (props) => {
   } else {
     return (
       <React.Fragment>
-        <div className="page-head">
+        <HeadBlock>
           <h1>{project.name}</h1>
           <h2>{project.code}</h2>
           <p>{project.description}</p>
-        </div>
+        </HeadBlock>
       </React.Fragment>
     );
   }

@@ -8,7 +8,7 @@ const Tutorial = () => {
       <NavigationBar />
       <div className="row">
         <div className="col-md-1"></div>
-        <div className="col-md-10">
+        <div className="col-md-10" style={{ overflowX: "hidden" }}>
           <h1>Tutorial</h1>
           <p>
             Hola! este es el tutorial de LeanEln, en el cual aprenderás los

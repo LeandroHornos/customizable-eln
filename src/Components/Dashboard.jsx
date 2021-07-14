@@ -4,17 +4,18 @@ import React from "react";
 import NavigationBar from "./NavigationBar";
 import Groups from "./Groups";
 import AppFooter from "./AppFooter";
+import HeadBlock from "./HeadBlock";
 
 const Dashboard = () => {
   return (
     <React.Fragment>
       <NavigationBar />
+      <HeadBlock>
+        <h1>Mis grupos de trabajo</h1>
+      </HeadBlock>
       <div className="row">
         <div className="col-md-1"></div>
         <div className="col-md-10">
-          <div className="page-head">
-            <h1>Mis grupos de trabajo</h1>
-          </div>
           <Groups />
         </div>
         <div className="col-md-1"></div>

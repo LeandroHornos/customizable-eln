@@ -11,7 +11,8 @@ import TemplateEditor from "./Components/TemplateEditor";
 import ReportEditor from "./Components/ReportEditor";
 import Project from "./Components/Project";
 import Blank from "./Components/Blank";
-import Tutorial from "./Components/Tutorial";
+import Guide from "./Components/Guide";
+import ComposerPage from "./Components/ComposerPage";
 
 function App() {
   // const currentLang = "es";
@@ -34,8 +35,11 @@ function App() {
           <Route exact path="/group/:gid/project/:pid">
             <Project />
           </Route>
-          <Route exact path="/tutorial">
-            <Tutorial />
+          <Route exact path="/guia">
+            <Guide />
+          </Route>
+          <Route exact path="/composer">
+            <ComposerPage />
           </Route>
           <Route exact path="/blank">
             <Blank />

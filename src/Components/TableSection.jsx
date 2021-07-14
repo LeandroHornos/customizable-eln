@@ -181,6 +181,7 @@ export const TableSection = (props) => {
                 </td>
               </tr>
               <tr>
+                <td>#</td>
                 {layout.columns.map((col) => {
                   return (
                     <td key={`${col.id}-row-0`} style={{ padding: "0" }}>
@@ -213,7 +214,7 @@ export const TableSection = (props) => {
                     <Button
                       size="sm"
                       variant="outline-primary"
-                      style={{ marginTop: "20px" }}
+                      style={{ marginTop: "20px", marginRight: "2px" }}
                       onClick={() => {
                         setSavingChanges(true);
                         saveRow(newRow);
@@ -227,7 +228,7 @@ export const TableSection = (props) => {
                     </Button>
                     <Button
                       size="sm"
-                      variant="outline-dark"
+                      variant="outline-danger"
                       style={{ marginTop: "20px" }}
                       onClick={() => {
                         cancelNewRow();

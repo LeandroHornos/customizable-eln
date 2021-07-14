@@ -28,6 +28,7 @@ import TableSection from "./TableSection";
 import TextSection from "./TextSection";
 import FileLinksSection from "./FileLinksSection";
 import JournalSection from "./JournalSection";
+import HeadBlock from "./HeadBlock";
 
 import { useParams } from "react-router-dom";
 
@@ -97,24 +98,24 @@ export const ReportEditor = () => {
         </div>
       ) : (
         <React.Fragment>
-          <div className="row" style={{ paddingTop: "50px" }}>
-            <div className="col-md-1"></div>
-            <div className="col-md-5">
-              <div>
-                <h2 className="color-1-light">
-                  <strong>Proyecto:</strong> {report.projectName}
-                </h2>
-                <h2 className="color-1-light">
-                  <small>Reporte: {report.reportNumber}</small>
-                </h2>
+          <HeadBlock>
+            <div className="row" style={{ paddingTop: "50px" }}>
+              <div className="col-md-6" style={{ padding: "0px" }}>
+                <div>
+                  <h2 className="color-1-light">
+                    <strong>Proyecto:</strong> {report.projectName}
+                  </h2>
+                  <h2 className="color-1-light">
+                    <small>Reporte: {report.reportNumber}</small>
+                  </h2>
+                </div>
+              </div>
+              <div className="col-md-6" style={{ padding: "0px" }}>
+                <h3>Descripción:</h3>
+                <p>{report.description}</p>
               </div>
             </div>
-            <div className="col-md-5">
-              <h3>Descripción:</h3>
-              <p>{report.description}</p>
-            </div>
-            <div className="col-md-1"></div>
-          </div>
+          </HeadBlock>
           <div className="row">
             <div className="col-md-1"></div>
             <div className="col-md-10">
