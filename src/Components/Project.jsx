@@ -18,7 +18,7 @@ import SpinnerAndText from "./SpinnerAndText";
 import HeadBlock from "./HeadBlock";
 
 // Functions
-import { checkObj, checkArray } from "../utilities";
+import { checkObj, checkArray, getTextPreview } from "../utilities";
 
 import { peter } from "../demoUsers";
 
@@ -308,36 +308,38 @@ export const ReportTable = (props) => {
     return <p>No hay reportes</p>;
   } else {
     return (
-      <Table>
-        <thead>
-          <th>Reporte Nro</th>
-          <th>Descripción</th>
-          <th>Estado</th>
-          <th>Link</th>
-        </thead>
-        <tbody>
-          {reports.map((rep) => {
-            return (
-              <tr key={rep.id}>
-                <td>{rep.reportNumber}</td>
-                <td>{rep.description}</td>
-                <td>{rep.status}</td>
-                <td>
-                  <Button
-                    style={{ padding: "0px" }}
-                    variant="link"
-                    onClick={() => {
-                      history.push(`/report/${rep.id}`);
-                    }}
-                  >
-                    Ver
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+      <div style={{ overflowX: "auto" }}>
+        <Table>
+          <thead>
+            <th>Reporte Nro</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Link</th>
+          </thead>
+          <tbody>
+            {reports.map((rep) => {
+              return (
+                <tr key={rep.id}>
+                  <td>{rep.reportNumber}</td>
+                  <td>{getTextPreview(rep.description, 100)}</td>
+                  <td>{rep.status}</td>
+                  <td>
+                    <Button
+                      style={{ padding: "0px" }}
+                      variant="link"
+                      onClick={() => {
+                        history.push(`/report/${rep.id}`);
+                      }}
+                    >
+                      Ver
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </div>
     );
   }
 };

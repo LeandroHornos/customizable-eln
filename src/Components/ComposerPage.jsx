@@ -15,7 +15,9 @@ const ComposerPage = () => {
           <small>powered by Kekule.js</small>
         </p>
       </HeadBlock>
-      <KekuleComposer />
+      <div className="table-container">
+        <KekuleComposer />
+      </div>
       <AppFooter />
     </React.Fragment>
   );

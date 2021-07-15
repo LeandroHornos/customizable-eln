@@ -18,6 +18,7 @@ import SpinnerAndText from "./SpinnerAndText";
 import HeadBlock from "./HeadBlock";
 
 import { peter } from "../demoUsers";
+import { getTextPreview } from "../utilities";
 
 export const Group = () => {
   const user = peter;
@@ -156,40 +157,42 @@ export const ProjectTable = (props) => {
   const { projects, id } = props;
   return (
     <React.Fragment>
-      <Table>
-        <thead>
-          <th>Codigo</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Link</th>
-        </thead>
-        <tbody style={{ padding: "20px" }}>
-          {projects.length > 0 ? (
-            projects.map((project) => {
-              return (
-                <tr key={project.id}>
-                  <td>{project.code}</td>
-                  <td>{project.name}</td>
-                  <td>{project.description}</td>
-                  <td>
-                    <Button
-                      style={{ padding: "0px", fontSize: "1em" }}
-                      variant="link"
-                      onClick={() => {
-                        history.push(`/group/${id}/project/${project.id}`);
-                      }}
-                    >
-                      ver
-                    </Button>
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
-            <p>No hay proyectos</p>
-          )}
-        </tbody>
-      </Table>
+      <div style={{ overflowX: "auto" }}>
+        <Table>
+          <thead>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Link</th>
+          </thead>
+          <tbody style={{ padding: "20px" }}>
+            {projects.length > 0 ? (
+              projects.map((project) => {
+                return (
+                  <tr key={project.id}>
+                    <td>{project.code}</td>
+                    <td>{project.name}</td>
+                    <td>{getTextPreview(project.description, 100)}</td>
+                    <td>
+                      <Button
+                        style={{ padding: "0px", fontSize: "1em" }}
+                        variant="link"
+                        onClick={() => {
+                          history.push(`/group/${id}/project/${project.id}`);
+                        }}
+                      >
+                        ver
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <p>No hay proyectos</p>
+            )}
+          </tbody>
+        </Table>
+      </div>
     </React.Fragment>
   );
 };
