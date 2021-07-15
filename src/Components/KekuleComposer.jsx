@@ -72,7 +72,7 @@ const KekuleComposer = () => {
         "config",
         "objInspector",
       ]); // create all default common tool buttons
-      comp.setDimension("90%", "90vh");
+      comp.setDimension("90%", "75vh");
 
       setComposer(comp);
     };

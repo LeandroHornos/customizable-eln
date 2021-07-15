@@ -2,7 +2,7 @@ import React from "react";
 
 const HeadBlock = (props) => {
   return (
-    <div className="row page-head">
+    <div className="row page-head" style={{ marginTop: "56px" }}>
       <div className="col-12" style={{ padding: "0px" }}>
         <div className="row">
           <div className="col-md-1"></div>

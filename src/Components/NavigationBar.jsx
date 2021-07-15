@@ -5,7 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 
 const NavigationBar = () => {
   return (
-    <Navbar collapseOnSelect expand="lg" variant="dark" className="navigation-bar">
+    <Navbar collapseOnSelect expand="lg" variant="dark" className="navigation-bar" fixed="top">
       <Navbar.Brand href="/">
         LEAN<span style={{ color: "red" }}>ELN</span>
       </Navbar.Brand>
